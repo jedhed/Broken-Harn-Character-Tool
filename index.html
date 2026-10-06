@@ -198,6 +198,18 @@ td.act{white-space:nowrap;text-align:right}td.act>*{margin-left:16px;vertical-al
 .dlrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-top:8px}.dlrow .btn{font-size:15.5px;padding:4px 12px}
 td b{font:700 17.5px var(--head)}
 .err{color:var(--bad-t);font-weight:700;font-size:14px}
+.pshort{display:none}
+@media (max-width:600px){
+ .pfull{display:none}.pshort{display:inline}
+ .phases{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:0}
+ .phase{flex-direction:column;flex-wrap:nowrap;align-items:center;gap:4px;font-size:15px;letter-spacing:.04em;padding:8px 2px 6px;text-align:center}
+ .phase .cnt{font-size:13.5px;padding:0 7px}
+ .banner{padding-inline:16px;align-items:center;gap:4px 10px}
+ .banner .name{font-size:20px}
+ .banner.inchar .sect{display:none}
+ .blink{font-size:15.5px;padding:3px 6px}
+}
+@media (max-width:380px){.banner .name{font-size:18px}.blink{font-size:14.5px;padding:3px 4px}}
 </style>
 </head>
 <body>
@@ -963,11 +975,11 @@ function panel(){const I=issues();const warn=(I[S.step]||[]).map(m=>`<div class=
  $('#panel').innerHTML=h}
 const ord=n=>n+(['th','st','nd','rd'][n%10>3||Math.floor(n/10)===1?0:n%10]);
 function travelOut(){const tot=S.travel.roll+travelMod().m;const t=TRAVEL.find(x=>tot<=x[0]);return{label:t[1],text:t[2]}}
-const PHASES=[['Family & Origin',7],['Your Character',4],['Outfitting & Final Touches',3]];let viewPhase=null;
+const PHASES=[['Family & Origin',7,'Origin'],['Your Character',4,'Character'],['Outfitting & Final Touches',3,'Outfitting']];let viewPhase=null;
 const phaseSteps=k=>{const st=PHASES.slice(0,k).reduce((a,p)=>a+p[1],0);return ORDER.slice(st,st+PHASES[k][1])};
 const phaseOf=i=>PHASES.findIndex((_,k)=>phaseSteps(k).includes(i));
 function steps(){const I=issues();const bad=i=>(I[i]||[]).length>0;const cur=phaseOf(S.step);const vp=viewPhase===null?cur:viewPhase;
- $('#steps').innerHTML=`<div class="phases" role="tablist">${PHASES.map(([n],k)=>{const st=phaseSteps(k),d=st.filter(i=>done(i)&&!bad(i)).length,b=st.filter(bad).length;return`<button type="button" class="phase" role="tab" aria-selected="${k===vp}" data-act="phase" data-val="${k}">${n} <span class="cnt ${b?'bad':d===st.length?'ok':'warn'}">${d} of ${st.length}${b?' · '+b+' to fix':''}</span></button>`}).join('')}</div>
+ $('#steps').innerHTML=`<div class="phases" role="tablist">${PHASES.map(([n,,sh],k)=>{const st=phaseSteps(k),d=st.filter(i=>done(i)&&!bad(i)).length,b=st.filter(bad).length;return`<button type="button" class="phase" role="tab" aria-selected="${k===vp}" data-act="phase" data-val="${k}" aria-label="${n}"><span class="pfull">${n}</span><span class="pshort">${sh}</span> <span class="cnt ${b?'bad':d===st.length?'ok':'warn'}">${d} of ${st.length}${b?' · '+b+' to fix':''}</span></button>`}).join('')}</div>
  <div class="steps">${phaseSteps(vp).map(i=>{const now=S.step===i;const m=bad(i)?'bad':now?'now':done(i)?'done':'';return`<button class="step" data-act="go" data-val="${i}" ${now?'aria-current="step"':''}><span class="mark ${m}" title="${bad(i)?'Needs another look':done(i)?'Complete':'Not finished'}"></span>${STEPS[i]}${bad(i)?'<span class="sr"> (needs another look)</span>':''}</button>`}).join('')}</div>`}
 function sheet(){const c=culture();const o=occ();const t=tongues();const {led,ex}=ledger();const e='<span class="empty">not chosen</span>';
  const id=`<dl>${S.concept?`<dt>Concept</dt><dd>${esc(S.concept)}</dd>`:''}${S.career?`<dt>Career</dt><dd>${careerLine()}</dd>`:''}<dt>Folk</dt><dd>${S.folk}${S.sex?', '+S.sex.toLowerCase():''}${orbP()?', '+orbP()+(orbP()==='Ivinian'&&S.clan?' of clan '+esc(S.clan):''):''}</dd><dt>Born</dt><dd>${S.place?(S.nation==='tribal'?'Among the '+S.place:(S.inSet?S.place:'A village near '+S.place)+', '+NAT[S.nation].name):e}</dd><dt>Society</dt><dd>${c||e}</dd><dt>Class</dt><dd>${S.cls?CLASSES[S.cls]:e}</dd><dt>Family trade</dt><dd>${S.occ||e}</dd><dt>Upbringing</dt><dd>${S.bg?BG[S.bg].name:e}</dd><dt>Status</dt><dd>${S.cls?statusVal():e}</dd><dt>Coin</dt><dd>${S.cls?coinText():e}</dd></dl>`;
@@ -1065,7 +1077,7 @@ function importChar(text){const r=readCharFile(text);if(r.err){loadMsg=[false,r.
  const id=newId();CHARS.unshift({id,name:r.name,S:r.S,saved:Date.now(),sum:null});openChar(id);
  const cp=r.camp;loadMsg=null;render();if(cp&&(cp.d!==GM.d||cp.m!==GM.m||cp.y!==GM.y)){const n=$('#dlnote');if(n)n.textContent='This file was made for a campaign starting '+cp.d+' '+(MONTHS[cp.m-1]||'')+' '+yearTxt(cp.y)+'. Yours starts '+campTxt()+', so the birth year may differ.'}}
 function syncGM(){$('#eyebrow').textContent='Character roll · '+yearTxt(GM.y);const m=$('#camp-m');if(!m.options.length)m.innerHTML=MONTHS.map((n,i)=>`<option value="${i+1}">${n}</option>`).join('');const set=(el,v)=>{if(document.activeElement!==el)el.value=v};set($('#camp-d'),GM.d);set(m,GM.m);set($('#camp-y'),GM.y);$('#gm-sindarin').checked=!!GM.Sindarin;$('#gm-khuzdul').checked=!!GM.Khuzdul}
-function render(){syncGM();const st=VIEW==='start';$('#start').hidden=!st;$('#steps').hidden=st;$('#cols').hidden=st;$('#lnk-chars').hidden=st;
+function render(){syncGM();const st=VIEW==='start';$('#start').hidden=!st;$('#steps').hidden=st;$('#cols').hidden=st;$('#lnk-chars').hidden=st;document.querySelector('.banner').classList.toggle('inchar',!st);
  if(st){$('#banner').hidden=true;$('#sect').textContent='Characters';store();startScreen();return}
  ageSettled();$('#banner').hidden=!S.example;$('#sect').textContent=STEPS[S.step];steps();panel();sheet();saveNow()}
 
