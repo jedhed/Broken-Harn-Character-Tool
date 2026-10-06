@@ -1,0 +1,1162 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<style>html{box-sizing:border-box}body{margin:0}img{max-width:100%}</style>
+<title>Broken Hârn Origins</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grenze:ital,wght@0,500;0,600;0,700;1,500&family=Bitter:ital,wght@0,400;0,600;0,700;1,400&display=swap">
+<style>
+/* Layout: a working desk. Choices on the left as one step at a time; the character's roll (the record) stays pinned on the right and fills as you choose. */
+/* Colours and fonts follow the Broken Hârn Style Kit. */
+:root{
+  --paper:#FBF8F1; --card:#FFFDF8; --panel:#F7E8CB; --panel2:#FDF3DE;
+  --ink:#1C181A; --muted:#645C5A; --hair:#D9CFBC;
+  --header:#1E4266; --on:#FFFFFF; --primary:#1C181A; --onp:#FFFFFF;
+  --ok:#2F7676; --ok-t:#2F7676; --warn:#8F6414; --warn-t:#8F6414; --bad:#A8322A; --bad-t:#A8322A;
+  --house:#7E4210; --lock:#8A8380; --sel:#EAF3F0; --trait:#2A4296;
+  --head:"Grenze",Georgia,serif;
+  --body:"Bitter",Georgia,serif;
+  /* Older names, kept as aliases until each component is restyled. */
+  --display:var(--head);
+  --bg:var(--paper); --surface:var(--card); --sunk:var(--panel); --line:var(--hair); --line-strong:var(--muted);
+  --ink-dim:var(--muted); --ink-faint:var(--muted);
+  --woad:var(--primary); --woad-soft:var(--panel2); --on-woad:var(--onp);
+  --lichen:var(--ok-t); --madder:var(--bad-t); --madder-soft:var(--panel2);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --paper:#1B1819; --card:#221E1F; --panel:#2E2620; --panel2:#251F1D;
+    --ink:#EFE8DB; --muted:#B1A79E; --hair:#45403C;
+    --header:#2A568A; --on:#FFFFFF; --primary:#EFE8DB; --onp:#1B1819;
+    --ok:#2F7F7F; --ok-t:#6FC2C0; --warn:#8F6414; --warn-t:#D9A94A; --bad:#B43A30; --bad-t:#F0897D;
+    --house:#E0A070; --lock:#7C7572; --sel:#22373A; --trait:#9FB2F2; color-scheme:dark;
+  }
+}
+:root[data-theme="dark"]{
+    --paper:#1B1819; --card:#221E1F; --panel:#2E2620; --panel2:#251F1D;
+    --ink:#EFE8DB; --muted:#B1A79E; --hair:#45403C;
+    --header:#2A568A; --on:#FFFFFF; --primary:#EFE8DB; --onp:#1B1819;
+    --ok:#2F7F7F; --ok-t:#6FC2C0; --warn:#8F6414; --warn-t:#D9A94A; --bad:#B43A30; --bad-t:#F0897D;
+    --house:#E0A070; --lock:#7C7572; --sel:#22373A; --trait:#9FB2F2; color-scheme:dark;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font:400 15px/1.45 var(--body);padding-inline:16px;padding-block:20px 48px;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+.app{max-width:1180px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:18px;flex:1}
+h1,h2,h3{font-family:var(--display);font-weight:700;margin:0;text-wrap:balance}
+h1{font-size:30px;line-height:1.1}
+h2{font-size:22px}
+h3{font-size:19px;line-height:1.15}
+.panel>header h2{font-size:30px;line-height:1.05;text-transform:uppercase;letter-spacing:.02em;margin-bottom:4px}
+p{margin:0}
+.actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+button,select,input{font:inherit;color:inherit}
+.btn{font:600 17px/1.2 var(--head);padding:7px 17px;border-radius:3px;border:1px solid var(--ink);background:var(--card);color:var(--ink);cursor:pointer;display:inline-flex;align-items:center;gap:7px}
+.btn:hover:not(:disabled){background:var(--panel)}
+.btn.primary:hover:not(:disabled){background:var(--primary);box-shadow:0 0 0 3px var(--hair)}
+.btn.primary{background:var(--primary);border:2px solid var(--primary);color:var(--onp);padding:6px 16px}
+.btn.roll::before{content:"";width:13px;height:13px;border:1.5px solid currentColor;border-radius:2px;background:radial-gradient(circle,currentColor 1.6px,transparent 2px);flex:none}
+:focus-visible{outline:2px solid var(--ok-t);outline-offset:2px}
+.notice{background:var(--panel2);border:1px solid var(--hair);border-left:4px solid var(--header);padding:8px 12px;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;justify-content:space-between}
+.banner{background:var(--header);color:var(--on);display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 18px;margin:-20px -16px 18px;padding:9px max(20px,calc((100% - 1180px)/2 + 16px));padding-top:calc(9px + env(safe-area-inset-top,0px))}
+.banner .name{font:700 26px/1.1 var(--head);letter-spacing:.05em;text-transform:uppercase}
+.banner .sect{font:500 16px var(--head);letter-spacing:.12em;text-transform:uppercase;opacity:.85}
+.banner .links{margin-left:auto;display:flex;flex-wrap:wrap;gap:4px;align-items:baseline}
+.blink{font:600 17px var(--head);color:var(--on);background:transparent;border:0;padding:3px 10px;border-radius:3px;cursor:pointer;text-decoration:underline;text-decoration-color:rgba(255,255,255,.45);text-underline-offset:3px;list-style:none}
+.blink::-webkit-details-marker{display:none}
+.blink:hover{background:rgba(255,255,255,.14)}
+.banner :focus-visible{outline:2px solid var(--on);outline-offset:2px}
+.banner{position:relative}.banner .gm{position:static}.banner .gm .pop{color:var(--ink);right:max(16px,calc((100% - 1180px)/2 + 16px));top:calc(100% + 4px);box-shadow:0 6px 14px -8px rgba(0,0,0,.5)}
+.cols{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,330px);gap:22px;align-items:start}
+@media (max-width:900px){.cols{grid-template-columns:minmax(0,1fr)}}
+main{display:flex;flex-direction:column;gap:14px;min-width:0}
+.stepnav{display:flex;flex-direction:column;border-bottom:1px solid var(--hair)}
+.phases{display:flex;flex-wrap:wrap;gap:0 4px}
+.phase{font:700 17px var(--head);letter-spacing:.05em;text-transform:uppercase;background:transparent;color:var(--muted);border:0;border-bottom:3px solid transparent;padding:9px 12px 6px;cursor:pointer;display:inline-flex;flex-wrap:wrap;gap:4px 8px;align-items:center;text-align:left}
+.phase[aria-selected="true"]{color:var(--ink);border-bottom-color:var(--ink)}
+.cnt{font:600 14.5px var(--head);letter-spacing:0;text-transform:none;color:var(--on);padding:1px 9px;border-radius:3px;white-space:nowrap}
+.cnt.ok{background:var(--ok)}.cnt.warn{background:var(--warn)}.cnt.bad{background:var(--bad)}
+.steps{display:flex;flex-wrap:wrap;gap:2px 4px;padding:6px 0 8px;border-top:1px solid var(--hair)}
+.step{font:400 14.5px var(--body);background:transparent;border:0;color:var(--ink);padding:4px 10px;border-radius:3px;cursor:pointer;display:inline-flex;gap:7px;align-items:center}
+.step[aria-current="step"]{background:var(--panel);font-weight:700}
+.mark{width:11px;height:11px;border:1.5px solid var(--muted);display:inline-block;flex:none}
+.mark.done{background:var(--ok);border-color:var(--ok)}
+.mark.now{background:var(--ink);border-color:var(--ink)}
+.mark.bad{background:var(--bad);border-color:var(--bad)}
+.panel{display:flex;flex-direction:column;gap:18px}
+.panel>header p{max-width:62ch}
+.field{display:flex;flex-direction:column;gap:8px}
+.lab{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;justify-content:space-between}
+.lab b{font:700 20px/1.15 var(--head)}
+.lab .hint b,.lab label .hint{font:inherit}
+.hint{color:var(--muted);font-size:13.5px}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{font:400 14.5px var(--body);border:1px solid var(--muted);background:var(--card);color:var(--ink);padding:4px 11px;border-radius:6px;cursor:pointer}
+.chip small{color:var(--muted);font-size:12.5px;margin-left:4px}
+.chip[aria-pressed="true"]{background:var(--primary);border-color:var(--primary);color:var(--onp);font-weight:600}
+.chip[aria-pressed="true"] small{color:var(--onp);opacity:.8}
+.chip:disabled{cursor:not-allowed;border:1px dashed var(--lock);color:var(--lock);background:transparent}
+.chip:disabled small{color:var(--lock)}
+.chip:disabled[aria-pressed="true"]{border:1px solid var(--primary);background:var(--primary);color:var(--onp)}
+.chip:disabled[aria-pressed="true"] small{color:var(--onp)}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:10px}
+.card{text-align:left;border:1px solid var(--hair);background:var(--card);color:var(--ink);padding:10px 12px;border-radius:0;cursor:pointer;display:flex;flex-direction:column;gap:3px;font-size:14px}
+.card[aria-pressed="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink);background:var(--sel)}
+.card:disabled{cursor:not-allowed;background:transparent;border:1px dashed var(--lock);color:var(--lock)}
+.card:disabled .tag{color:var(--lock)}
+.card span{font-size:14px}
+.card span.tag,.tag{font:600 13px var(--head);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.tag.lock{color:var(--lock)}
+select,.text{font:400 14.5px var(--body);color:var(--ink);background:var(--card);border:1px solid var(--muted);border-radius:3px;padding:6px 8px;max-width:100%}
+input.text{width:100%}
+.result{background:var(--panel);padding:9px 12px;font-size:14.5px}
+.warnbox{background:var(--panel2);border-left:4px solid var(--bad);padding:8px 12px;color:var(--bad-t);font-weight:700;font-size:14px}
+button.link{border:0;background:none;padding:0;color:var(--ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer;font:600 16px var(--head)}
+.spg{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:4px 20px}
+.sp{display:grid;grid-template-columns:minmax(0,1fr) 3ch auto 4ch auto 3ch;gap:6px;align-items:center}
+.sp .add{color:var(--lichen);font-weight:700;text-align:center;font-variant-numeric:tabular-nums}
+.sp b{text-align:right;font-variant-numeric:tabular-nums}
+.btn.mini{padding:1px 8px;font-size:15.5px}
+.btn:disabled{background:var(--hair);border-color:var(--hair);color:var(--muted);cursor:not-allowed}
+.sub{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:12px}
+.sub>h3{font-size:20px}
+.note{background:var(--panel2);padding:9px 12px;font-size:14px;border-left:3px solid var(--house)}
+.nav{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;border-top:4px double var(--ink);padding-top:12px}
+/* the roll */
+aside{border-left:2px solid var(--ink);padding-left:16px;position:sticky;top:calc(env(safe-area-inset-top,0px) + 12px);display:flex;flex-direction:column;gap:10px;min-width:0;max-height:calc(100vh - 24px);overflow:auto;font-size:14px}
+@media (max-width:900px){aside{position:static;max-height:none;border-left:0;border-top:2px solid var(--ink);padding:14px 0 0}}
+aside .eyebrow{font:600 13px var(--head);letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+#name{font:700 27px/1.05 var(--head);color:var(--ink);border:0;border-bottom:1px dashed var(--muted);background:none;width:100%;padding:2px 0}
+dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px}
+dt{font:600 15.5px var(--head)}
+dd{margin:0}
+.empty{color:var(--ink-faint)}
+.sec{display:flex;flex-direction:column;gap:6px}
+.sec h3{font:700 17px var(--head);letter-spacing:.06em;text-transform:uppercase;margin:6px 0 0;padding-bottom:2px;border-bottom:4px double var(--ink);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:2px 8px}
+.sec h3 small{font:400 12.5px var(--body);letter-spacing:0;text-transform:none;color:var(--muted)}
+.fine{font-size:12px;color:var(--muted)}
+.skills{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px 16px}
+@media (max-width:420px){.skills{grid-template-columns:minmax(0,1fr)}}
+.grp{display:flex;flex-direction:column}
+.grp h4{margin:0 0 2px;font:600 13px var(--head);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
+.sk{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;align-items:baseline;font-size:14px;color:var(--muted)}
+.sk.up{color:var(--ink)}
+.sk .src{display:block;font-size:12px;line-height:1.1;margin-bottom:3px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
+.sk b{font-variant-numeric:tabular-nums;min-width:2ch;text-align:right}
+.sk .ex{font-size:11px;font-weight:700;color:var(--lichen);margin-left:4px}
+.sk.over b{color:var(--madder)}
+.rows{display:flex;flex-direction:column;gap:2px}
+.row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
+.row span:last-child{font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
+.row small{color:var(--muted);font-size:12px}
+.rows.stripe{gap:0}.rows.stripe .row{padding:2px 6px}.rows.stripe .row:nth-child(odd){background:var(--panel)}
+details.calls{border-top:1px solid var(--line-strong);padding-top:10px;margin-top:auto}
+details.calls summary{cursor:pointer;font-weight:700}
+details.calls ol{color:var(--ink-dim);max-width:75ch;padding-left:22px}
+.gm{position:relative}
+.gm summary{list-style:none;cursor:pointer}
+.gm summary::-webkit-details-marker{display:none}
+.gm .pop{position:absolute;right:0;top:calc(100% + 6px);background:var(--surface);border:1px solid var(--line-strong);padding:10px 12px;display:flex;flex-direction:column;gap:6px;z-index:5;min-width:220px}
+.gm label{display:flex;gap:8px;align-items:center}
+.subpick{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px;padding:8px 12px;background:var(--panel2);border:1px solid var(--hair);border-left:3px solid var(--ink)}.subpick select{flex:1;min-width:180px}
+.ptbar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;align-items:center;gap:8px 22px;padding:9px 12px;background:var(--panel);border-bottom:2px solid var(--ink);box-shadow:0 4px 10px -6px rgba(0,0,0,.35)}
+.ptbar .pt{display:flex;flex-wrap:wrap;align-items:center;gap:4px 8px}.ptbar .pt small{color:var(--muted);font-size:13px}.ptbar .ptnote{color:var(--muted);font-size:13px;flex-basis:100%}
+.cnt.big{font-size:19px;padding:2px 11px}
+.frow{display:grid;grid-template-columns:84px minmax(0,1fr) 42px;gap:8px;align-items:center}.frow label{font-weight:600}.frow select{width:100%;min-width:0}
+.trail{font-size:13px;color:var(--muted)}.trail.free{color:var(--ok-t);font-weight:600}
+.item{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 12px;padding:6px 0;border-bottom:1px solid var(--hair)}.item b{font:600 18px var(--head)}
+.seg{display:inline-flex;border:1px solid var(--ink);border-radius:3px;overflow:hidden}
+.seg button{font:600 15.5px var(--head);border:0;background:var(--card);color:var(--ink);padding:3px 12px;cursor:pointer}
+.seg button[aria-pressed="true"]{background:var(--primary);color:var(--onp)}
+.savenote{font-size:13px;font-weight:600;color:var(--lichen);min-height:1.2em}.savenote.bad{color:var(--madder)}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
+.ents{display:flex;flex-direction:column;gap:7px}
+.ent{padding-left:12px;text-indent:-12px;line-height:1.35}
+.ent b{font:600 15.5px var(--head)}
+.ent small{color:var(--muted);font-size:12.5px}
+.ent.goal{font-size:14px;padding-left:0;text-indent:0}
+.goalcard{display:flex;justify-content:space-between;align-items:flex-start;gap:8px 16px}.goalcard>div{min-width:0}
+.gbuild{display:grid;grid-template-columns:auto minmax(0,1fr);gap:8px 10px;align-items:center;max-width:600px}.gbuild label{font:600 17px var(--head);white-space:nowrap}.gbuild input{width:100%}
+@media (max-width:480px){.gbuild{grid-template-columns:minmax(0,1fr);gap:2px 0}.gbuild input{margin-bottom:6px}}
+.gprev{font-size:14.5px}.gprev b{font:600 13px var(--head);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);display:block}
+.traitline{line-height:1.4}
+.traitline b{font:600 17px var(--head);color:var(--trait)}
+h4.subh{border-bottom:1px solid var(--hair);padding-bottom:2px;margin:4px 0 5px}
+.agerow{display:flex;flex-wrap:wrap;align-items:center;gap:8px 14px}.agerow input[type=range]{flex:1;min-width:160px;max-width:340px;accent-color:var(--trait)}
+.agerow output{font:700 26px/1 var(--head);min-width:2ch;text-align:right;font-variant-numeric:tabular-nums}
+.camp{display:flex;gap:6px;align-items:center}.camp input{width:6.5ch}.camp #camp-y{width:10ch}
+[hidden]{display:none!important}
+.instr{max-width:68ch}
+.begin{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px}
+.bcard{background:var(--card);border:1px solid var(--hair);padding:10px 12px;font-size:14px;display:flex;flex-direction:column;gap:8px;align-items:flex-start;min-width:0}
+.scroll{overflow-x:auto}
+table{border-collapse:collapse;width:100%}
+th{font:600 16.5px var(--head);text-align:left;padding:4px 10px;border-bottom:2px solid var(--ink);white-space:nowrap}
+td{padding:6px 10px;font-size:14.5px;vertical-align:middle}
+tbody tr:nth-child(odd){background:var(--panel)}
+td.act{white-space:nowrap;text-align:right}td.act>*{margin-left:16px;vertical-align:middle}td.act>*:first-child{margin-left:0}
+.dlrow{display:flex;flex-wrap:wrap;align-items:center;gap:6px 10px;margin-top:8px}.dlrow .btn{font-size:15.5px;padding:4px 12px}
+td b{font:700 17.5px var(--head)}
+.err{color:var(--bad-t);font-weight:700;font-size:14px}
+</style>
+</head>
+<body>
+
+<div class="banner">
+  <span class="name">Broken Hârn</span><span class="sect" id="sect"></span>
+  <span class="links">
+    <button class="blink" type="button" data-act="chars" id="lnk-chars">Characters</button>
+    <details class="gm"><summary class="blink">GM settings</summary>
+      <div class="pop">
+        <b>Unlock folk</b>
+        <label><input type="checkbox" id="gm-sindarin" data-gm="Sindarin"> Sindarin</label>
+        <label><input type="checkbox" id="gm-khuzdul" data-gm="Khuzdul"> Khuzdul</label>
+        <b style="margin-top:6px">Campaign start</b>
+        <span class="hint">Ages are counted as of this date.</span>
+        <div class="camp"><input class="text" type="number" id="camp-d" data-camp="d" min="1" max="30" aria-label="Day"><select id="camp-m" data-camp="m" aria-label="Month"></select><input class="text" type="number" id="camp-y" data-camp="y" min="1" max="9999" aria-label="Year"><span>TR</span></div>
+      </div>
+    </details>
+  </span>
+</div>
+<input type="file" id="filein" accept=".md,.markdown,.txt,text/markdown,text/plain" hidden>
+<div class="app">
+  <div id="start" class="panel" hidden></div>
+  <nav class="stepnav" id="steps" aria-label="Character creation steps"></nav>
+  <div class="notice" id="banner" hidden><span>This is an example origin so you can see a filled roll. Nothing here is yours yet.</span><button class="btn" data-act="fresh">Start fresh</button></div>
+  <div class="cols" id="cols">
+    <main>
+      <section class="panel" id="panel"></section>
+    </main>
+    <aside>
+      <div>
+        <div class="eyebrow" id="eyebrow">Character roll · 720 TR</div>
+        <input id="name" aria-label="Character name" placeholder="Name your character">
+        <div id="savenote" class="savenote" role="status"></div>
+        <div class="dlrow"><button class="btn" type="button" data-act="dl">Download .md</button><span id="dlnote" class="hint" role="status"></span></div>
+      </div>
+      <div id="sheet" style="display:flex;flex-direction:column;gap:14px"></div>
+    </aside>
+  </div>
+  <details class="calls">
+    <summary>Rules this prototype applies</summary>
+    <p class="hint">Spellweavers use the rulebook's rules unchanged. A Shek-Pvar convocation is a house within the order and changes no numbers. An Origin roll skips three events that need noble birth and, for a Slave or Serf, five that need a free family. When an Origin event implies a different parentage, you choose whether to change it or explain both. Each sunsign gives +10 to one skill and +5 to two more. Divinity belongs to no sign, since piety comes from the gods and not the stars. Tribal tongues are named for the nation: ten are Jarin dialects, six are Hârnic dialects, the Kamaki speak Kamakin and the Solori an Azeri tongue. A dialect speaker understands the parent language at 20 less. A family whose tongue is a dialect of the language you were raised in costs nothing in language; only the two -wises split. Gargun is offered as a second language to the Ymodi, Pagaelin, Tulwyn, Equani and Kabloqui.</p>
+  </details>
+</div>
+
+<script>
+const $=s=>document.querySelector(s);
+const rnd=n=>Math.floor(Math.random()*n)+1;
+const dice=(n,s)=>{let t=0;for(let i=0;i<n;i++)t+=rnd(s);return t};
+const parse=s=>s.split(',').map(p=>{const[a,w]=p.split(':');return{name:a,w:+w}});
+function pickW(items){const tot=items.reduce((a,i)=>a+i.w,0);let r=Math.random()*tot;for(const i of items){if((r-=i.w)<0)return i}return items[items.length-1]}
+
+/* ---------- data ---------- */
+const NATIONS=[
+ {id:'tribal',name:'Tribal nations',w:18,human:'Tribal',places:parse('Adaenum:5,Anoa:4,Bujoc:3,Chelni:4,Chymak:1,Equani:6,Gozyda:4,Hodiri:16,Kabloqui:1,Kamaki:2,Kath:2,Kubora:8,Pagaelin:12,Solori:3,Taelda:11,Tulwyn:10,Urdu:6,Ymodi:2')},
+ {id:'chybisa',name:'Chybisa',w:1,human:'Feudal',places:parse('Burzyn:40,Geda:20,Lerenil:15,Onden:25')},
+ {id:'kaldor',name:'Kaldor',w:13,human:'Feudal',places:parse('Athelren:2,Baseta:2,Bidow:2,Esenor:3,Fisen:2,Gardiren:6,Getha:1,Heru:2,Hutop:2,Jedes:1,Kiban:8,Kobing:2,Kolorn:3,Kyg:2,Minarsas:8,Nenda:2,Nubeth:2,Olokand:6,Pendeth:2,Qualdris:7,Querina:5,Setrew:2,Shebra:3,Sirendel:2,Tashal:11,Ternua:3,Tonot:2,Uldien:3,Yeged:2,Zoben:2')},
+ {id:'kanday',name:'Kanday',w:12,human:'Feudal',places:parse('Aleath:16,Avertu:2,Chison:2,Cuton:2,Dunir:1,Dyrisa:8,Edino:2,Ewen:5,Findumon:2,Gimon:1,Hebon:1,Heroth:4,Ibonost:1,Imiden:4,Kedis:6,Menekod:5,Minilaous:1,Ohetis:3,Pinide:2,Quivum:4,Sarkum:6,Selvos:7,Sepire:6,Sumon:6,Torthan:1,Zerien:2')},
+ {id:'melderyn',name:'Melderyn',w:20,human:'Feudal',places:parse('Cherafir:10,Chyrefal:10,Cosyuh:1,Cundras:1,Cupeth:4,Fosumo:1,Glenoth:1,Gosus:1,Gythrun:3,Harden:5,Huvos:4,Jetust:3,Jothet:2,Karveth:5,Laket:2,Lyf:2,Menio:2,Moque:2,Nurisel:5,Ontur:3,Parios:2,Parnam:3,Racyn:1,Ramere:3,Shenap:4,Thay:13,Wharo:3,Yael:2,Zuilos:2')},
+ {id:'orbaal',name:'Orbaal',w:10,human:'Viking',places:parse('Aaldem:2,Antir:2,Arathel:3,Arone:2,Asax:2,Daasen:2,Ebein:2,Fjaga:2,Geldeheim:6,Gwaeryn:2,Gyfyn:2,Hjael:2,Keiren:4,Kjen:2,Leriel:4,Lorkin:5,Marby:5,Mul:2,Pethwys:2,Pjagel:2,Pled:3,Pyberg:2,Quiam:2,Quimen:2,Sherwyn:3,Shese:2,Shien:2,Tandir:4,Tawheim:2,Teryff:2,Thoen:2,Thrand:2,Thursa:2,Utera:2,Vaagel:4,Vold:2,Wethom:2,Zuden:3,Zynholm:2')},
+ {id:'rethem',name:'Rethem',w:12,human:'Feudal',places:parse('Arketh:2,Bedenes:2,Bekar:3,Chakta:5,Dasen:3,Golotha:7,Henwe:2,Hyen:3,Ithiko:4,Ithius:4,Menekai:5,Norienar:5,Omnis:4,Phira:5,Quiso:4,Quste:3,Senun:6,Shostim:5,Techen:7,Themeson:6,Thiri:4,Tormau:3,Weseda:2,Winen:4,Zaza:2')},
+ {id:'tharda',name:'Tharda',w:13,human:'Imperial',places:parse('Bythe:3,Cestor:3,Chenad:3,Coranan:15,Dumon:1,Eidru:5,Esuron:3,Firis:5,Fobin:4,Geminost:2,Geshtei:7,Hediro:3,Hibut:5,Imrium:5,Kuseme:5,Moleryn:3,Noru:4,Ostenor:2,Parnan:6,Peden:2,Shiran:9,Stimos:1,Telen:4')},
+ {id:'azadmere',name:'Azadmere',w:1,human:'Feudal',places:parse('Azadmere:15,Habe:85')},
+ {id:'evael',name:'Evael',w:0,human:'',places:parse('Elshavel:5,Ulfshafen:5')},
+ {id:'other',name:'Independent holdings',w:0,human:'Feudal',places:parse('Noron:3,Trobridge:2')}
+];
+const NAT=Object.fromEntries(NATIONS.map(n=>[n.id,n]));
+const CITIES=['Tashal','Aleath','Cherafir','Thay','Golotha','Coranan','Shiran','Azadmere','Elshavel'];
+const CI={Tribal:0,Viking:1,Feudal:2,Imperial:3,Sindarin:4,Khuzan:5};
+const CLASSES={slave:'Slave',serf:'Serf',unguilded:'Unguilded',guilded:'Guilded',noble:'Noble'};
+const CLASSW={
+ Tribal:{slave:10,unguilded:89,noble:1},
+ Viking:{slave:15,serf:65,unguilded:5,guilded:13,noble:2},
+ Feudal:{slave:15,serf:55,unguilded:23,guilded:5,noble:2},
+ Imperial:{slave:25,unguilded:65,guilded:8,noble:2},
+ Khuzan:{unguilded:15,guilded:83,noble:2},
+ Sindarin:{unguilded:70,guilded:29,noble:1}};
+/* [name, urban %, weights for Tribal, Viking, Feudal, Imperial, Sindarin, Khuzan] */
+const OCC={
+ slave:[['Farmer',0,[20,80,80,75,0,0]],['Herdsman',0,[60,17,15,15,0,0]],['Servant/Cook',20,[20,3,5,8,0,0]],['Gladiator/Guard',20,[0,0,0,2,0,0]]],
+ serf:[['Farmer',0,[0,0,80,0,0,0]],['Herdsman',0,[0,0,15,0,0,0]],['Servant/Cook',0,[0,0,5,0,0,0]]],
+ unguilded:[['Animal Trainer',75,[0,1,1,2,1,1]],['Beggar/Scavenger',95,[0,2,4,4,0,0]],['Cartographer/Artist',90,[0,1,1,1,2,2]],['Cleric/Shaman',65,[3,2,2,2,1,1]],['Cook/Servant',80,[0,4,4,4,4,15]],['Farmer (freehold)',0,[0,45,48,25,0,0]],['Fisherman',50,[17,10,6,6,11,0]],['Gladiator',95,[0,0,1,3,0,0]],['Herdsman',0,[20,5,2,7,0,0]],['Hunter/Trapper',10,[60,6,3,3,38,2]],['Laborer/Longshoreman',95,[0,7,8,8,0,12]],['Prostitute/Pimp',75,[0,2,2,4,0,0]],['Ratter',70,[0,2,2,2,0,0]],['Sage/Tutor',80,[0,1,1,4,0,24]],['Scribe',90,[0,2,2,5,7,7]],['Soldier: Legionnaire/Guardsman',90,[0,1,1,10,10,33]],['Soldier: Mercenary/Viking',70,[0,6,2,5,21,0]],['Soldier: Yeoman',0,[0,0,7,0,0,0]],['Teamster',90,[0,1,1,2,1,1]],['Thatcher',5,[0,1,1,1,1,0]],['Toymaker',75,[0,1,1,2,3,2]]],
+ guilded:[['Alchemist',90,[0,1,1,1,2,1]],['Apothecary',90,[0,1,1,1,2,1]],['Astrologer',90,[0,1,1,1,1,1]],['Chandler',95,[0,2,2,2,1,3]],['Charcoaler',10,[0,3,2,2,1,1]],['Clothier',95,[0,3,4,3,5,4]],['Courtesan',99,[0,1,1,1,0,0]],['Embalmer',95,[0,2,2,2,1,1]],['Glassworker',90,[0,2,2,2,12,1]],['Harper/Skald',80,[0,5,3,3,10,4]],['Hideworker',40,[0,6,7,6,10,1]],['Innkeeper',35,[0,4,5,4,4,2]],['Jeweler',99,[0,2,2,2,9,10]],['Lexigrapher',95,[0,2,2,2,4,3]],['Litigant',95,[0,1,1,1,0,1]],['Locksmith',95,[0,1,1,1,1,2]],['Mage (Shek-Pvar)',90,[0,1,1,2,5,1]],['Mason',60,[0,2,3,3,6,10]],['Mercantyler',90,[0,8,6,6,2,13]],['Metalsmith',15,[0,9,9,9,4,8]],['Miller/Millwright',10,[0,7,8,8,1,1]],['Miner',1,[0,3,3,3,1,15]],['Ostler',75,[0,1,2,3,1,0]],['Perfumer',95,[0,2,2,3,1,1]],['Physician',75,[0,1,1,1,1,1]],['Pilot',95,[0,2,1,1,1,0]],['Potter',85,[0,4,4,4,1,1]],['Salter',30,[0,2,2,2,1,1]],['Seaman',95,[0,4,3,3,1,0]],['Shipwright',90,[0,1,1,1,1,0]],['Tentmaker',95,[0,1,1,1,1,1]],['Thespian',70,[0,1,1,1,1,1]],['Thief (Lia-Kavair)',75,[0,2,3,3,1,1]],['Timberwright',10,[0,2,2,2,1,1]],['Weaponcrafter',75,[0,2,2,2,2,7]],['Woodcrafter',30,[0,8,8,8,4,1]]],
+ noble:[['Cleric (noble)',65,[0,0,5,5,0,0]],['Herald',80,[0,3,5,5,3,2]],['Bailiff (manor)',5,[0,0,5,28,0,0]],['Chieftain',0,[100,0,0,0,0,0]],['Knight Bachelor/Lady',50,[0,0,70,0,0,0]],['Knight/Patrician/Lady',0,[0,97,15,62,97,98]]]
+};
+const WEALTH={serf:[40,80,160],unguilded:[60,120,240],guilded:[90,180,360],noble:[600,1200,2400]};
+const STATUS={slave:0,serf:1,unguilded:1,guilded:2,noble:4};
+const CAT={
+ Combat:['Dodge','Melee: Light','Melee: Medium','Melee: Heavy','Might','Missile','Thrown'],
+ Adventuring:['Athletics','Endurance','Locks & Traps','Perception','Ride','Sail/Boat','Sleight of Hand','Stealth','Survival','Track','Willpower'],
+ Social:['Deceive','Insight','Inspire','Intimidate','Perform','Persuade','Protocol','Seduce','Wit'],
+ Lore:['Ancient Lore','Arcana','Commerce','Common Lore','Craft: Artistic','Craft: Practical','Divinity','Heal','Naturewise','Streetwise']};
+const c10={id:'c10',amt:10,n:2,from:['Combat'],label:'Two Combat skills'};
+const rs={id:'rs',amt:10,n:1,opts:['Ride','Sail/Boat'],label:'Ride or Sail/Boat'};
+const ad={id:'ad',amt:10,n:1,opts:['Arcana','Divinity'],label:'Arcana or Divinity'};
+const eAL={id:'e1',ex:true,n:1,from:['Adventuring','Lore'],label:'Expertise in one Adventuring or Lore skill'};
+const BG={
+ urban:{name:'Civilized, Urban',blurb:'Raised in a town among crowded streets, trades and law.',f20:['Common Lore'],f10:['Perception','Commerce','Heal','Streetwise'],fex:[],
+  slots:[{id:'s20',amt:20,n:1,from:['Social'],label:'One Social skill'},c10,{id:'s10',amt:10,n:4,from:['Social'],not:'s20',label:'Four more Social skills'},ad,{id:'cr',amt:10,n:1,opts:['Craft: Practical','Craft: Artistic'],label:'One Craft'},{id:'e1',ex:true,n:1,from:['Adventuring'],label:'Expertise in one Adventuring skill'},{id:'e2',ex:true,n:1,from:['Lore'],label:'Expertise in one Lore skill'}]},
+ rural:{name:'Civilized, Rural',blurb:'Raised on a manor, a farm or in a crafter\'s household, tied to a lord and the land.',f20:['Common Lore','Craft: Practical'],f10:['Athletics','Endurance','Perception','Survival','Heal','Naturewise'],fex:['Naturewise'],
+  slots:[c10,rs,{id:'s10',amt:10,n:2,from:['Social'],label:'Two Social skills'},ad,eAL]},
+ barbarian:{name:'Barbarian',blurb:'Raised among a tribe beyond the kingdoms, bound to kin and country.',f20:['Common Lore','Survival'],f10:['Athletics','Endurance','Perception','Stealth','Track','Divinity','Heal','Naturewise'],fex:['Survival'],
+  slots:[c10,rs,{id:'s10',amt:10,n:1,from:['Social'],label:'One Social skill'},eAL]},
+ wanderer:{name:'Wanderer',blurb:'Raised on the move, with no homeland to claim.',f20:['Naturewise'],f10:['Athletics','Endurance','Perception','Survival','Track','Common Lore','Craft: Practical','Divinity','Heal'],fex:['Common Lore'],lang40:true,
+  slots:[{id:'rs20',amt:20,n:1,opts:['Ride','Sail/Boat'],label:'Ride or Sail/Boat'},c10,{id:'s10',amt:10,n:1,from:['Social'],label:'One Social skill'},eAL]}
+};
+const LANGS=['Hârnic','Jarin','Ivinian','Khuzan','Sindarin'];
+const MONTHS=['Nuzyael','Peonu','Kelen','Nolus','Larane','Agrazhar','Azura','Halane','Savor','Ilvin','Navek','Morgat'];
+const SIGNS=[['Ulandus',4],['Aralius',34],['Feniri',63],['Ahnu',94],['Angberelius',125],['Nadai',157],['Hirin',186],['Tarael',215],['Tai',244],['Skorus',273],['Masara',303],['Lado',332]];
+const PARENT=parse('Raised by both parents:30,Raised by mother; father absent:5,Raised by father; mother absent:2.5,Father dead:2.5,Father dead; mother remarried:2.5,Mother dead:2.5,Mother dead; father remarried:5,Fostered with another family:20,Adopted:5,Bastard; acknowledged by father:5,Bastard; unacknowledged:10,Orphan; fostered:8,Orphan; adopted:1.5,Orphan; living alone:0.5');
+const STANDING=['Outcast','Unpopular','Average','Popular','Favorite'];
+const TRAVEL=[[3,'Home','has not gone much beyond the birthplace'],[6,'Close','has been within five leagues of home'],[9,'Near','has visited places within 25 leagues, such as a market town'],[12,'Near Realm','has travelled across the realm, to its capital or border'],[15,'Near Region','has visited neighbouring kingdoms'],[18,'Far Region','has travelled far by ship or long road'],[99,'Remote Region','has seen places most people have never heard of']];
+const STEPS=['Folk','Birthplace','Station','Upbringing','Tongues','Kin & travel','Concept','Ability scores','Life events','Career','Rounding out','Attributes','Traits & goals','Gear'];
+const ORDER=[6,0,1,2,3,4,5,7,8,9,10,11,13,12];
+const parseLife=t=>t.split('\n').map(l=>{const[lo,name,text,std,sw,gb,tag]=l.split(';');return{lo:+lo,name,text,std,sw:sw||'',gb:gb||'',tag:tag||''}}).map((e,i,a)=>({...e,hi:i<a.length-1?a[i+1].lo-1:100}));
+const LIFE={origin:parseLife(`1;Child of Revolt;Your noble family was overthrown by its own commoners, and you escaped.;Protocol|Common Lore;;;noble
+3;Legacy of Invention;Guild artisans whose new method angered their guild left you unfinished work.;Craft: Practical|Commerce;;;free
+5;Tower of Secrets;Your father was raised to petty nobility for reasons he never explained.;Perception|~Noble-wise|$;;;noble
+7;Faithful Companion;Your family bred or handled animals, and sold the one you loved.;Ride|Track
+9;Servant to Nobility;You grew up serving a noble house and befriended one of its children.;Inspire|Protocol
+11;Outside the Law;Raised in a bandit camp, you had to prove your worth every day.;Athletics|Intimidate
+13;Smuggler's Start;Your family ran contraband until one stolen prize got them caught.;Sleight of Hand|Stealth
+15;Tied to the Streets;An orphan in a large town, taken in by a group with a secret.;Streetwise|Deceive;;;orphan
+17;Marked at Birth;You were born with a strange mark that some say resembles a rune.;Arcana|Divinity;B?
+19;River Rat;Your family traded along the Kald, the Thard or another river, a step ahead of the law.;Sail/Boat|Persuade
+21;Fated From Birth;Family legend says the firstborn die young. Each death looked like mischance. The only clue is an heirloom.;Ancient Lore|Willpower
+23;Far Trader;Your family travelled with a wealthy caravan or trading fleet.;Sail/Boat|Commerce;;;free
+25;Raised by a Sect;Given to a secluded religious order and entrusted with something sacred.;Divinity|Ancient Lore
+27;Cursed Inheritance;You carry an heirloom with a troubling reputation.;Willpower|Arcana|$
+29;Imprisoned;You spent your early years in captivity.;Locks & Traps|Intimidate
+31;Bastard of High Blood;The illegitimate child of someone powerful, raised in secret.;Protocol|~Noble-wise|$;;;bastard
+33;Raised in the Wild;You grew up at the edge of settled land or among nomads.;Naturewise|Survival
+35;Witness;A man preached against Morgath in the market and was dead by nightfall. No one speaks of it.;Divinity|Insight
+37;Orphan of War;Lost or abandoned in a war, and taught to survive by a stranger.;Endurance|Heal;;;orphan
+39;Apprentice of the Esoteric;Raised by a recluse of the Guild of Arcane Lore.;Arcana|Craft: Practical;B?
+41;Far Traveler;War, famine or disaster drove your family far from home.;Sail/Boat|Survival
+43;Heretic's Offspring;Your mother believed a god had chosen her. The church called it heresy.;Divinity|Willpower;;G
+45;Shipwrecked;The sole survivor of the wreck that took your family.;Survival|Sail/Boat;;;orphan
+47;Apprenticed;An odd artisan took you on, and you left before your training ended.;Craft: Practical|Craft: Artistic
+49;Haunted Home;Your family's house was troubled by things no one else would believe.;Insight|Perception
+51;Diplomatic Upbringing;Your family were envoys between warring factions.;Protocol|Insight;;;free
+53;Child of the Pit;Dying, you were carried to Araka-Kalai, where your father bargained with the Ilvirans. He never came back. What small mutation appeared as you recovered?;Survival|~Ivashu-wise
+55;Raised by a Sage;Brought up by someone who sought to decipher the world's secrets.;Common Lore|Ancient Lore;B?
+57;Tavern Kid;Your family kept a busy tavern.;Persuade|Wit;;;free
+59;Beast-Marked;You survived a wild animal or worse as a child, and carry the scar.;Dodge|Naturewise
+61;Crowd Pleaser;You were taught to work the crowd at markets and fairs.;Perform|Sleight of Hand
+63;Rising Star;Hailed as a prodigy, until someone tried to exploit or ruin you.;*Combat|Craft: Practical|Craft: Artistic
+65;Revenge Sworn;Someone ruined your parents, and you know who to blame.;Track|Perception
+67;Secret Heritage;Your parents were of noble birth and hid it from everyone.;Protocol|~Noble-wise|$
+69;Secret Sanctuary;As a child you had a hidden refuge in a ruin or a cave.;Stealth|Naturewise
+71;Little Thief;Caught stealing as a child, and punished or forgiven.;Sleight of Hand|Stealth
+73;Found Family;Raised by a band of outcasts in the streets or the wilds.;Streetwise|Naturewise;;;orphan
+75;Scion of Glory;A parent was a celebrated hero, and you live in that shadow.;Inspire|Athletics|$
+77;Blightmarked;Your family was blamed for spreading a sickness you never caught.;Heal|Insight
+79;Soldier's Child;A parent served under arms and was marked by it.;*Combat|Ride
+81;Last Words;Your eldest kin died before telling you the family secret, leaving only a rhyme.;Perform|Ancient Lore
+83;Merchant's Life;Your family were travelling peddlers.;Persuade|Commerce;;;free
+85;Village Protector;You helped defend your community from a threat when young.;Missile|Insight|$
+87;Fateful Rescue;You saved someone of rank from injury or death.;Athletics|Protocol|$
+89;Wild Child;Raised in the wilderness by a stern, secretive aunt.;Survival|Perception;;;orphan
+91;Student;You began your studies young under a scholar.;Ancient Lore|Common Lore
+93;Child of Privilege;Born to the ruling class, you fled when the people rose against a corrupt leader.;Protocol|Common Lore;;;noble
+95;Storykeeper;Raised among travelling minstrels and storytellers.;Perform|Wit
+97;Home of Ill Repute;An older sibling raised you in the pleasure quarter of a large town.;Craft: Artistic|Seduce;;;orphan
+99;Oathsworn;An ancestor's vow has passed to you.;Willpower|Inspire`),youth:parseLife(`1;Left for Dead;You were laid out for burial and woke. Someone had refused to give up on you.;Endurance|Heal
+3;Itinerant Actor;You toured with a theatre troupe until you had to flee.;Perform|Streetwise
+5;Dogsbody;You served aboard an Ivinian raider or a pirate ship, and its captain trusted you with a secret.;Sail/Boat|~Navigation-wise
+7;The Swarm;Gargun came down on your village. You were spared, and others were carried off.;Survival|~Gargun-wise
+9;Unexpected Stand-In;A servant to minstrels, you took a performer's place before a lord.;Perform|Wit
+11;Ever a Squire;You squired for a knight in wartime and were never knighted.;*Combat|Ride
+13;Tough Character;Where you grew up you were known for your physical presence.;Athletics|Intimidate
+15;Grifter;You learned early to spot and fleece the gullible.;Sleight of Hand|Insight
+17;Hunted;Someone close to you belonged to a secret society, and it has pursued you since.;Stealth|Persuade
+19;Shady Trade;You dealt in contraband and learned to dodge the authorities.;Streetwise|Commerce
+21;Artist;You made art for a wealthy patron, and left on bad terms.;Craft: Artistic|Protocol
+23;Sanguine Secret;Your master armorer secretly worked something like blood into a stranger's armor. You hold a piece of it.;Craft: Practical|Insight
+25;Gaoler;You worked as a guard in a prison or dungeon.;Locks & Traps|Intimidate
+27;River Run;Ivinian raiders attacked your town, and you got others out by the river.;Sail/Boat|Persuade
+29;By Wits Alone;You served someone of means as jester, clown or adviser.;Perform|Wit
+31;Terrible Vision;A vision you took to be from the gods terrified you.;Divinity|Inspire;;G
+33;Chantry-Raised;You studied under a Shek-Pvar master who then vanished, leaving you something others want.;Arcana|Ancient Lore;T?
+35;Rebel Arisen;An uprising broke your community.;Endurance|Stealth
+37;Young Recruit;Conscripted young into a local militia.;*Combat|Ride
+39;Champion;You won a contest at a fair or a noble court.;Athletics|Wit|$
+41;Labyrinth-Lost;You were lost for weeks in a forest, ruin or catacomb.;Willpower|Ancient Lore;T:Earth
+43;Healer's Apprentice;You assisted a healer through a deadly outbreak.;Inspire|Heal
+45;Thrilling Pursuit;You hunted for a living and once chased a prized quarry.;Missile|Survival
+47;Saboteur's Sidekick;A saboteur taught you weak points and traps.;Locks & Traps|Perception
+49;Harsh Migration;You guided your people through wilderness to refuge.;Survival|Track
+51;Forbidden Lesson;Your master left you alone with something you were told not to touch. It nearly got loose.;Willpower|Arcana;B:Control
+53;Dealmaker;You were known for brokering deals and settling disputes in the market.;Common Lore|Commerce|$
+55;Courtly Spy;A page or servant in a noble house, gathering secrets for its rival.;Deceive|Protocol
+57;Honey-Trap Hustler;You ran cons that played on greed, vanity and desire.;Streetwise|Seduce
+59;Amorous Adventure;Something you made won you an admirer, and a romance that lingers.;Seduce|Craft: Artistic
+61;Sacred Grove;You tended a grove or forest shrine and broke a taboo there.;Naturewise|Divinity;;G
+63;Tricky Tinker;You became adept at small mechanical devices.;Sleight of Hand|Craft: Practical
+65;Land of Legend;You grew up beside a wild place thick with old stories.;Ancient Lore|Naturewise
+67;Rite of Passage;You completed your people's rite of passage, at a cost.;Athletics|Insight;T?
+69;Trial of Strength;You faced a ceremonial ordeal of endurance or arms.;*Melee|Endurance
+71;Eagle Eye;You were respected for spotting threats or game before anyone else.;Missile|Perception
+73;Narrow Escape;A theft went wrong and you slipped away.;Dodge|Stealth
+75;Range Rider;You roamed open country and once tracked down a fugitive.;Ride|Track
+77;Vigilant Ally;Stranded in the wilds, you kept an injured companion alive.;Survival|Heal
+79;Spiritual Path;You joined a pilgrimage and lifted the others' spirits.;Divinity|Inspire;;G
+81;Duel of Words;You held your ground in argument against someone far above you.;Willpower|Wit
+83;Master's Plan;Your master left you to finish a critical piece of work.;Locks & Traps|Craft: Practical|$
+85;Merchant Mariner;You crewed a trading vessel and learned to bargain.;Sail/Boat|Commerce
+87;Magician;You earned a living with illusions and trickery. Or was it trickery?;Sleight of Hand|Perform;B:Change
+89;Counterfeiter;You forged an artwork, a document or coin, and were found out.;Deceive|Craft: Artistic
+91;Enforcer;You collected debts and settled scores for a criminal gang.;Streetwise|Intimidate
+93;Firebrand;You rallied your community in a crisis.;Inspire|Common Lore
+95;Courtly Affair;A romance at court, pursued alongside your ambitions.;Protocol|Seduce
+97;Strange Flora;You experimented with a plant of strange properties.;Heal|Naturewise;T:Plants
+99;Glimpse Beyond;In meditation or turmoil you touched something greater.;Perception|Insight;B:Witness`),recent:parseLife(`1;Desperate Rescue;You fought off bandits bare-handed to save a stranger.;Perception|Might
+3;Bitter Victory;You won a lord's archery contest and were called a cheat.;Seduce|Missile
+5;Arena Contender;You fought in a brutal public contest.;Athletics|Intimidate|$
+7;Gambler's Touch;You caught a cheat at dice, or out-cheated one.;Sleight of Hand|Insight
+9;Back From the Dead;You saw your best friend die. Last year you saw him again, and he ran.;Track|Heal
+11;Survivor;You were trapped for days in a mountain crevasse.;Thrown|Survival
+13;Revenue Run-In;You collected taxes, or dodged them.;Dodge|Commerce
+15;Jailbreak;You planned an escape from a guarded place, or were swept into one.;Locks & Traps|Intimidate
+17;Healer's Friend;On campaign you befriended a skilled healer.;Heal|Protocol
+19;Pirate's Gambit;Captured by pirates, you talked your way into the crew.;Sail/Boat|Persuade
+21;Forced Labor;You were conscripted to build a powerful man's great work.;Endurance|~Architecture-wise
+23;Broken Promise;You broke an oath you did not want to break.;Willpower|Deceive
+25;Cavalry Charge;You rode at the front of a mounted charge.;*Melee|Ride
+27;Whisper Campaign;You spread word of hope or rebellion under guard.;Stealth|Inspire
+29;Evangelist;You spread your faith's teachings on a mission.;Perform|Divinity;;G
+31;Clever Ingenuity;In a siege you built or mended a vital engine.;Craft: Practical|Common Lore
+33;Artist of the Wild;You made a shrine or memorial from what the wild provided.;Craft: Artistic|Naturewise;T:Earth
+35;The Loose Beast;Something escaped in the city, and you were hired to bring it in quietly.;Streetwise|Persuade;B:Control
+37;Storm-Runner;Chasing word of a flying beast, you were caught in a storm.;Dodge|Survival;T:Air
+39;Stalwart Defender;You held your ground when others broke.;*Melee|Willpower
+41;Stalker;You tracked an elusive target for days before striking.;Missile|Track
+43;Ancient Mystery;You found weathered glyphs in a ruin and learned their meaning.;Perception|Ancient Lore
+45;Informant;You came by valuable word about the local underworld.;Streetwise|Wit
+47;Infiltrator;You slipped into a guarded place as someone else.;Stealth|Deceive
+49;Fortune Dealer;You read the stars for wealthy clients, and one took it to heart.;Arcana|Commerce
+51;Challenging Climb;You scaled a treacherous ridge.;Athletics|Naturewise
+53;Sacred Vigil;You stayed awake for days in prayer and saw a vision.;Endurance|Divinity;;G
+55;Lover's Lock;You charmed your way close to something valuable and took it.;Locks & Traps|Seduce
+57;Memorial Tribute;You made a tribute to someone fallen, and it moved the crowd.;Inspire|Craft: Artistic
+59;Battered Vessel;You helped keep a storm-damaged ship afloat.;Sail/Boat|Craft: Practical
+61;Courier;You carried a vital message to someone in authority.;Ride|Protocol
+63;Smuggled Goods;You moved contraband through a patrolled district.;Sleight of Hand|Streetwise
+65;Campfire Tales;On a hard journey your stories kept everyone going.;Survival|Perform
+67;Secret History;You pieced together a community's hidden past.;Insight|Common Lore
+69;Battlefield Medic;You tended the wounded in the chaos of battle.;Willpower|Heal
+71;Deal of a Lifetime;You closed a deal others thought impossible.;Persuade|Commerce
+73;Improvised Repair;Your weapon broke mid-fight and you fixed it on the spot.;*Melee|Craft: Practical
+75;Heroic Rescue;You saved someone by a feat of strength or daring.;Athletics|Inspire|$
+77;Holy Revision;You found a different meaning in a sacred teaching.;Perception|Divinity;;G
+79;Masked Entertainer;You performed in disguise, and someone wants to unmask you.;Stealth|Perform
+81;Path to Ruin;An overgrown trail led you to an abandoned place and a clue.;Track|Ancient Lore
+83;Close Bond;Taming an unruly mount, you came to see through its eyes.;Ride|Insight
+85;Trial of the Wild;In a lean season you foraged to keep people alive.;Survival|Naturewise
+87;Agent of Diplomacy;You served as envoy aboard a ship on a delicate mission.;Sail/Boat|Protocol
+89;Clever Theft;With banter and skill you opened a lock under its guardian's nose.;Locks & Traps|Wit
+91;Reluctant Revelation;You drew a dangerous truth from someone unwilling.;Deceive|Seduce;T:Thought
+93;Waycutter;You forced a path through an obstacle or an enemy.;Might|Endurance;B:Destroy
+95;Summoner's Call;You or another conjured a powerful entity to gain the upper hand.;Intimidate|Arcana;T:Spheres
+97;Forbidden Knowledge;You found an old tome with disturbing insights.;Arcana|Ancient Lore;B?
+99;Haunted;A restless spirit haunts you, waking and sleeping.;Arcana+~Undead-wise
+100;Forgotten Past;You woke with no memory beyond your other two events and a fight on a dock.;*Any`)};
+const LIFET=[['origin','Origin','Where you came from.'],['youth','Youth','What shaped you growing up.'],['recent','Recent','What happened not long ago.']];
+const BINDS=['Change','Conjure','Control','Destroy','Witness'];const STRANDS=['Air','Beasts','Body','Earth','Fire','Plants','Spheres','Spirit','Thought','Water'];
+const ABIL={
+ Strength:{skills:['Melee: Medium','Melee: Heavy','Thrown','Athletics','Sail/Boat','Intimidate'],talents:['Powerful Blow','Sweeping Attack','Strong Back'],desc:['Strong','Big','Brutish','Powerful','Muscled']},
+ Dexterity:{skills:['Dodge','Melee: Light','Missile','Ride','Sleight of Hand','Stealth'],talents:['Combat Awareness','Quick and Quiet','Quickdraw'],desc:['Fast','Nimble','Quick','Dexterous','Agile']},
+ Constitution:{skills:['Might','Endurance','Survival','Track','Craft: Practical'],talents:['Enduring Watch','Not Today, Death','Mettle'],desc:['Tough','Hardy','Enduring','Weathered','Rugged']},
+ Intelligence:{skills:['Locks & Traps','Protocol','Wit','Ancient Lore','Arcana','Commerce','Common Lore'],talents:['Tactician','Travel Planner','Inner Strength'],desc:['Smart','Studied','Intelligent','Astute','Cunning']},
+ Wisdom:{skills:['Perception','Willpower','Insight','Craft: Artistic','Divinity','Heal','Naturewise'],talents:['Combat Awareness','Fearless','I See Your Mind'],desc:['Wise','Perceptive','Discerning','Prudent','Sage']},
+ Charisma:{skills:['Deceive','Inspire','Perform','Persuade','Seduce','Streetwise'],talents:['Feint','Press the Point','Allow Me To Introduce…'],desc:['Charismatic','Magnetic','Alluring','Affable','Natural Leader']}};
+const TAL={'Powerful Blow':'+1 base damage with one weapon type of your choice.','Sweeping Attack':'One Heavy weapon attack at −20 against two or more engaged foes.','Strong Back':'Two more Inventory slots.','Combat Awareness':'+1 Initiative. Can be taken more than once.','Quick and Quiet':'Run while using Stealth.','Quickdraw':'Draw a weapon of one Combat skill without spending an action.','Enduring Watch':'Recover Fatigue as if you had not kept watch.','Not Today, Death':'+2 Death Threshold.','Mettle':'+20 Endurance to resist Body Impairment.','Tactician':'+2 SL on a successful roll to Prepare the Battlefield.','Travel Planner':'Two extra Favor for the party on a successful Travel Lore roll.','Inner Strength':'+1 Max Resolve.','Fearless':'+20 Willpower against fear.','I See Your Mind':'Spend leverage to learn an NPC\'s Special Reaction or Tolerance.','Feint':'A Hard Deceive roll makes your foe defend at −10.','Press the Point':'Once per Social Encounter, use a skill a third time running, or reuse one that just failed.','Allow Me To Introduce…':'+1 Tolerance when you speak first for the group.'};
+const CAREERS=['Warrior','Rogue','Ranger','Speaker','Bard','Civilian','Loremaster','Merchant','Godbound','Spellweaver'];
+const FAITH={
+ Agrik:{of:'war and flame',acolyte:'Agnichâri',senior:'Herúchai',ordained:'Ulânkh (mendicant) or Aperâni (temple master)',order:'Laúmak (soldier) or Harâgki (knight)'},
+ Halea:{of:'wealth and pleasure',acolyte:'Corâthar',ordained:'Shénasenè',order:'Sólithar',note:'Only women are ordained. The Sólithar are the male temple guards and consorts.'},
+ Ilvir:{of:'the Ivashu',acolyte:'Acolyte',ordained:'Temple Priest or Mendicant',note:'Ilvirans have no formal titles. About half the clergy wander as mendicants.'},
+ Larani:{of:'chivalry and battle',acolyte:'Ashésa',ordained:'Matakéa',order:'Méken (soldier), Erána (knight-errant) or Melána (knight)'},
+ Morgath:{of:'chaos and undeath',acolyte:'Lóngai',senior:'Súngai',ordained:'Khála'},
+ Naveh:{of:'deception and murder',acolyte:'Adránatha',ordained:'Dránatha',note:'Návas-Kâra is an honorary title, earned later.'},
+ Peoni:{of:'agriculture and healing',acolyte:'Esoláni',ordained:'Ebaséthè (temple) or Reslâva (mendicant)'},
+ Sarajin:{of:'battle and lust',ordained:'Priest',note:'Sarajinists have no formal titles. Priests are clan members who see to spiritual needs, and skalds fill a similar place.'},
+ "Save-K'nor":{of:'knowledge and reason',acolyte:'Manídar',ordained:'Halíki',note:'Each belongs to one of three orders: the Hýn-Aelôri (scholars), Rydequélyn (jesters) or Shéa-Al-Aécôr (diplomats).'},
+ Siem:{of:'dreams and mysteries',ordained:'Inthiar',note:'Inthiar is the title of a human priest. Among elves and dwarves there are no offices.'}};
+const ROLES={lay:'Lay follower',acolyte:'Acolyte',senior:'Senior acolyte',order:'Fighting order',ordained:'Ordained'};
+const roleAllowed=r=>{if(S.deity!=='Halea'||!S.sex)return true;if(r==='acolyte'||r==='ordained')return S.sex==='Female';if(r==='order')return S.sex==='Male';return true};
+const titleOf=()=>S.role==='lay'||!FAITH[S.deity]?'follower':FAITH[S.deity][S.role];
+function careerLine(){if(S.career==='Godbound'&&S.deity)return'Godbound of '+esc(S.deity)+', '+titleOf()+(S.occ2?' ('+S.occ2.toLowerCase()+')':'');if(S.career==='Spellweaver')return'Spellweaver, Shek-Pvar'+(S.occ2&&S.occ2!=='Unaffiliated'?' of the '+S.occ2+' convocation':'');return S.career+(S.occ2?' ('+S.occ2.toLowerCase()+')':'')}
+function careerExtra(){if(S.career==='Spellweaver')return'<div class="result">Tradition: <b>Shek-Pvar</b>, the dominant school of magic on Hârn. You choose a convocation at the career step.</div>';
+ if(S.career!=='Godbound')return'';const f=FAITH[S.deity];
+ return`<div class="field"><div class="lab"><label for="deity"><b>Which god has chosen you?</b></label></div><select id="deity" data-set="deity"><option value="">Choose…</option>${Object.entries(FAITH).map(([d,v])=>`<option value="${esc(d)}" ${S.deity===d?'selected':''}>${esc(d)}, of ${v.of}</option>`).join('')}</select></div>
+ ${f?`<div class="field"><div class="lab"><span><b>Your place in the faith</b> <span class="hint">sets your title</span></span></div><div class="chips">${Object.keys(ROLES).filter(r=>r==='lay'||f[r]).map(r=>chip(ROLES[r],S.role===r,'role',r,'',!roleAllowed(r)&&S.role!==r)).join('')}</div>
+ <div class="result">Title: <b>${titleOf()}</b>${f.note?'<br>'+f.note:''}</div><span class="hint">Being Godbound means the god favours you. It doesn't require a church office, so a lay follower or a soldier of a fighting order can be one.</span></div>`:''}`}
+
+const TALC={
+ Combat:{'Armor Piercer':'+1 Piercing with one weapon type.','Armor Training':'','Assassin':'+1 SL when attacking with surprise.','Catch and Release':'Catch a thrown weapon and hurl it back.','Cloak and Blade':'Fight with a cloak in place of a shield for +20 to parries.','Close the Distance':'Reach weapons get 10 less against you.','Combat Awareness':'+1 Initiative. Can be taken more than once.','Defender':'+10 to parry with one melee weapon type.','Drop Attack':'After felling a foe, a free attack at −20 on another.','Eagle Eye':'One more zone of range with one ranged weapon type.','Enhanced Defense':'Outnumbering foes gain only +10 against one of your Combat skills.','Fast Runner':'Run two zones as your action.','Fast Skirmisher':'On an Initiative of 20 or more, take a second turn.','Feint':'A Hard Deceive roll makes your foe defend at −10.','Forceful Shot':'Drive Back with a missile weapon for 4 SLs.','Full Quiver':'Re-roll an Ammo Supply Die once per combat.','Hard-Headed':'Head Impairment does not stun you.','Hold the Line':'+1 Toughness when you Stand Your Ground.','Horse Archer':'Mounted ranged attacks are not capped by Ride.','Impaired Fighter, Arm':'Fight on with an impaired arm at −20.','Impaired Fighter, Leg':'Still Run with an impaired leg.','Intimidating Charge':'A successful Charge may force your foe to flee.','Knock-Out Strike':'A surprise blow to the head from behind can knock a target out.','Large Shield Training':'Use a Large shield.','Mounted Charge':'+1 SL on a successful mounted Charge.','On Your Feet':'Rising from Prone in body armor is 10 easier.','Powerful Blow':'+1 base damage with one weapon type of your choice.','Pugilist':'Only −10 with Might against an armed foe.','Quickdraw':'Draw a weapon of one Combat skill without spending an action.','Rapid Fire':'One ranged attack at −20 against two targets in a zone.','Riposte':'After a strong parry, +20 on your next attack against that foe.','Rise a Fighter':'Rise from Prone with Endurance, Might or Willpower.','Run for Your Life!':'+20 Athletics when fleeing melee.','Shield Wall':'Shoulder to shoulder with another, maneuvers against you cost 2 more SL.','Speed-Loader':'Reload a crossbow as part of your action.','Sweeping Attack':'One Heavy weapon attack at −20 against two or more engaged foes.','Tactical Advance':'+20 defense when pressing a withdrawing foe.','Tactical Retreat':'Attack one extra foe who follows your Fighting Withdrawal.','Tactician':'+2 SL on a successful roll to Prepare the Battlefield.','Two-Weapon Fighter':'Gain a Secondary Attack maneuver with a Light weapon in your off hand.'},
+ Adventuring:{'Anti-Venom Blood':'+20 Endurance against poison.','…But It Is Not This Day!':'Once a session, an Inspire roll restores spent Resolve to the party.','Careful Rationing':'As Quartermaster, ignore up to 3 points of Fatigue penalties once a session.','Ease of Passage':'Once a session, each party member takes one less Fatigue after a leg of travel.','Enduring Watch':'Recover Fatigue as if you had not kept watch.','Fearless':'+20 Willpower against fear.','Mettle':'+20 Endurance to resist Body Impairment.','On Through the Night':'As Guide, one forced march a session without the Fatigue penalty.','Quick and Quiet':'Run while using Stealth.','Ride Like the Wind':'A Ride roll at −20 moves you one extra zone.','Ship\'s Gunner':'Support your ship\'s Weapon skill with Sail/Boat.','Spyglass':'As Scout, once a session try to avoid an Event despite a failed roll.','Useful Gear':'Roll the Gear die to take 1 less Fatigue on a Journey.','Watchmaster':'Keeping watch alone costs −10 Perception in place of −30.'},
+ Social:{'Allow Me To Introduce…':'+1 Tolerance when you speak first for the group.','Barbed Tongue':'A verbal jab gives an opponent −20 on their next Social roll.','Blather':'Confuse a target with nonsense for −20 to their next roll.','Entertaining':'Your first Perform or Wit in a Social Encounter costs no Tolerance.','Expressive':'Your Social skills are not capped by the language you speak.','Fiery Words':'Your first Inspire or Intimidate in a Social Encounter costs no Tolerance.','Honeyed Words':'Your first Persuade or Seduce in a Social Encounter costs no Tolerance.','Inspirational':'Inspire Ally grants +20, or +10 to two allies.','I See Your Mind':'Spend leverage to learn an NPC\'s Special Reaction or Tolerance.','Natural Politician':'Your first Deceive or Protocol in a Social Encounter costs no Tolerance.','Press the Point':'Once per Social Encounter, use a skill a third time running, or reuse one that just failed.','Rally the Troops':'+20 to Rally in Mass Combat, and steady forces who break.','Storm the Decks':'Support a boarding crew with your Inspire.','Universal Taunt':'Taunt a foe with any fitting Social skill.'},
+ Lore:{'Alchemist':'Make more doses when brewing alchemical potions.','Barterer':'Haggle a price by 10% per degree of success.','Battlefield Tactics':'Raise friendly units\' Initiative in a battle. Needs Battle-wise.','Beast Tamer':'Tame wild animals with Naturewise.','Bedside Manner':'Add three times your Heal Score to a patient\'s Recovery rolls.','Extra Bandages':'Re-roll a failed Medical Supply roll once a session.','It\'s All in the Mold':'+20 Heal to purge infected wounds.','Kingsfoil':'Once a session, purge an infection while on a Journey.','Lecturer':'Use one of your -wises in a Social Encounter.','Literate':'Read and write any language you speak.','Master Craftsman':'Extra SLs when crafting make a masterwork item.','Natural Remedies':'+10 to find ingredients for natural healing potions and to brew them.','Surgeon':'+20 Heal to perform an amputation.','Travel Planner':'Two extra Favor for the party on a successful Travel Lore roll.','Weapon of Faith':'Pray in combat for Favor. Needs Divinity 70.'}};
+Object.values(TALC).forEach(o=>Object.entries(o).forEach(([k,v])=>{if(!TAL[k])TAL[k]=v}));
+const ARMOR=['Reinforced Leather','Mail','Scale','Plate'];const ROMAN=['I','II','III','IV'];
+ROMAN.forEach((r,i)=>TAL['Armor Training '+r]='Use Combat Maneuvers in body or arm armor as heavy as '+ARMOR[i]+'.');
+TAL.Godbound='Choose a patron deity and gain Piety.';TAL.Experienced='30 extra points for Adventuring, Social or Lore skills when Rounding Out.';
+const CAREER={
+ Warrior:{who:'Mercenaries, knights, archers and anyone who lives by the sword.',cw:[1,20],pool:[80,50,40,30],fixed:['Armor Training III'],picks:[['Combat']],coin:[1,6,5],occ:['Militiaman','Yeoman','Guardsman','Legionnaire','Mercenary','Huscarl','Knight','Gladiator']},
+ Rogue:{who:'Thieves, ruffians, burglars and others who live outside the law.',cw:[1,20],pool:[50,70,50,30],fixed:[],picks:[['Combat','Adventuring','Social'],['Combat','Adventuring','Social']],coin:[1,6,5],occ:['Thief (Lia-Kavair)','Beggar or scavenger','Smuggler','Outlaw']},
+ Ranger:{who:'Hunters and guides of the wild places.',cw:[1,20],pool:[50,80,30,40],fixed:[],picks:[['=On Through the Night','=Armor Training I'],['Combat','Adventuring']],coin:[1,6,5],occ:['Hunter or trapper','Herdsman','Fisherman','Timberwright','Charcoaler','Animal trainer','Tribal hunter']},
+ Speaker:{who:'Envoys, advocates and anyone who sways others with words.',cw:[1,30],pool:[20,40,80,60],fixed:[],picks:[['Social'],['Social']],coin:[2,4,10],occ:['Litigant','Herald','Courtesan','Bailiff','Envoy']},
+ Bard:{who:'Harpers, skalds and players, the carriers of news and old songs.',cw:[2,20],pool:[30,50,70,50],fixed:['Entertaining'],picks:[['Social']],coin:[1,6,5],occ:['Harper','Skald','Thespian']},
+ Civilian:{who:'Guildsmen, crafters, farmers and townsfolk.',cw:[1,20],pool:[50,50,50,50],fixed:['Experienced'],picks:[['Adventuring','Social','Lore']],coin:[2,6,10],occ:['Farmer','Laborer or longshoreman','Cook or servant','Teamster','Thatcher','Toymaker','Chandler','Clothier','Embalmer','Glassworker','Hideworker','Jeweler','Locksmith','Mason','Metalsmith','Miller','Miner','Ostler','Perfumer','Potter','Prostitute','Salter','Shipwright','Tentmaker','Weaponcrafter','Woodcrafter']},
+ Loremaster:{who:'Scholars and the learned, in lore both common and strange.',cw:[3,30],pool:[20,50,50,80],fixed:['Literate'],picks:[['=Lecturer','=Travel Planner']],coin:[2,4,10],occ:['Sage or tutor','Scribe','Cartographer','Alchemist','Apothecary','Astrologer','Lexigrapher','Physician']},
+ Merchant:{who:'Those who trade wares or services for profit.',cw:[1,30],pool:[20,60,60,60],fixed:['Literate'],picks:[['=Barterer','=I See Your Mind']],coin:[3,6,10],occ:['Mercantyler','Innkeeper','Pilot','Seaman','Peddler']},
+ Godbound:{who:'A mortal chosen by a god and granted the right to call on divine aid.',cw:[0,30],pool:[30,40,50,60],fixed:['Godbound'],picks:[['=Literate','Lore']],coin:[1,6,10],occ:['Temple cleric','Mendicant','Fighting order','Lay devotee','Shaman']},
+ Spellweaver:{who:'The Shek-Pvar: those who pull at the threads of the world.',cw:[1,20],pool:[20,20,20,40],fixed:['Patterned in the Weave','Literate'],picks:[],coin:[1,6,5],magic:true,occ:['Lyahvi','Peleahn','Jmorvi','Fyvria','Odivshe','Savorya','Unaffiliated']}};
+TAL['Patterned in the Weave']='Born to the Pattern. +5 Max Resolve and a True Name.';
+const HOUSE={Lyahvi:['air, light and illusion','Aeromancer'],Peleahn:['fire and motion','Firemancer'],Jmorvi:['metal and making','Earthbinder'],Fyvria:['life, growth and decay','Druid'],Odivshe:['water and cold','Wavemaster'],Savorya:['mind and knowledge','Seer'],Unaffiliated:['no house','']};
+const SWT={Aeromancer:[['Conjure','Control'],['Air','Earth','Spirit','Thought'],['Beasts','Spheres']],Battlemage:[['Conjure','Destroy'],['Beasts','Body','Earth','Fire'],['Spirit','Thought']],Druid:[['Change','Control'],['Beasts','Earth','Plants','Water'],['Spheres','Spirit']],Earthbinder:[['Change','Control'],['Beasts','Air','Earth','Plants'],['Spirit','Thought']],Elementalist:[['Conjure','Control'],['Air','Earth','Fire','Water'],['Body','Thought']],Firemancer:[['Conjure','Control'],['Air','Fire','Plants','Thought'],['Water','Body']],Healer:[['Conjure','Witness'],['Beasts','Body','Thought','Water'],['Spheres','Spirit']],Inquisitor:[['Destroy','Witness'],['Body','Fire','Spheres','Spirit'],['Earth','Water']],Seer:[['Control','Witness'],['Body','Air','Spheres','Thought'],['Beasts','Earth']],Sorcerer:[['Control','Destroy'],['Body','Fire','Spheres','Thought'],['Beasts','Spirit']],Spiritbinder:[['Change','Control'],['Body','Spheres','Spirit','Thought'],['Plants','Fire']],Wavemaster:[['Change','Control'],['Air','Beasts','Body','Water'],['Fire','Spirit']]};
+const newSw=()=>({binds:[],strands:[],thin:[],bp:{},sl:{},sx:{},ex:'',thread:'',name:'',tpl:''});
+const sum=o=>Object.values(o).reduce((a,b)=>a+b,0);
+const lifeLv=x=>(ledger().led['Strand: '+x]||[]).filter(p=>p[1]==='life event').reduce((a,p)=>a+p[0],0);
+const strandLv=x=>talentSlots().filter(([id,t])=>t==='Strand Secret'&&subOf(id,t)===x).length+lifeLv(x)+(S.sw.sl[x]||0)+(S.sw.sx[x]||0)+(S.ro.str[x]||0);
+const swClean=()=>{const w=S.sw;Object.keys(w.sl).forEach(x=>{if(!w.strands.includes(x))delete w.sl[x]});Object.keys(w.sx).forEach(x=>{if(w.thin.includes(x))delete w.sx[x]});if(w.ex&&false)w.ex=''};
+function magicPanel(){const w=S.sw;const stp=(act,x,n,up,lbl)=>`<button class="btn mini" data-act="${act}" data-val="${x}|-${up}" ${n<=0?'disabled':''} aria-label="Take ${up} from ${lbl}">−${up}</button>`;
+ return`<div class="sub"><div class="lab"><span><b>Your magic</b> <span class="hint">two Binds, four Strands and two Thin Strands define what you can do</span></span>${rollBtn('swRest','Roll the rest')}</div>
+  <div class="field"><div class="lab"><label for="swtpl"><b>Start from a template</b> <span class="hint">optional. The book calls these convocations.</span></label></div><select id="swtpl" data-swtpl="1"><option value="">Choose your own</option>${Object.keys(SWT).map(k=>`<option ${w.tpl===k?'selected':''}>${k}</option>`).join('')}</select>${S.occ2&&HOUSE[S.occ2]&&HOUSE[S.occ2][1]?`<span class="hint">${HOUSE[S.occ2][1]} is close to the ${S.occ2} tradition.</span>`:''}</div>
+  <div class="field"><div class="lab"><span><b>Binds</b> <span class="hint">+10 to each. What you do to the world.</span></span>${cChosen(w.binds.length,2)}</div><div class="chips">${BINDS.map(b=>chip(b,w.binds.includes(b),'swb',b,'',w.binds.length>=2&&!w.binds.includes(b))).join('')}</div></div>
+  <div class="field"><div class="lab"><span><b>Strands</b> <span class="hint">What you act upon.</span></span>${cChosen(w.strands.length,4)}</div><div class="chips">${STRANDS.map(x=>chip(x,w.strands.includes(x),'sws',x,'',(w.strands.length>=4&&!w.strands.includes(x))||w.thin.includes(x))).join('')}</div></div>
+  <div class="field"><div class="lab"><span><b>Thin Strands</b> <span class="hint">Hard for you. They cannot be raised now and cost double later.</span></span>${cChosen(w.thin.length,2)}</div><div class="chips">${STRANDS.map(x=>chip(x,w.thin.includes(x),'swt',x,lifeLv(x)?'keeps '+lifeLv(x):'',(w.thin.length>=2&&!w.thin.includes(x))||w.strands.includes(x))).join('')}</div></div>
+  <div class="field"><div class="lab"><b>Bind points</b><span class="chips" style="align-items:center"><span class="hint">70 at most in any Bind</span>${cLeft(100-sum(w.bp),100)}</span></div><div class="spg">${BINDS.map(b=>{const k='Bind: '+b,base=baseVal(k),n=w.bp[b]||0;return`<div class="sp"><span>${b}</span><span class="hint">${base}</span>${stp('bp',b,n,5,b)}<span class="add">${n?'+'+n:''}</span><button class="btn mini" data-act="bp" data-val="${b}|5" ${100-sum(w.bp)<=0||base+n>=70?'disabled':''} aria-label="Add 5 to ${b}">+5</button><b>${Math.min(70,base+n)}</b></div>`}).join('')}</div></div>
+  <div class="field"><div class="lab"><b>Strand levels</b><span class="chips" style="align-items:center"><span class="hint">for your four Strands, 5 at most</span>${cLeft(10-sum(w.sl),10)}</span></div>${w.strands.length?`<div class="spg">${w.strands.map(x=>{const n=w.sl[x]||0;return`<div class="sp"><span>${x}</span><span class="hint">${lifeLv(x)+(w.sx[x]||0)}</span>${stp('sl',x,n,1,x)}<span class="add">${n?'+'+n:''}</span><button class="btn mini" data-act="sl" data-val="${x}|1" ${10-sum(w.sl)<=0||strandLv(x)>=5?'disabled':''} aria-label="Add 1 to ${x}">+1</button><b>${strandLv(x)}</b></div>`}).join('')}</div>`:'<span class="hint">Choose your four Strands first.</span>'}</div>
+  <div class="field"><div class="lab"><b>Three more levels</b><span class="chips" style="align-items:center"><span class="hint">in any Strand that is not Thin</span>${cLeft(3-sum(w.sx),3)}</span></div><div class="spg">${STRANDS.filter(x=>!w.thin.includes(x)).map(x=>{const n=w.sx[x]||0;return`<div class="sp"><span>${x}</span><span class="hint">${lifeLv(x)+(w.sl[x]||0)}</span>${stp('sx',x,n,1,x)}<span class="add">${n?'+'+n:''}</span><button class="btn mini" data-act="sx" data-val="${x}|1" ${3-sum(w.sx)<=0||strandLv(x)>=5?'disabled':''} aria-label="Add 1 more to ${x}">+1</button><b>${strandLv(x)}</b></div>`}).join('')}</div></div>
+  <div class="field"><div class="lab"><span><b>Expertise in one Bind</b> <span class="hint">one level</span></span></div><div class="chips">${BINDS.map(b=>chip(b,w.ex===b,'swex',b)).join('')}</div></div>
+  <div class="field"><div class="lab"><label for="swthread"><b>Thread Die</b> <span class="hint">a d8 in one Bind or Strand</span></label></div><select id="swthread" data-sw="thread"><option value="">Choose…</option>${BINDS.map(b=>'Bind: '+b).concat(STRANDS.map(x=>'Strand: '+x)).map(k=>`<option ${w.thread===k?'selected':''}>${k}</option>`).join('')}</select></div>
+  <div class="field"><div class="lab"><label for="swname"><b>True Name</b> <span class="hint">in the language of your people. Guard it.</span></label></div><input class="text" id="swname" data-sw="name" value="${esc(w.name)}" placeholder="The name the Pattern gave you"></div></div>`}
+function swDone(){const w=S.sw;return w.binds.length===2&&w.strands.length===4&&w.thin.length===2&&sum(w.bp)===100&&sum(w.sl)===10&&sum(w.sx)===3&&!!w.ex&&!!w.thread}
+const CATS=Object.keys(CAT);
+const cdef=()=>{const c=CAREER[S.career];return c&&!c.pending?c:null};
+function baseVal(x){return Math.min(70,(ledger().led[x]||[]).filter(p=>p[1]!=='career').reduce((a,p)=>a+p[0],0))}
+const spent=cat=>CAT[cat].reduce((a,x)=>a+(S.cp[x]||0),0);
+const poolLeft=cat=>{const c=cdef();return c?c.pool[CATS.indexOf(cat)]-spent(cat):0};
+function armorNext(i){const have=[...(cdef()?cdef().fixed:[]),...S.ctal.filter((_,k)=>k!==i)].filter(n=>n&&n.startsWith('Armor Training')).map(n=>ROMAN.indexOf(n.split(' ')[2])+1);const next=Math.max(0,...have)+1;return next>4?null:'Armor Training '+ROMAN[next-1]}
+function talentOpts(i){const c=cdef();return c.picks[i].flatMap(t=>t[0]==='='?[t.slice(1)]:Object.keys(TALC[t]).map(n=>n==='Armor Training'?armorNext(i):n).filter(Boolean))}
+function careerTalents(){const c=cdef();if(!c)return[];return[...c.fixed,...S.ctal.slice(0,c.picks.length).filter(Boolean)].filter(n=>n!==S.cswap)}
+function careerTongues(L,W){const c=cdef();if(!c)return;const v=c.cw[1];if(S.career==='Godbound'&&S.deity)W.push([S.deity+'-wise',30,'career']);
+ S.cw.slice(0,c.cw[0]).forEach(x=>{if(x.mode==='wise'&&x.name)W.push([x.name.replace(/-wise$/i,'')+'-wise',v,'career']);else if(x.mode.startsWith('lang:'))L.push([x.mode.slice(5),v,'career']);else if(x.mode.startsWith('add:')){const n=x.mode.slice(4);const e=L.find(l=>l[0]===n)||W.find(w=>w[0]===n);if(e)e[1]=Math.min(70,e[1]+v)}})}
+const coinText=()=>!S.cls?'':[S.cls==='slave'?'':WEALTH[S.cls][S.wealth]+'d from family',cdef()&&S.ccoin?S.ccoin+'d from your career':'',S.ro.bonus==='coin'?'100d from rounding out':''].filter(Boolean).join(' + ')||'none';
+
+const TALX={
+ 'Combat Maneuver':{'Bullrush':'Drive Back costs 1 less SL with one melee skill.','Disarming Hit':'Disarm costs 1 less SL with one Combat skill.','Drop. Your. Sword.':'Compel Surrender costs 1 less SL with one Combat skill.','Leg Sweeper':'Trip costs 1 less SL with one Combat skill.','Precise Strike':'Choose Location costs 1 less SL with one Combat skill.','Shield Beat':'Shield Bash costs 1 less SL with one size of shield.','Shield Breaker':'+2 on the roll when cleaving a shield with a two-handed weapon.','Shield Maneuver':'Circumvent Shield costs 1 less SL with one Combat skill.','Subjugating Words':'Use Intimidate in combat to force a surrender.','Wrestler':'Grapple costs 1 less SL with Might.','Shield Arm':'Circumvent Shield costs 1 more SL against you.','Slippery':'Grapple costs 1 more SL against you.','Stable Stance':'Trip and Shield Bash cost 1 more SL against you.','Stay Put':'Drive Back costs 1 more SL against you.','Stay Up':'Unbalance costs 1 more SL against you.','Strong Grip':'Disarm costs 1 more SL against you.'},
+ Magic:{'Armored Caster':'Armor hinders your casting by 3 less.','Enchanter':'Arcana reduces Fraying when you make enchanted items.','Enduring Caster':'Spend 1 less Resolve to Mitigate with one Bind.','Fast Summoner':'Draw a summoning circle in 15 minutes.','Forceful Strand':'Targets resist your spells with one Strand at −10.','Ritual Caster':'+10 to ritual spell rolls.','Strand Secret':'Gain a new Strand at 1.','Unerring Bolt':'+1 damage with attack spells of one Strand.','Words Alone':'Cast with both hands occupied at −20.','Weave Shadow':'Roll on the Weave Reaction Table at −1.','Divine Conduit':'Spend 1 Resolve and roll Piety to let your god speak through you.','True Faith':'Once a session, raise a granted miracle by one step.','Weave Resistant':'+20 with one skill when opposing magic.'},
+ Miscellaneous:{'Cat\'s Fall':'Athletics reduces falling damage.','Fast Healer':'Remove 1 extra Wound Point on a successful Recovery roll.','Grit':'In one hit location, Shock waits for a third Impairment.','I Have Just the Thing':'Re-roll a failed Gear Supply Die once a session.','Inner Strength':'+1 Max Resolve.','Not Today, Death':'+2 Death Threshold.','Steely Thews':'Re-roll the Wound Die once a session.','Strong Back':'Two more Inventory slots.','Strong Immune System':'Re-roll the Infection Die once a session.','Swift Rider':'Alone on horseback, a Forced March costs only −2 Fatigue.','Tough':'+1 Toughness.','Unkillable':'+1 Lethality Level.','Weapon Belt':'+1 Max Weapon ENC.'}};
+Object.values(TALX).forEach(o=>Object.entries(o).forEach(([k,v])=>{if(!TAL[k])TAL[k]=v}));
+const newRo=()=>({bonus:'',btal:'',pts:{},str:{},neww:[],savvy:[],oldEx:'',humEx:'',humTal:''});
+const RO_FREE={Young:70,Adult:100,Old:100};
+function talentGroups(){const g={Combat:Object.keys(TALC.Combat).map(n=>n==='Armor Training'?armorNext(-1):n).filter(Boolean),'Combat Maneuver':Object.keys(TALX['Combat Maneuver']),Adventuring:Object.keys(TALC.Adventuring),Social:Object.keys(TALC.Social),Lore:Object.keys(TALC.Lore),Miscellaneous:Object.keys(TALX.Miscellaneous)};
+ const m=Object.keys(TALX.Magic).filter(n=>n==='Weave Resistant'||(S.career==='Godbound'?['Divine Conduit','True Faith'].includes(n):S.career==='Spellweaver'&&!['Divine Conduit','True Faith'].includes(n)));g.Magic=m;return g}
+const talentSelect=(id,attr,val,label)=>`<select id="${id}" ${attr} aria-label="${label}"><option value="">Choose a Talent…</option>${Object.entries(talentGroups()).map(([k,l])=>`<optgroup label="${k}">${l.map(n=>`<option ${val===n?'selected':''}>${n}</option>`).join('')}</optgroup>`).join('')}</select>${val?`<span class="hint">${TAL[val]||''}</span>`:''}`;
+const roCat=k=>k[0]==='@'?'Lore':/^(Bind|Piety)/.test(k)?'Magic':CATS.find(c=>CAT[c].includes(k));
+function roPools(extraKey,extra){const r=S.ro;const t={Combat:0,Adventuring:0,Social:0,Lore:0,Magic:0};Object.entries(r.pts).forEach(([k,n])=>t[roCat(k)]+=n);t.Lore+=20*r.neww.length;t.Magic+=5*sum(r.str);if(extraKey)t[extraKey]+=extra;
+ const loreT=S.age==='Old'?30:0,expT=careerTalents().includes('Experienced')?30:0,freeT=RO_FREE[S.age];
+ const loreU=Math.min(loreT,t.Lore),expU=Math.min(expT,t.Adventuring+t.Social+t.Lore-loreU);const need=t.Combat+t.Adventuring+t.Social+t.Lore+t.Magic-loreU-expU;
+ return{free:freeT-need,lore:loreT-loreU,exp:expT-expU,freeT,loreT,expT}}
+const roOk=(cat,amt)=>roPools(cat,amt).free>=0;
+const total=x=>(ledger().led[x]||[]).reduce((a,p)=>a+p[0],0);
+const tongueVal=n=>{const t=tongues();const e=t.L.find(l=>l[0]===n)||t.W.find(w=>w[0]===n);return e?e[1]:0};
+function roTongues(L,W){S.ro.neww.forEach(x=>{if(x.mode==='wise'&&x.name)W.push([x.name.replace(/-wise$/i,'')+'-wise',20,'rounding out']);else if(x.mode.startsWith('lang:'))L.push([x.mode.slice(5),20,'rounding out'])});Object.entries(S.ro.pts).forEach(([k,n])=>{if(k[0]!=='@'||!n)return;const e=L.find(l=>l[0]===k.slice(1))||W.find(w=>w[0]===k.slice(1));if(e)e[1]=Math.min(70,e[1]+n)})}
+const savvyMax=()=>3+(S.folk==='Human'?1:0);
+const roSkillKeys=()=>[...Object.values(CAT).flat(),...(S.career==='Spellweaver'?BINDS.map(b=>'Bind: '+b):[])];
+function roRow(k,label,step){const n=S.ro.pts[k]||0;const isT=k[0]==='@';const tot=isT?tongueVal(k.slice(1)):Math.max(0,Math.min(70,total(k)));const room=isT?70-tot:70-total(k);return`<div class="sp"><span>${label}</span><span class="hint">${tot-n}</span><button class="btn mini" data-act="rop" data-val="${esc(k)}|-5" ${n<=0?'disabled':''} aria-label="Take 5 from ${esc(label)}">−5</button><span class="add">${n?'+'+n:''}</span><button class="btn mini" data-act="rop" data-val="${esc(k)}|5" ${room<5||!roOk(roCat(k),5)?'disabled':''} aria-label="Add 5 to ${esc(label)}">+5</button><b>${tot}</b></div>`}
+function roPanel(){const r=S.ro;const P=roPools();const t=tongues();const known=[...t.L,...t.W];const hum=S.folk==='Human';
+ const ageTxt={Young:'+20 Endurance, +1 Death Threshold, and 70 points for any skills.',Adult:'100 points for any skills.',Old:'One more level of Expertise, −20 Endurance, −2 Death Threshold, 30 points for Lore skills, and 100 points for any skills.'};
+ return`<header><h2>Rounding out</h2><p>Everything you have picked up since your career, up to the day play begins. This is the last step that changes your skills.</p></header>
+ <div class="field"><div class="lab"><b>Age</b></div><div class="chips">${['Young','Adult','Old'].map(a=>chip(a,S.age===a,'age',a)).join('')}</div><div class="result"><b>${S.age}.</b> ${ageTxt[S.age]}</div>
+  <div class="agerow"><label for="years"><b>Age in years</b></label><input type="range" id="years" data-years min="${AGE_R[S.age][0]}" max="${AGE_R[S.age][1]}" step="1" value="${ageYears()}"><output id="yearsOut" for="years">${ageYears()}</output>${rollBtn('years','Roll an age')}</div>
+  <span class="hint"><span id="bornOut">${bornLine()}</span> · Age as of ${campTxt()}.</span></div>
+ <div class="sub"><div class="lab"><b>One more thing you gained</b></div><div class="cards">${[['talent','A Talent','Any one you meet the requirements for.'],['status','+1 Status','Standing in your community.'],['coin','100d','Coin in hand.']].map(([k,n,d])=>`<button class="card" aria-pressed="${r.bonus===k}" data-act="robonus" data-val="${k}"><h3>${n}</h3><span>${d}</span></button>`).join('')}</div>
+  ${r.bonus==='talent'?`<div class="field">${talentSelect('robtal','data-ro="btal"',r.btal,'Bonus Talent')}${subUI('rb',r.btal)}</div>`:''}</div>
+ <div class="sub"><div class="lab"><span><b>Skill points</b> <span class="hint">to 70 at most</span></span>${rollBtn('roRest','Spend the rest at random')}</div>
+  <div class="ptbar" role="status" aria-live="polite">${[[P.free,P.freeT,'for any skill'],...(P.loreT?[[P.lore,30,'Lore only']]:[]),...(P.expT?[[P.exp,30,'Adventuring, Social or Lore']]:[])].map(([n,t,l])=>`<span class="pt"><span class="cnt big ${n<0?'bad':n===0?'ok':'warn'}">${n<0?(-n)+' over':n+' left'} of ${t}</span><small>${l}</small></span>`).join('')}${P.loreT||P.expT?'<small class="ptnote">Restricted points are used first when a skill qualifies.</small>':''}</div>
+  ${CATS.map(k=>`<div class="field"><div class="lab"><b>${k}</b></div><div class="spg">${CAT[k].map(x=>roRow(x,x)).join('')}</div></div>`).join('')}
+  <div class="field"><div class="lab"><span><b>-wises and languages</b> <span class="hint">these count as Lore. A new one costs 20 and starts at 20.</span></span><button class="btn" data-act="ronew" ${roOk('Lore',20)?'':'disabled'}>Buy a new one for 20</button></div>
+   ${known.length?`<div class="spg">${known.map(x=>roRow('@'+x[0],x[0])).join('')}</div>`:''}
+   ${r.neww.map((x,i)=>`<div class="chips"><select id="ronew${i}" data-ronew="${i}" aria-label="New -wise or language ${i+1}"><option value="">Choose…</option><option value="wise" ${x.mode==='wise'?'selected':''}>A new -wise (name it)</option>${langChoices().filter(l=>!t.L.some(k=>k[0]===l)||x.mode==='lang:'+l).map(l=>`<option value="lang:${l}" ${x.mode==='lang:'+l?'selected':''}>New language: ${l}</option>`).join('')}</select>${x.mode==='wise'?`<input class="text" style="width:auto;flex:1" id="ronewn${i}" data-ronewname="${i}" value="${esc(x.name)}" placeholder="Name it" aria-label="Name of the -wise">`:''}<button class="btn" data-act="rodel" data-val="${i}">Remove</button></div>`).join('')}</div>
+  ${S.career==='Godbound'?`<div class="field"><div class="lab"><b>Piety</b></div><div class="spg">${roRow('Piety','Piety')}</div></div>`:''}
+  ${S.career==='Spellweaver'?`<div class="field"><div class="lab"><b>Binds</b></div><div class="spg">${BINDS.map(b=>roRow('Bind: '+b,b)).join('')}</div></div>
+   <div class="field"><div class="lab"><span><b>Strands</b> <span class="hint">5 points a level, level 5 at most, never a Thin Strand</span></span></div><div class="spg">${STRANDS.filter(x=>!S.sw.thin.includes(x)).map(x=>{const n=r.str[x]||0;return`<div class="sp"><span>${x}</span><span class="hint">${strandLv(x)-n}</span><button class="btn mini" data-act="rostr" data-val="${x}|-1" ${n<=0?'disabled':''} aria-label="Take a level from ${x}">−1</button><span class="add">${n?'+'+n:''}</span><button class="btn mini" data-act="rostr" data-val="${x}|1" ${strandLv(x)>=5||!roOk('Magic',5)?'disabled':''} aria-label="Add a level to ${x}">+1</button><b>${strandLv(x)}</b></div>`}).join('')}</div></div>`:''}</div>
+ <div class="sub"><div class="lab"><span><b>Savvy skills</b> <span class="hint">these improve faster with experience${hum?'. Humans choose a fourth':''}</span></span>${cChosen(r.savvy.length,savvyMax())}</div>
+  ${CATS.map(k=>`<div class="field"><span class="hint">${k}</span><div class="chips">${CAT[k].map(x=>chip(x,r.savvy.includes(x),'rosav',x,'',r.savvy.length>=savvyMax()&&!r.savvy.includes(x))).join('')}</div></div>`).join('')}
+  ${S.career==='Spellweaver'?`<div class="field"><span class="hint">Binds</span><div class="chips">${BINDS.map(b=>chip(b,r.savvy.includes('Bind: '+b),'rosav','Bind: '+b,'',r.savvy.length>=savvyMax()&&!r.savvy.includes('Bind: '+b))).join('')}</div></div>`:''}</div>
+ ${S.age==='Old'||hum?`<div class="sub"><div class="lab"><b>${hum?'Human gifts':'With age'}</b></div>
+  ${S.age==='Old'?`<div class="field"><div class="lab"><label for="rooldex"><b>Expertise from age</b> <span class="hint">one level in any skill</span></label></div><select id="rooldex" data-ro="oldEx"><option value="">Choose…</option>${roSkillKeys().map(x=>`<option ${r.oldEx===x?'selected':''}>${x}</option>`).join('')}</select></div>`:''}
+  ${hum?`<div class="field"><div class="lab"><label for="rohumex"><b>Human Expertise</b> <span class="hint">one level in any skill</span></label></div><select id="rohumex" data-ro="humEx"><option value="">Choose…</option>${roSkillKeys().map(x=>`<option ${r.humEx===x?'selected':''}>${x}</option>`).join('')}</select></div>
+  <div class="field"><div class="lab"><b>Human Talent</b></div>${talentSelect('rohumtal','data-ro="humTal"',r.humTal,'Human Talent')}${subUI('rh',r.humTal)}</div>`:''}</div>`:''}`}
+function roDone(){const r=S.ro;const P=roPools();return!!r.bonus&&(r.bonus!=='talent'||!!r.btal)&&P.free===0&&P.lore===0&&P.exp===0&&r.savvy.length===savvyMax()&&(S.age!=='Old'||!!r.oldEx)&&(S.folk!=='Human'||(!!r.humEx&&!!r.humTal))&&r.neww.every(x=>x.mode&&(x.mode!=='wise'||x.name))}
+
+const CSK=CAT.Combat.filter(x=>x!=='Dodge');
+const SUBS={
+ 'Armor Piercer':['Weapon type',()=>WPN.map(w=>w[0])],
+ 'Powerful Blow':['Weapon type',()=>['Fists',...WPN.map(w=>w[0])]],
+ 'Defender':['Melee weapon type',()=>['Fists',...WPN.filter(w=>(w[1].startsWith('Melee')||w[1]==='Might')&&!/cannot parry|Mounted charge/.test(w[5])).map(w=>w[0])]],
+ 'Eagle Eye':['Ranged weapon type',()=>WPN.filter(w=>w[1]==='Missile'||w[1]==='Thrown'||/thrown/i.test(w[5])).map(w=>w[0])],
+ 'Enhanced Defense':['Combat skill you defend with',()=>CAT.Combat.filter(x=>x!=='Missile'&&x!=='Thrown')],
+ 'Quickdraw':['Combat skill',()=>CSK.filter(x=>x!=='Might')],
+ 'Bullrush':['Melee skill',()=>CSK.filter(x=>x!=='Missile'&&x!=='Thrown')],
+ 'Disarming Hit':['Combat skill',()=>CSK],'Drop. Your. Sword.':['Combat skill',()=>CSK],'Leg Sweeper':['Combat skill',()=>CSK],'Precise Strike':['Combat skill',()=>CSK],'Shield Maneuver':['Combat skill',()=>CSK],
+ 'Shield Beat':['Shield size',()=>['Small','Medium','Large']],
+ 'Shield Breaker':['Two-handed weapon',()=>WPN.filter(w=>w[1]==='Melee: Heavy'&&(/Two-handed/.test(w[5])||w[0]==='Longsword')).map(w=>w[0])],
+ 'Rise a Fighter':['Skill you rise with',()=>['Endurance','Might','Willpower']],
+ 'Lecturer':['One of your -wises',()=>tongues().W.map(w=>w[0])],
+ 'Enduring Caster':['Bind',()=>BINDS.slice()],
+ 'Forceful Strand':['Strand',()=>S.sw.strands.length?S.sw.strands.slice():STRANDS.slice()],
+ 'Unerring Bolt':['Strand',()=>S.sw.strands.length?S.sw.strands.slice():STRANDS.slice()],
+ 'Strand Secret':['New Strand',()=>STRANDS.filter(x=>!S.sw.thin.includes(x)&&!S.sw.strands.includes(x)&&!(S.sw.sl[x]||S.sw.sx[x]||S.ro.str[x]))],
+ 'Weave Resistant':['Skill',()=>Object.values(CAT).flat()],
+ 'Grit':['Hit location',()=>['Body','Head','Both Arms','Both Legs']]};
+function talentSlots(){let o=[];S.abil.forEach((a,i)=>{if(a.talent)o.push(['a'+i,a.talent])});const c=cdef();if(c){c.fixed.forEach((t,i)=>o.push(['f'+i,t]));c.picks.forEach((_,i)=>{if(S.ctal[i])o.push(['c'+i,S.ctal[i]])});o=o.filter(x=>x[0][0]==='a'||x[1]!==S.cswap)}if(S.ro.btal)o.push(['rb',S.ro.btal]);if(S.folk==='Human'&&S.ro.humTal)o.push(['rh',S.ro.humTal]);return o}
+const subOf=(id,t)=>SUBS[t]&&S.tsub[id]&&SUBS[t][1]().includes(S.tsub[id])?S.tsub[id]:'';
+const subTaken=(id,t)=>talentSlots().filter(x=>x[0]!==id&&x[1]===t).map(x=>subOf(x[0],t)).filter(Boolean);
+const subsMissing=pre=>talentSlots().filter(([id,t])=>pre.includes(id[0])&&SUBS[t]&&SUBS[t][1]().length&&!subOf(id,t));
+function subUI(id,t){if(!SUBS[t])return'';const[lab,fn]=SUBS[t];const all=fn();if(!all.length)return`<span class="hint">${t} needs ${lab.toLowerCase()}, and there is none to choose yet.</span>`;const cur=subOf(id,t),tk=subTaken(id,t);
+ return`<div class="subpick"><label for="ts_${id}"><b>${t}:</b> ${lab.toLowerCase()}</label><select id="ts_${id}" data-tsub="${id}"><option value="">Choose…</option>${all.map(x=>`<option value="${esc(x)}" ${cur===x?'selected':''} ${tk.includes(x)?'disabled':''}>${esc(x)}${WMAP[x]?' ('+WMAP[x][1]+')':''}${tk.includes(x)?' (already taken)':''}</option>`).join('')}</select></div>`}
+function fillSubs(){const sc=x=>x==='Fists'?skillVal('Might'):WMAP[x]?skillVal(WMAP[x][1]):CAT.Combat.includes(x)?skillVal(x):0;talentSlots().forEach(([id,t])=>{if(!SUBS[t]||subOf(id,t))return;const tk=subTaken(id,t);const o=SUBS[t][1]().filter(x=>!tk.includes(x));if(!o.length)return;const m=t==='Weave Resistant'?0:Math.max(...o.map(sc));if(t==='Weave Resistant'){S.tsub[id]=o[rnd(o.length)-1];return};const best=o.filter(x=>sc(x)===m);S.tsub[id]=best[rnd(best.length)-1]})}
+function talentCounts(){const tl={};S.abil.forEach(a=>{if(a.talent)tl[a.talent]=(tl[a.talent]||0)+1});careerTalents().forEach(t=>tl[t]=(tl[t]||0)+1);[S.ro.btal,S.folk==='Human'?S.ro.humTal:''].filter(Boolean).forEach(t=>tl[t]=(tl[t]||0)+1);return tl}
+const newAt=()=>({res:0,init:0,tough:0,dt:0,rInit:null,rDT:null});
+function attrs(){const t=talentCounts(),a=S.at;const n=k=>t[k]||0;const mk=(name,parts)=>{parts=parts.filter(q=>q[0]||q[1]==='base'||q[1]==='rolled');return{name,parts,val:parts.reduce((x,q)=>x+q[0],0)}};
+ const res=mk('Max Resolve',[[10,'base'],[2*a.res,'points'],[n('Inner Strength'),'Inner Strength'],[5*n('Patterned in the Weave'),'Patterned in the Weave']]);
+ const init=mk('Initiative',[[a.rInit!==null?a.rInit:10,a.rInit!==null?'rolled':'base'],[a.init,'points'],[n('Combat Awareness'),'Combat Awareness'],[-gearCalc().pen,'armor']]);
+ const tough=mk('Toughness',[[0,'base'],[Math.floor(a.tough/2),'points'],[n('Tough'),'Tough']]);
+ const dt=mk('Death Threshold',[[a.rDT!==null?a.rDT:20,a.rDT!==null?'rolled':'base'],[a.rDT!==null?0:2*a.dt,'points'],[2*n('Not Today, Death'),'Not Today, Death'],[S.age==='Young'?1:S.age==='Old'?-2:0,'age']]);
+ const ll=mk('Lethality Level',[[Math.ceil(dt.val/3),'base'],[n('Unkillable'),'Unkillable']]);const inv=mk('Inventory slots',[[6,'base'],[2*n('Strong Back'),'Strong Back']]);
+ return{res,init,tough,dt,ll,inv}}
+const atLeft=()=>5-S.at.res-S.at.init-S.at.tough-(S.at.rDT!==null?0:S.at.dt);
+const atBreak=x=>x.parts.map((q,i)=>(i?(q[0]<0?'− ':'+ '):'')+Math.abs(q[0])+' '+q[1]).join(' ');
+function atPanel(){const A=attrs(),a=S.at,left=atLeft();
+ const row=(k,x,per,desc,step,locked)=>`<div class="sub"><div class="lab"><span><b>${x.name}</b> <span class="hint">${desc}</span></span><span class="chips" style="align-items:center"><button class="btn mini" data-act="atp" data-val="${k}|-${step}" ${a[k]<=0||locked?'disabled':''} aria-label="Take a point from ${x.name}">−</button><b style="min-width:3ch;text-align:center;font-size:20px">${k==='init'?'+':''}${x.val}</b><button class="btn mini" data-act="atp" data-val="${k}|${step}" ${left<step||locked?'disabled':''} aria-label="Add to ${x.name}">+</button></span></div><span class="hint">${per} · ${atBreak(x)}</span>`;
+ return`<header><h2>Attributes</h2><p>How hard you can push, how fast you react, and how much punishment you can take. You have five points to spend. Talents and age you have already chosen are counted in.</p></header>
+ <div class="result">Attribute points ${cLeft(left,5)}</div>
+ ${row('res',A.res,'2 Resolve a point','Inner strength and, for a Spellweaver, the fuel for magic.',1)}</div>
+ ${row('init',A.init,'1 a point','Added to a d10 each round to see when you act. Armor lowers it.',1)}<div class="chips"><button class="btn" data-act="atroll" data-val="rInit">${a.rInit===null?'Roll 6 + 1d6 in place of the fixed 10':'Go back to the fixed 10'}</button></div></div>
+ ${row('tough',A.tough,'1 Toughness for 2 points','Helps you stay up when wounded.',2)}</div>
+ ${row('dt',A.dt,'2 a point','The lethal wounds you can take before you die.',1,a.rDT!==null)}<div class="chips"><button class="btn" data-act="atroll" data-val="rDT">${a.rDT===null?'Roll 15 + 2d4 in place of the fixed 20':'Go back to the fixed 20'}</button>${a.rDT!==null?'<span class="hint">A rolled Death Threshold cannot be raised with points.</span>':''}</div></div>
+ <div class="sub"><div class="lab"><b>Worked out for you</b></div><div class="result"><b>Lethality Level ${A.ll.val}</b>, a third of your Death Threshold rounded up${A.ll.parts.length>1?', plus Unkillable':''}. Past this in lethal wounds, you are dying once you fall in Shock.<br><b>Inventory slots ${A.inv.val}</b>${A.inv.parts.length>1?', with Strong Back':''}.</div></div>`}
+
+const TRAITS={Altruistic:'Puts the needs of others first.',Callous:'Cold, harsh, short on compassion.',Calm:'Measured and slow to anger.',Cautious:'Careful and wary of risk.',Compliant:'Inclined to obey rules and authority.',Deceitful:'Habitually dishonest.',Defiant:'Resists authority and control.',Fearless:'Bold to the point of recklessness.',Forgiving:'Lets go of grudges.',Friendly:'Open and warm toward others.',Honest:'Truthful in word and deed.',Hopeful:'Expects things to turn out well.',Humble:'Modest and unassuming.',Loyal:'Devoted to people, causes or ideals.',Passionate:'Driven by strong feeling.',Pessimistic:'Expects the worst.',Proud:'Keenly aware of their own worth.',Suspicious:'Distrustful, expecting hidden motives.','Self-serving':'Looks to their own benefit first.',Trusting:'Believes the best of others.',Unprincipled:'Guided by self-interest over duty.',Vengeful:'Holds grudges and seeks retribution.'};
+const cap=w=>w.charAt(0).toUpperCase()+w.slice(1);
+const signWords=()=>{const sg=activeSign();return sg?[1,2].flatMap(i=>SIGNINFO[sg][i].split(/, | and /).map(cap)):[]};
+const goalOk=t=>/^(I|We) (will|want|need|must)\b/i.test(t.trim());
+function goalText(){const f=id=>{const el=$('#'+id);return el?el.value.trim().replace(/[.!]+$/,''):''};const lc=x=>/^[A-Z][a-z]/.test(x)&&!/^I\b/.test(x)?x[0].toLowerCase()+x.slice(1):x;const low=x=>lc(x.replace(/^(I|We) (will|want to|need to|must( overcome)?) /i,'').replace(/^to /i,''));
+ const w=low(f('gwant')),o=f('gblock').replace(/^((I|We) must overcome|despite) /i,'').replace(/,$/,''),d=low(f('gdo'));return w&&d?'I will '+d+(o?', despite '+o+',':'')+' so that I can '+w+'.':''}
+function goalCnt(){const n=S.goals.length,me=S.goals.filter(g=>g.kind==='individual').length,sh=n-me;const ok=n>=3&&n<=5&&me>=1&&sh>=1;const txt=n+(n===1?' goal':' goals');
+ const msg=!me?(n?txt+' · write a personal goal':'Write a personal goal'):n<3?txt+' · aim for 3 to 5':n>=6?txt:!sh?txt+' · add a shared one':txt;
+ return`<span class="chips" style="align-items:center">${n?`<span class="hint">${me} personal · ${sh} shared</span>`:''}<span class="cnt ${ok?'ok':'warn'}">${msg}</span></span>`}
+function tgPanel(){const tr=S.traits,full=tr.length>=3;const sw=signWords();const desc=S.abil.map(a=>a.desc).filter(Boolean);
+ const draw=[...LIFET.filter(([t])=>S.life[t]).map(([t])=>lifeEv(t).name+(S.life[t].rel?' (a '+S.life[t].rel.toLowerCase()+')':'')),...(S.allies||[]),S.parent,S.standing?S.standing+' in the clan':'',S.concept].filter(Boolean);
+ return`<header><h2>Traits and goals</h2><p>How your character tends to behave, and what they are trying to do. Traits can change as the campaign unfolds. Goals are how you earn experience.</p></header>
+ <div class="sub"><div class="lab"><span><b>Personality traits</b> <span class="hint">two or three</span></span><span class="cnt ${tr.length>=2&&tr.length<=3?'ok':'warn'}">${tr.length} chosen</span></div>
+  <div class="chips">${Object.keys(TRAITS).map(t=>`<button class="chip" title="${TRAITS[t]}" aria-pressed="${tr.includes(t)}" data-act="tr" data-val="${t}" ${full&&!tr.includes(t)?'disabled':''}>${t}</button>`).join('')}</div>
+  ${sw.length?`<div class="field"><span class="hint">From your sunsign, ${activeSign()}</span><div class="chips">${sw.map(t=>chip(t,tr.includes(t),'tr',t,'',full&&!tr.includes(t))).join('')}</div></div>`:''}
+  <div class="chips"><input class="text" style="width:auto;flex:1" id="trcustom" placeholder="Or write your own" aria-label="Your own trait"><button class="btn" data-act="tradd" ${full?'disabled':''}>Add</button></div>
+  ${tr.length?`<div class="result">${tr.map(t=>`<b>${esc(t)}.</b> ${TRAITS[t]||(sw.includes(t)?'A mark of your sunsign.':'Your own.')}`).join('<br>')}</div>`:''}
+  <span class="hint">In a dramatic moment tied to a goal, a trait can be worth up to +20 or −20 on a roll, if the GM agrees. Taking the penalty by choice earns 1 experience point.${desc.length?' Your descriptors, '+desc.map(esc).join(' and ')+', can give the bonus in the same way.':''}</span></div>
+ <div class="sub"><div class="lab"><span><b>Goals</b> <span class="hint">aim for three to five, with at least one of your own and one shared with the party</span></span>${goalCnt()}</div>
+  ${S.goals.length>=6?'<p class="note">Six or more goals may be too many for a starting character. Only 3 experience points a session can come from goals, however many you pursue.</p>':''}
+  ${S.goals.map((g,i)=>`<div class="result goalcard"><div>${esc(g.text)}${goalOk(g.text)?'':' <i class="hint">Goals read best starting with “I will”, “I want”, “I need” or “I must”.</i>'}<div class="chips" style="margin-top:8px">${chip('Mine',g.kind==='individual','goalkind',i+'|individual')}${chip('Shared with the party',g.kind==='shared','goalkind',i+'|shared')}</div></div><button class="link" data-act="goaldel" data-val="${i}">Remove</button></div>`).join('')}
+  <div class="field"><div class="lab"><label for="goaltext"><b>Write a goal</b></label></div><div class="chips"><input class="text" style="width:auto;flex:1" id="goaltext" placeholder="I will…"><button class="btn" data-act="goaladd">Add</button></div>
+   <span class="hint">Make it specific, something you do yourself, and something that can be finished.</span></div>
+  <div class="field"><div class="lab"><b>Or build one in three steps</b></div>
+   <div class="gbuild">
+    <label for="gwant">I want to</label><input class="text" id="gwant" placeholder="avenge my brother">
+    <label for="gblock">Despite</label><input class="text" id="gblock" placeholder="his hideout being well guarded (optional)">
+    <label for="gdo">I will</label><input class="text" id="gdo" placeholder="pick off his scouts and lieutenants">
+   </div>
+   <div class="result gprev" id="gprev" hidden></div>
+   <div class="chips"><button class="btn" data-act="goalbuild">Combine into a goal</button></div></div>
+  ${draw.length?`<div class="result"><b>Things to draw on.</b> ${draw.map(esc).join(' · ')}</div>`:''}
+  <span class="hint">You can leave goals blank and find them in play.</span></div>`}
+
+/* name, skill, cost, damage, ENC, notes */
+const WEAP=[['Dagger','Melee: Light',20,'1',1,'Can be thrown'],['Parrying Dagger','Melee: Light',25,'1',1,'Defensive'],['Shortsword','Melee: Light',60,'2',1,''],['Cutlass','Melee: Light',60,'2',1,''],['Hand Axe','Melee: Light',30,'2',1,'Can be thrown'],['Cudgel','Melee: Light',10,'2 non-lethal',1,''],['Rapier','Melee: Light',100,'2',1,'Defensive'],['Javelin','Melee: Light',70,'2',2,'Piercing 1, can be thrown'],['Blackjack','Melee: Light',15,'1 non-lethal',1,''],['Whip','Melee: Light',25,'1',1,'Reach 1, cannot parry'],['Brass Knuckles','Might',20,'0',0,'Makes unarmed blows lethal'],
+ ['Broadsword','Melee: Medium',100,'4',2,''],['Mace','Melee: Medium',100,'4',2,''],['Scimitar','Melee: Medium',100,'4',2,''],['Flail','Melee: Medium',100,'4',2,''],['Bearded Axe','Melee: Medium',120,'4',2,'Unwieldy'],['Warhammer','Melee: Medium',110,'4',2,'Piercing 1'],['Club','Melee: Medium',30,'4 non-lethal',2,''],['Staff','Melee: Medium',50,'4 non-lethal',2,'Two-handed, Reach 1, Defensive'],['Spear','Melee: Medium',60,'3',2,'Reach 1, Piercing 1, Unwieldy, can be thrown'],
+ ['Battle-Axe','Melee: Heavy',150,'6',3,'Two-handed, Unwieldy, Overbearing'],['Longsword','Melee: Heavy',200,'4, or 5 two-handed',3,''],['Two-Handed Sword','Melee: Heavy',180,'6',4,'Two-handed, Reach 1, Unwieldy, Overbearing'],['Longspear','Melee: Heavy',100,'5',4,'Two-handed, Reach 2, Piercing 1, Unwieldy'],['Halberd','Melee: Heavy',200,'6',4,'Two-handed, Reach 1, Unwieldy, Overbearing'],['Heavy Flail','Melee: Heavy',150,'6',3,'Two-handed, Unwieldy, Overbearing'],['War Staff','Melee: Heavy',80,'5 non-lethal',3,'Two-handed, Reach 1, Defensive'],['Maul','Melee: Heavy',175,'6',4,'Two-handed, Piercing 1, Unwieldy, Overbearing'],['Lance','Melee: Heavy',160,'10',4,'Mounted charge only. ENC 2 on horseback'],
+ ['Sling','Missile',10,'1',1,'Medium range'],['Shortbow','Missile',50,'2',2,'Two-handed, long range'],['Longbow','Missile',120,'3',3,'Two-handed, very long range'],['Light Crossbow','Missile',100,'3',3,'Two-handed, Piercing 1, medium range, reload 1'],['Heavy Crossbow','Missile',200,'3',4,'Two-handed, Piercing 3, long range, reload 1'],['Throwing Knives','Thrown',30,'1',0,'Uses the Ammo die'],
+ ['Buckler','Shield',25,'+1 AP',1,'Can be used with a bow'],['Small Shield','Shield',50,'+3 AP',1,''],['Medium Shield','Shield',75,'+4 AP',2,''],['Large Shield','Shield',100,'+5 AP',3,'Needs Large Shield Training']];
+const WMAP=Object.fromEntries(WEAP.map(w=>[w[0],w]));const WPN=WEAP.filter(w=>w[1]!=='Shield');
+const MISC=[['Armor repair kit',20,1],['Riding horse',300,0],['Mule',150,0],['Wagon',100,0],['Warhorse',1200,0]];
+const ARM=[['Padding',20,1,0.5,0],['Quilt',40,2,1,0],['Leather',60,3,2,0],['Reinforced Leather',100,4,3,1],['Mail',200,5,4,2],['Scale',250,6,5,3],['Plate',500,7,6,4]];
+const AMAP=Object.fromEntries(ARM.map(a=>[a[0],a]));
+const APEN={'Reinforced Leather':[0,5,0,5],Mail:[0,10,10,10],Scale:[10,15,20,15],Plate:[20,20,30,20]};
+const LOC=[['Head','Head'],['Body','Body'],['LArm','Left arm'],['RArm','Right arm'],['LLeg','Left leg'],['RLeg','Right leg']];
+const newGear=()=>({coin:null,freeN:null,armor:{},items:[],misc:[]});
+const trainLv=()=>Math.max(0,...Object.keys(talentCounts()).filter(n=>n.startsWith('Armor Training ')).map(n=>ROMAN.indexOf(n.split(' ')[2])+1));
+function gearCalc(){const g=S.gear;const lv=trainLv();const pieces=LOC.filter(([k])=>g.armor[k]).map(([k,n])=>({k,n,a:AMAP[g.armor[k]]}));
+ const elig=pieces.filter(x=>x.a[4]<=lv).sort((x,y)=>y.a[1]-x.a[1]).slice(0,g.freeN||0);const free=new Set(elig.map(x=>x.k));
+ const armorCost=pieces.filter(x=>!free.has(x.k)).reduce((a,x)=>a+x.a[1],0);const itemCost=g.items.reduce((a,x)=>a+WMAP[x.n][2],0)+g.misc.reduce((a,n)=>a+MISC.find(m=>m[0]===n)[1],0);
+ const fam=S.cls&&S.cls!=='slave'?WEALTH[S.cls][S.wealth]:0;const budget=fam+(cdef()&&S.ccoin||0)+(S.ro.bonus==='coin'?100:0)+(g.coin||0);const left=budget-armorCost-itemCost;
+ const bulk=pieces.reduce((a,x)=>a+x.a[3],0);const pen=Math.ceil(bulk/3);
+ const maxHand=6+(talentCounts()['Weapon Belt']||0);const handEnc=g.items.filter(x=>x.hand).reduce((a,x)=>a+WMAP[x.n][4],0);
+ const invEnc=g.items.filter(x=>!x.hand).reduce((a,x)=>a+WMAP[x.n][4],0)+g.misc.reduce((a,n)=>a+MISC.find(m=>m[0]===n)[2],0)+(left>0?Math.ceil(left/500):0);
+ const pn={};const body=g.armor.Body,head=g.armor.Head;const leg=[g.armor.LLeg,g.armor.RLeg].filter(Boolean).sort((x,y)=>AMAP[y][3]-AMAP[x][3])[0];
+ if(head&&APEN[head]&&APEN[head][0])pn.Perception=APEN[head][0];if(body&&APEN[body]){pn.Stealth=APEN[body][1];pn.Dodge=APEN[body][1];if(APEN[body][2])pn['Rise from Prone']=APEN[body][2]}if(leg&&APEN[leg])pn.Athletics=APEN[leg][3];
+ const untrained=pieces.filter(x=>['Body','LArm','RArm'].includes(x.k)&&x.a[4]>lv);const shield=g.items.filter(x=>x.hand&&WMAP[x.n][1]==='Shield').map(x=>WMAP[x.n]).sort((x,y)=>parseInt(y[3].slice(1))-parseInt(x[3].slice(1)))[0];
+ return{pieces,free,armorCost,itemCost,budget,left,bulk,pen,maxHand,handEnc,invEnc,pn,untrained,shield,lv,fam}}
+function gearPanel(){const g=S.gear,G=gearCalc();const inv=attrs().inv.val;const groups=['Melee: Light','Melee: Medium','Melee: Heavy','Missile','Thrown','Might','Shield'];
+ return`<header><h2>Gear</h2><p>What you carry when play begins. Everyone starts with a dagger, a few pieces of armor and some coin to spend.</p></header>
+ <div class="sub"><div class="lab"><b>Starting coin</b>${rollBtn('gcoin','Roll 2d4 × 50')}</div><div class="result">${g.coin===null?'Not rolled yet.':`<b>${G.budget}d</b> in all: ${[G.fam?G.fam+'d from family':'',cdef()&&S.ccoin?S.ccoin+'d from your career':'',S.ro.bonus==='coin'?'100d from rounding out':'',g.coin+'d starting coin'].filter(Boolean).join(' + ')}.<br>Spent <b>${G.armorCost+G.itemCost}d</b> · <b>${G.left}d</b> left`}</div></div>
+ <div class="sub"><div class="lab"><span><b>Armor</b> <span class="hint">one piece for each part of the body</span></span>${rollBtn('gfree','Roll 1d3 + 1 free pieces')}</div>
+  <div class="result">${g.freeN===null?'Roll to see how many pieces you start with for free.':`<b>${g.freeN} free pieces.</b> Your most costly pieces are counted as the free ones, as long as you are trained for them.`} ${G.lv?`You are trained up to ${ARMOR[G.lv-1]}.`:'You have no Armor Training, so Leather is the heaviest you can wear freely.'}</div>
+  <div class="spg">${LOC.map(([k,n])=>`<div class="frow"><label for="arm${k}">${n}</label><select id="arm${k}" data-arm="${k}"><option value="">None</option>${ARM.map(a=>`<option value="${a[0]}" ${g.armor[k]===a[0]?'selected':''}>${a[0]}, AP ${a[2]}, ${a[1]}d</option>`).join('')}</select>${g.armor[k]?`<span class="trail ${G.free.has(k)?'free':''}">${G.free.has(k)?'free':AMAP[g.armor[k]][1]+'d'}</span>`:'<span></span>'}</div>`).join('')}</div>
+  ${G.untrained.length?`<div class="warnbox">You are not trained for ${[...new Set(G.untrained.map(x=>x.a[0]))].join(' or ')} on the body or arms. While you wear it you cannot use Combat Maneuvers.</div>`:''}
+  <div class="result">Bulk <b>${G.bulk}</b>, so Initiative <b>−${G.pen}</b>${Object.keys(G.pn).length?' · '+Object.entries(G.pn).map(([k,v])=>k+' −'+v).join(', '):''}${S.career==='Spellweaver'&&G.pen?` · spells cost ${Math.max(0,G.pen-3*(talentCounts()['Armored Caster']||0))} more`:''}</div></div>
+ <div class="sub"><div class="lab"><span><b>Weapons and shields</b> <span class="hint">a dagger is yours already and is always at hand</span></span></div>
+  ${g.items.length?`<div class="rows">${g.items.map((x,i)=>{const w=WMAP[x.n];return`<div class="item"><span><b>${w[0]}</b> <span class="hint">${w[1]==='Shield'?w[3]:'damage '+w[3]} · ENC ${w[4]}${w[5]?' · '+w[5]:''}</span></span><span class="chips" style="align-items:center"><span class="seg"><button type="button" aria-pressed="${x.hand}" data-act="ghand" data-val="${i}|1">At hand</button><button type="button" aria-pressed="${!x.hand}" data-act="ghand" data-val="${i}|0">Packed</button></span><button class="link" data-act="gdel" data-val="${i}">Remove</button></span></div>`}).join('')}</div>`:''}
+  <div class="chips"><select id="gadd" aria-label="Weapon or shield to buy"><option value="">Choose a weapon or shield…</option>${groups.map(k=>`<optgroup label="${k==='Shield'?'Shields':k}${CATS.some(c=>CAT[c].includes(k))?' (skill '+skillVal(k)+')':''}">${WEAP.filter(w=>w[1]===k).map(w=>`<option value="${w[0]}">${w[0]}, ${w[2]}d${w[1]==='Shield'?', '+w[3]:', damage '+w[3]}</option>`).join('')}</optgroup>`).join('')}</select><button class="btn" data-act="gadd">Buy</button></div>
+  <div class="result">At hand <b>${G.handEnc}</b> of ${G.maxHand} ENC · Packed and coin <b>${G.invEnc}</b> of ${inv} Inventory slots${G.shield?` · Shield ${G.shield[3]}`:''}</div></div>
+ <div class="sub"><div class="lab"><b>Other things</b></div><div class="chips">${MISC.map(m=>`<button class="chip" aria-pressed="${g.misc.includes(m[0])}" data-act="gmisc" data-val="${m[0]}">${m[0]}<small>${m[1]}d</small></button>`).join('')}</div>
+  <div class="result"><b>Supply dice.</b> Gear d12 · Ammo d12 · Rations d12 · Medical d12. Everyday items such as rope, torches and bandages come out of these.</div></div>`}
+const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+
+/* ---------- state ---------- */
+const blank=()=>({folk:'Human',nation:'',place:'',inSet:false,cls:'',occ:'',wealth:1,bg:'',picks:{},dual:'',lang2:'',lang40:'',age:'Adult',birth:null,sibs:null,parent:'',standing:'',travel:null,allies:null,concept:'',career:'',deity:'',role:'lay',sex:'',dualTribe:'',people:'',clan:'',years:null,ageSet:false,abil:[],cuspPick:'',life:{origin:null,youth:null,recent:null},lifeFilter:true,occ2:'',cw:[],cp:{},ctal:[],cswap:'',ccoin:null,sw:newSw(),ro:newRo(),at:newAt(),traits:[],goals:[],gear:newGear(),tsub:{},b30:{},step:6,example:false});
+let S=blank();
+const GM={Sindarin:false,Khuzdul:false,d:1,m:1,y:720};
+const AGE_R={Young:[20,29],Adult:[30,49],Old:[50,69]};
+const ageMid=()=>{const[lo,hi]=AGE_R[S.age];return Math.round((lo+hi)/2)};
+const ageYears=()=>{const[lo,hi]=AGE_R[S.age];return Number.isInteger(S.years)&&S.years>=lo&&S.years<=hi?S.years:ageMid()};
+const ageSettled=()=>{if(!S.ageSet&&roDone()&&!subsMissing('r').length)S.ageSet=true;return!!S.ageSet};
+const yearTxt=y=>y>0?y+' TR':(1-y)+' BT';
+function birthYear(yrs){if(!S.birth)return null;const later=S.birth.m>GM.m||(S.birth.m===GM.m&&S.birth.d>GM.d);return GM.y-(yrs===undefined?ageYears():yrs)-(later?1:0)}
+const campTxt=()=>GM.d+' '+MONTHS[GM.m-1]+' '+yearTxt(GM.y);
+const bornLine=yrs=>S.birth?'Born '+S.birth.d+' '+MONTHS[S.birth.m-1]+', '+yearTxt(birthYear(yrs)):'Set a birth date on Kin &amp; travel to get the birth year.';
+
+/* ---------- derivations ---------- */
+function culture(){const n=NAT[S.nation];if(!n)return'';if(S.folk==='Sindarin'&&n.id==='evael')return'Sindarin';if(S.folk==='Khuzdul'&&n.id==='azadmere')return'Khuzan';return n.human}
+function env(){if(!S.nation)return'';if(S.nation==='tribal')return'Wilderness';return S.inSet&&CITIES.includes(S.place)?'City':'Rural'}
+function classW(){const c=culture();if(!c)return{};const w={...CLASSW[c]};if(c==='Feudal'&&S.nation!=='rethem'){w.serf+=w.slave;delete w.slave}if(orbP()==='Jarin')delete w.noble;return w}
+function occList(){const c=culture();if(!c||!S.cls)return[];const col=S.cls==='serf'?2:CI[c];return OCC[S.cls].map(o=>({name:o[0],urban:o[1],w:o[2][col]})).filter(o=>o.w>0)}
+function occ(){return occList().find(o=>o.name===S.occ)}
+function suggestBg(){const c=culture();if(!c)return'';if(c==='Tribal')return'barbarian';const o=occ();return env()==='City'||(o&&o.urban>=50)?'urban':'rural'}
+const orbP=()=>S.nation==='orbaal'?S.people:'';const otherP=()=>orbP()==='Ivinian'?'Jarin':orbP()==='Jarin'?'Ivinian':'';const orbMixed=()=>S.nation==='orbaal'&&S.dual==='orbaal'&&!!S.people;
+const STIGMA_JARIN='The Jarin of Orbaal are a conquered people. Under Ivinian rule they rarely rise above the rank of guildsman, and none is noble. This holds only in Orbaal.';
+function langOf(nid,cls,folk,tribe){if(nid==='orbaal'&&S.nation==='orbaal'&&S.people)return S.people;if(nid==='evael')return'Sindarin';if(nid==='azadmere')return folk==='Khuzdul'?'Khuzan':'Hârnic';if(nid==='orbaal')return cls==='noble'?'Ivinian':'Jarin';if(nid==='tribal')return tribalLang(tribe===undefined?S.place:tribe);return'Hârnic'}
+const parentOf=l=>(/dialect \((Hârnic|Jarin)\)$/.exec(l)||[])[1]||'';
+const tribalFamily=()=>S.dual==='tribal';
+const STIGMA_KINGDOM='In most realms, those not native to a kingdom rarely rise above the rank of guildsman. The GM sets this aside when your deeds earn it.';
+const STIGMA_TRIBAL='Many in the kingdoms distrust tribal folk and seldom tell one nation from another. The child of a peaceful people is treated like the raiders who burned the next manor. Expect suspicion, and little hope of rank above the unguilded, until your deeds say otherwise.';
+const TRIBE_HARNIC=['Chelni','Gozyda','Hodiri','Kath','Pagaelin','Tulwyn'];
+function tribalLang(t){if(!t)return'Tribal dialect';if(t==='Kamaki')return'Kamakin';if(t==='Solori')return'Solori (Azeri family)';return t+' dialect ('+(TRIBE_HARNIC.includes(t)?'Hârnic':'Jarin')+')'}
+const TRIBE_GARGUN=['Ymodi','Pagaelin','Tulwyn','Equani','Kabloqui'];
+const gargunTribe=()=>S.nation==='tribal'&&TRIBE_GARGUN.includes(S.place);
+const parentLang=()=>S.nation==='tribal'&&S.place&&!['Kamaki','Solori'].includes(S.place)?(TRIBE_HARNIC.includes(S.place)?'Hârnic':'Jarin'):'';
+const langChoices=()=>gargunTribe()?[...LANGS,'Gargun']:LANGS;
+function wiseOf(nid,tribe){return (nid==='tribal'?(tribe||'Tribal'):NAT[nid].name)+'-wise'}
+function tongues(nc){const L=[],W=[];if(!S.nation){addLifeWises(W);if(!nc)careerTongues(L,W);if(!nc)roTongues(L,W);return{L,W}}const nl=langOf(S.nation,S.cls,S.folk);
+ if(S.dual&&NAT[S.dual]){const fl=orbMixed()?otherP():langOf(S.dual,S.cls,S.folk,S.dualTribe);if(fl===nl)L.push([nl,70,'spoken by both cultures']);else if(parentOf(fl)===nl||parentOf(nl)===fl){L.push([nl,70,'where you were raised']);L.push([fl,70,'your family\'s tongue, close kin to it'])}else{L.push([nl,50,orbMixed()?'your own people':'where you were raised']);L.push([fl,50,orbMixed()?'your other parent\'s people':'your family\'s tongue'])}if(orbMixed())W.push([wiseOf(S.nation,S.place),40]);else W.push([wiseOf(S.nation,S.place),30],[wiseOf(S.dual,S.dualTribe),30])}
+ else{L.push([nl,70,'native']);if(S.lang2)L.push([S.lang2,20,'second language']);W.push([wiseOf(S.nation,S.place),40])}
+ L.slice().forEach(l=>{const par=parentOf(l[0]);if(!par)return;const base=l[1]-20;const e=L.find(x=>x[0]===par);if(e){if(e[1]<base){e[1]=base;e[2]='understood through your dialect'}}else L.push([par,base,'understood through the '+l[0].split(' ')[0]+' dialect'])});
+ if(S.bg==='wanderer'&&S.lang40){const e=L.find(l=>l[0]===S.lang40);if(e){e[1]=Math.max(e[1],40)}else L.push([S.lang40,40,'Wanderer upbringing'])}
+ addLifeWises(W);if(!nc)careerTongues(L,W);if(!nc)roTongues(L,W);
+ return{L,W}}
+function addLifeWises(W){lifeGrants().filter(g=>g[0]==='~').forEach(g=>{const n=g.slice(1);const e=W.find(w=>w[0]===n);if(e)e[1]+=10;else W.push([n,20,'life event'])})}
+function slotOpts(sl){let o=sl.opts||sl.from.flatMap(c=>CAT[c]);if(sl.not)o=o.filter(s=>!(S.picks[sl.not]||[]).includes(s));return o}
+function grantLabel(k){return k.split('+').map(g=>g==='$'?'+1 Status':g[0]==='~'?'gain '+g.slice(1)+' at 20':g.startsWith('Strand')?'+2 '+g:'+10 '+g).join(' and ')}
+function expand(spec){return spec.split('|').flatMap(t=>t==='*Combat'?CAT.Combat:t==='*Melee'?['Melee: Light','Melee: Medium','Melee: Heavy']:t==='*Any'?Object.values(CAT).flat():t==='B?'?BINDS.map(b=>'Bind: '+b):t==='T?'?STRANDS.map(x=>'Strand: '+x):t.startsWith('B:')?['Bind: '+t.slice(2)]:t.startsWith('T:')?['Strand: '+t.slice(2)]:t==='G'?['Piety']:[t])}
+function optionsFor(e){return expand(S.career==='Spellweaver'&&e.sw?e.sw:S.career==='Godbound'&&e.gb?e.gb:e.std)}
+const lifeEv=t=>S.life[t]?LIFE[t].find(e=>e.lo===S.life[t].lo):null;
+function lifeGrants(){const out=[];LIFET.forEach(([t])=>{const l=S.life[t];if(l&&l.pick)l.pick.split('+').forEach(g=>out.push(g))});return out}
+function unfit(e){if(e.tag==='noble'&&S.cls&&S.cls!=='noble')return'need noble birth';if(e.tag==='free'&&(S.cls==='slave'||S.cls==='serf'))return'need a free family';return''}
+const IMPLIED={'Tied to the Streets':'Orphan; fostered','Orphan of War':'Orphan; fostered','Shipwrecked':'Orphan; living alone','Found Family':'Fostered with another family','Wild Child':'Orphan; fostered','Home of Ill Repute':'Orphan; fostered','Bastard of High Blood':'Bastard; unacknowledged'};
+function parentClash(){const e=lifeEv('origin');if(!e||!IMPLIED[e.name])return'';const imp=IMPLIED[e.name];const ok=imp.startsWith('Bastard')?S.parent.startsWith('Bastard'):/^(Orphan|Fostered|Adopted)/.test(S.parent);return ok?'':imp}
+function afterOrigin(){const e=lifeEv('origin');if(e&&IMPLIED[e.name]&&!S.parent)S.parent=IMPLIED[e.name]}
+const statusVal=()=>STATUS[S.cls]+lifeGrants().filter(g=>g==='$').length+(cdef()&&S.cswap?2:0)+(S.ro.bonus==='status'?1:0);
+function ledger(){const led={},ex={};const add=(s,a,src)=>{(led[s]=led[s]||[]).push([a,src])};
+ Object.values(CAT).flat().forEach(s=>add(s,Object.values(S.b30).includes(s)?30:20,'base'));
+ const b=BG[S.bg];if(b){b.f20.forEach(s=>add(s,20,'upbringing'));b.f10.forEach(s=>add(s,10,'upbringing'));b.fex.forEach(s=>ex[s]=(ex[s]||0)+1);
+  b.slots.forEach(sl=>(S.picks[sl.id]||[]).forEach(s=>{if(sl.ex)ex[s]=(ex[s]||0)+1;else add(s,sl.amt,'upbringing')}))}
+ lifeGrants().forEach(g=>{if(g!=='$'&&g[0]!=='~')add(g,g.startsWith('Strand')?2:10,'life event')});
+ {const sg=activeSign();if(sg)SIGNSK[sg].forEach((x,i)=>add(x,i?5:10,'sunsign'))}
+ S.abil.forEach(a=>{ABIL[a.name].skills.forEach(x=>add(x,5,'aptitude'));if(a.ex)ex[a.ex]=(ex[a.ex]||0)+1});
+ if(cdef()){Object.entries(S.cp).forEach(([x,n])=>{if(n)add(x,n,'career')});if(S.career==='Godbound'){add('Piety',20,'career');add('Piety',30,'Godbound talent')}if(cdef().magic){const w=S.sw;w.binds.forEach(b=>add('Bind: '+b,10,'chosen Bind'));Object.entries(w.bp).forEach(([b,n])=>{if(n)add('Bind: '+b,n,'career')});STRANDS.forEach(x=>{const n=(w.sl[x]||0)+(w.sx[x]||0);if(n)add('Strand: '+x,n,'career')});talentSlots().forEach(([id,t])=>{if(t==='Strand Secret'&&subOf(id,t))add('Strand: '+subOf(id,t),1,'Strand Secret')});if(w.ex)ex['Bind: '+w.ex]=(ex['Bind: '+w.ex]||0)+1}}
+ {const r=S.ro;Object.entries(r.pts).forEach(([k,n])=>{if(n&&k[0]!=='@')add(k,n,'rounding out')});Object.entries(r.str).forEach(([x,n])=>{if(n)add('Strand: '+x,n,'rounding out')});if(S.age==='Young')add('Endurance',20,'age');if(S.age==='Old')add('Endurance',-20,'age');[r.oldEx,r.humEx].forEach(x=>{if(x)ex[x]=(ex[x]||0)+1})}
+ return{led,ex}}
+function skillVal(x){return Math.max(0,Math.min(70,ledger().led[x].reduce((a,p)=>a+p[0],0)))}
+function slotsLeft(){const b=BG[S.bg];if(!b)return 0;return b.slots.reduce((a,sl)=>a+sl.n-(S.picks[sl.id]||[]).length,0)}
+function issues(){const I={0:[],1:[],2:[],3:[],4:[],6:[],8:[],9:[],10:[],11:[],13:[]};
+ {const G=gearCalc();if(S.gear.coin!==null&&G.left<0)I[13].push('You have spent '+(-G.left)+'d more than you have. Put something back.');if(G.handEnc>G.maxHand)I[13].push('You have '+G.handEnc+' ENC of weapons at hand and room for '+G.maxHand+'. Pack something away.');if(S.gear.items.some(x=>x.n==='Large Shield')&&!talentCounts()['Large Shield Training'])I[13].push('A Large Shield needs the Large Shield Training Talent.');const ov=G.invEnc-attrs().inv.val;if(ov>0)I[13].push('Your pack is '+ov+' over its '+attrs().inv.val+' slots'+(ov>=10?', which is more than anyone can carry.':', which gives −'+(ov<=3?10:ov<=6?20:30)+' to physical skills.'))}
+ if(atLeft()<0)I[11].push('You have spent '+(-atLeft())+' more Attribute points than you have. Take some back.');
+ {const P=roPools();if(P.free<0)I[10].push('You have spent '+(-P.free)+' more points than your age gives. Take some back.');Object.entries(S.ro.pts).forEach(([k,n])=>{if(n&&k[0]!=='@'&&total(k)>70)I[10].push(k+' is '+(total(k)-70)+' over the cap of 70. Take points back or they are lost.')});if(S.ro.savvy.length>savvyMax())I[10].push('You have chosen '+S.ro.savvy.length+' Savvy skills and may have '+savvyMax()+'.')}
+ {const c=cdef();if(c){CATS.forEach(k=>{if(poolLeft(k)<0)I[9].push(k+' is overspent by '+(-poolLeft(k))+'. Take points back.')});Object.entries(S.cp).forEach(([x,n])=>{const over=n?(ledger().led[x].reduce((a,p)=>a+p[0],0)-70):0;if(over>0)I[9].push(x+' is '+over+' over the cap of 70. Take '+over+' career points back or they are lost.')});c.picks.forEach((_,i)=>{if(S.ctal[i]&&!talentOpts(i).includes(S.ctal[i]))I[9].push(S.ctal[i]+' is not a Talent this career offers. Choose again.')});if(c.magic){BINDS.forEach(b=>{const t=(ledger().led['Bind: '+b]||[]).reduce((a,q)=>a+q[0],0);if(t>70)I[9].push('Bind: '+b+' is '+(t-70)+' over the cap of 70. Take points back.')});STRANDS.forEach(x=>{if(strandLv(x)>5&&(S.sw.sl[x]||S.sw.sx[x]))I[9].push('Strand: '+x+' is above level 5. Take a level back.')})}}}
+ LIFET.forEach(([t,n])=>{const l=S.life[t];if(l&&l.pick&&!optionsFor(lifeEv(t)).includes(l.pick))I[8].push('Your '+n+' reward no longer matches the career you have in mind. Choose it again.')});
+ if(S.career==='Godbound'&&!roleAllowed(S.role))I[6].push(S.role==='order'?'Halea\'s fighting order, the Sólithar, takes only men. Choose another place in the faith or change sex on the Folk tab.':'Only women are ordained in Halea\'s church. Choose another place in the faith or change sex on the Folk tab.');const c=culture();
+ if(S.nation==='evael'&&S.folk!=='Sindarin')I[1].push('Evael is a Sindarin realm. Choose another birthplace or change folk.');
+ if(S.nation&&S.place&&!NAT[S.nation].places.some(p=>p.name===S.place))I[1].push('The settlement no longer matches the nation.');
+ if(S.cls&&c&&!(S.cls in classW()))I[2].push(orbP()==='Jarin'&&S.cls==='noble'?'No Jarin holds noble rank in Orbaal. Choose another class, or make the character Ivinian on the Birthplace tab (a child recognised by an Ivinian father counts as Ivinian).':CLASSES[S.cls]+' is not a class in '+c+' society here. Choose another.');
+ if(S.occ&&S.cls&&c&&(S.cls in classW())&&!occ())I[2].push(S.occ+' is not found among the '+CLASSES[S.cls]+' class in '+c+' society. Choose another.');
+ if(S.dual&&S.dual===S.nation&&!orbMixed()&&(S.dual!=='tribal'||S.dualTribe===S.place))I[4].push('The family culture is the same as the birthplace. Pick a different one or switch to native.');
+ if(tribalFamily()&&!S.dualTribe)I[4].push('Choose which tribal nation your family is from.');
+ return I}
+function done(i){switch(i){case 0:return!!S.birth;case 1:return!!(S.nation&&S.place)&&(S.nation!=='orbaal'||!!S.people);case 2:return!!(S.cls&&S.occ);case 3:return!!S.bg&&slotsLeft()===0;case 4:return!!S.nation;case 5:return!!(S.sibs&&S.travel);case 6:return Object.keys(CAT).every(c=>S.b30[c]);case 7:return S.abil.length===2&&S.abil.every(a=>a.ex&&a.talent&&a.desc)&&!subsMissing('a').length;case 8:return LIFET.every(([t])=>S.life[t]&&S.life[t].pick);case 9:{const c=cdef();return!!c&&CATS.every(k=>poolLeft(k)===0)&&c.picks.every((_,i)=>S.ctal[i])&&S.cw.slice(0,c.cw[0]).filter(x=>x.mode&&(x.mode!=='wise'||x.name)).length===c.cw[0]&&S.ccoin!==null&&(!c.magic||swDone())&&!subsMissing('fc').length}case 10:return roDone()&&!subsMissing('r').length;case 11:return atLeft()===0&&S.at.tough%2===0;case 12:return S.traits.length>=2&&S.traits.length<=3;case 13:return S.gear.coin!==null&&S.gear.freeN!==null&&gearCalc().left>=0}}
+function signPair(b){const doy=(b.m-1)*30+b.d;let i=SIGNS.length-1;for(let k=0;k<SIGNS.length;k++)if(doy>=SIGNS[k][1])i=k;const start=SIGNS[i][1];const into=(doy-start+360)%360;const next=SIGNS[(i+1)%12];const len=(next[1]-start+360)%360;
+ return{main:SIGNS[i][0],other:into<2?SIGNS[(i+11)%12][0]:into>=len-2?next[0]:''}}
+function sunsign(b){const p=signPair(b);return p.other?p.main+'–'+p.other+' cusp':p.main}
+const SIGNSK={Ulandus:['Naturewise','Heal','Endurance'],Aralius:['Athletics','Inspire','Survival'],Feniri:['Craft: Practical','Locks & Traps','Might'],Ahnu:['Craft: Artistic','Melee: Heavy','Intimidate'],Angberelius:['Melee: Medium','Melee: Light','Thrown'],Nadai:['Dodge','Perform','Stealth'],Hirin:['Perception','Missile','Track'],Tarael:['Commerce','Deceive','Sleight of Hand'],Tai:['Ancient Lore','Common Lore','Arcana'],Skorus:['Wit','Persuade','Streetwise'],Masara:['Seduce','Insight','Willpower'],Lado:['Sail/Boat','Ride','Protocol']};
+const SIGNINFO={Ulandus:['the Tree','patient, confident and calm','aloof, inflexible and stubborn'],Aralius:['the Wands','energetic, optimistic and enthusiastic','impulsive, demanding and volatile'],Feniri:['the Smith','hard-working, productive and restless','impatient, argumentative and obsessive'],Ahnu:['the Fire Dragon','ambitious, experimental and idealistic','perfectionist, critical and quick-tempered'],Angberelius:['the Flaming Swords','lively, impassioned and persistent','blunt, aggressive and destructive'],Nadai:['the Salamander','exuberant, imaginative and spontaneous','unfocused, evasive and wasteful'],Hirin:['the Eagle','free-spirited, instinctive and opportunistic','rebellious, inscrutable and merciless'],Tarael:['the Pentacle','dedicated, contemplative and indirect','enigmatic, indecisive and obedient'],Tai:['the Lantern Bearer','philosophical, truthful and restrained','unemotional, inconsiderate and naive'],Skorus:['the Mixer','personable, curious and inspiring','avid, intrusive and dictatorial'],Masara:['the Chalice','affectionate, tenacious and emotional','temperamental, resentful and overbearing'],Lado:['the Galley','composed, tolerant and adaptive','yielding, indulgent and nonchalant']};
+function activeSign(){if(!S.birth)return'';const p=signPair(S.birth);return p.other&&S.cuspPick===p.other?p.other:p.main}
+function travelMod(){let m=0;const parts=[];const add=(v,l)=>{if(v){m+=v;parts.push((v>0?'+':'−')+Math.abs(v)+' '+l)}};
+ add(S.folk==='Sindarin'?4:S.folk==='Khuzdul'?2:0,S.folk);add(S.age==='Young'?-2:S.age==='Old'?2:0,S.age.toLowerCase());
+ add(S.cls==='noble'?3:(S.cls==='slave'||S.cls==='serf')?-4:S.cls?-1:0,S.cls==='noble'?'noble':(S.cls==='slave'||S.cls==='serf')?'unfree':'free');
+ const e=env();add(e==='City'?1:e?-2:0,e.toLowerCase());
+ const o=S.occ;add(/Seaman|Pilot/.test(o)?5:/Hunter|Mercantyler|Mercenary|Teamster/.test(o)?2:0,'family trade');return{m,parts}}
+
+/* ---------- rolls ---------- */
+const R={
+ nation(){const pool=NATIONS.filter(n=>n.w>0);S.nation=pickW(pool).id;R.place();if(S.nation==='orbaal')R.people()},
+ place(){const n=NAT[S.nation];S.place=pickW(n.places).name;S.inSet=rnd(100)<=10},
+ people(){const w={noble:100,guilded:55,unguilded:55,serf:5,slave:10}[S.cls];S.people=rnd(100)<=(w===undefined?25:w)?'Ivinian':'Jarin';if(S.people==='Jarin')S.clan=''},
+ years(){const[lo,hi]=AGE_R[S.age];S.years=lo+rnd(hi-lo+1)-1;S.ageSet=true},
+ cls(){const w=classW();S.cls=pickW(Object.entries(w).map(([name,w])=>({name,w}))).name;R.occ()},
+ occ(){const l=occList();S.occ=l.length?pickW(l).name:''},
+ picks(){const b=BG[S.bg];S.picks={};if(!b)return;b.slots.forEach(sl=>{const o=slotOpts(sl).slice();const p=[];while(p.length<sl.n&&o.length)p.push(o.splice(rnd(o.length)-1,1)[0]);S.picks[sl.id]=p})},
+ b30(){Object.entries(CAT).forEach(([c,l])=>S.b30[c]=l[rnd(l.length)-1])},
+ sex(){S.sex=rnd(100)<={Human:48,Sindarin:45,Khuzdul:75}[S.folk]?'Male':'Female'},
+ abil(){const k=Object.keys(ABIL);const a=rnd(6);let b=rnd(6);while(b===a)b=rnd(6);S.abil=[a,b].map(i=>({name:k[i-1],ex:'',talent:'',desc:''}))},
+ abilRest(){S.abil.forEach(a=>{const v=ABIL[a.name];const pk=l=>l[rnd(l.length)-1];if(!a.ex)a.ex=pk(v.skills);if(!a.talent)a.talent=pk(v.talents);if(!a.desc)a.desc=pk(v.desc)})},
+ birth(){S.birth={m:rnd(12),d:rnd(30)}},
+ swRest(){const w=S.sw;const pk=l=>l[rnd(l.length)-1];if(w.binds.length<2||w.strands.length<4||w.thin.length<2){const k=Object.keys(SWT);const t=SWT[HOUSE[S.occ2]&&HOUSE[S.occ2][1]||pk(k)];if(w.binds.length<2)w.binds=t[0].slice();if(w.strands.length<4){w.strands=t[1].slice();w.thin=w.thin.filter(x=>!w.strands.includes(x))}while(w.thin.length<2){const o=STRANDS.filter(x=>!w.strands.includes(x)&&!w.thin.includes(x));w.thin.push((t[2].find(x=>o.includes(x)))||pk(o))}}swClean();
+  let g=500;while(sum(w.bp)<100&&g--){const o=BINDS.filter(b=>baseVal('Bind: '+b)+(w.bp[b]||0)<70);if(!o.length)break;const b=pk(w.binds.filter(x=>o.includes(x)).concat(o));w.bp[b]=(w.bp[b]||0)+5}
+  g=200;while(sum(w.sl)<10&&g--){const o=w.strands.filter(x=>strandLv(x)<5);if(!o.length)break;const x=pk(o);w.sl[x]=(w.sl[x]||0)+1}
+  g=200;while(sum(w.sx)<3&&g--){const o=STRANDS.filter(x=>!w.thin.includes(x)&&strandLv(x)<5);if(!o.length)break;const x=pk(o);w.sx[x]=(w.sx[x]||0)+1}
+  if(!w.ex)w.ex=pk(w.binds);if(!w.thread)w.thread='Strand: '+pk(w.strands)},
+ roRest(){const r=S.ro;const keys=[...Object.values(CAT).flat(),...(S.career==='Spellweaver'?BINDS.map(b=>'Bind: '+b):[]),...(S.career==='Godbound'?['Piety']:[])];let g=800;while(g--){const o=keys.filter(k=>70-total(k)>=5&&roOk(roCat(k),5));if(!o.length)break;const k=o[rnd(o.length)-1];r.pts[k]=(r.pts[k]||0)+5}},
+ roAll(){S.ro=newRo();const r=S.ro;const pk=l=>l[rnd(l.length)-1];r.bonus=pk(['talent','status','coin']);const tl=Object.values(talentGroups()).flat();if(r.bonus==='talent')r.btal=pk(tl);R.roRest();const sk=roSkillKeys().slice();while(r.savvy.length<savvyMax())r.savvy.push(sk.splice(rnd(sk.length)-1,1)[0]);if(S.age==='Old')r.oldEx=pk(roSkillKeys());if(S.folk==='Human'){r.humEx=pk(roSkillKeys());r.humTal=pk(tl)}},
+ gcoin(){S.gear.coin=dice(2,4)*50},
+ gfree(){S.gear.freeN=rnd(3)+1},
+ gearAll(){S.gear=newGear();const g=S.gear;R.gcoin();R.gfree();const lv=trainLv();const best=ARM.filter(a=>a[4]<=lv).pop()[0];['Body','Head','LLeg','RLeg'].slice(0,g.freeN).forEach(k=>g.armor[k]=best);const sk=['Melee: Light','Melee: Medium','Melee: Heavy','Missile'].sort((a,b)=>skillVal(b)-skillVal(a))[0];const can=WEAP.filter(w=>w[1]===sk&&w[2]<=gearCalc().left&&w[0]!=='Dagger'&&w[0]!=='Lance');if(can.length){const w=can[rnd(can.length)-1];g.items.push({n:w[0],hand:true})}if(sk!=='Missile'&&sk!=='Melee: Heavy'&&gearCalc().left>=75)g.items.push({n:'Medium Shield',hand:true})},
+ atAll(){S.at=newAt();const a=S.at;let g=50;while(atLeft()>0&&g--){const k=['res','init','tough','dt'][rnd(4)-1];if(k==='tough'){if(atLeft()>=2)a.tough+=2}else a[k]++}},
+ ccoin(){const c=cdef();S.ccoin=dice(c.coin[0],c.coin[1])*c.coin[2]},
+ cpRest(){CATS.forEach(k=>{let guard=500;while(poolLeft(k)>0&&guard--){const open=CAT[k].filter(x=>baseVal(x)+(S.cp[x]||0)<70);if(!open.length)break;const x=open[rnd(open.length)-1];S.cp[x]=(S.cp[x]||0)+Math.min(5,poolLeft(k),70-baseVal(x)-(S.cp[x]||0))}})},
+ careerAll(){const c=cdef();if(!c)return;S.occ2=c.occ[rnd(c.occ.length)-1];S.cw=[];for(let i=0;i<c.cw[0];i++)S.cw.push(i===1?{mode:'lang:'+(LANGS.find(l=>!tongues(true).L.some(x=>x[0]===l))||'Jarin'),name:''}:{mode:'wise',name:i?(S.place||'Home')+' district':S.occ2});S.cp={};R.cpRest();S.ctal=[];c.picks.forEach((_,i)=>{const o=talentOpts(i);S.ctal[i]=o[rnd(o.length)-1]});S.cswap='';R.ccoin();S.sw=newSw();if(c.magic)R.swRest()},
+ life(t){const pool=LIFE[t].filter(e=>!(t==='origin'&&S.lifeFilter&&unfit(e))).map(e=>({name:e.lo,w:e.hi-e.lo+1}));const lo=pickW(pool).name;S.life[t]={lo,pick:'',rel:''};const o=optionsFor(lifeEv(t));if(o.length===1)S.life[t].pick=o[0];if(t==='origin')afterOrigin()},
+
+ sibs(){const c=culture();const n=c==='Khuzan'?dice(3,3)-2:c==='Sindarin'?dice(3,2)-2:(c==='Tribal'&&S.bg!=='wanderer')?dice(8,2)-7:dice(6,2)-5;S.sibs={n,rank:rnd(n)}},
+ parent(){S.parent=pickW(PARENT).name},
+ standing(){const r=rnd(100)+(S.sibs&&S.sibs.rank===1?5:0);S.standing=r<=10?'Outcast':r<=40?'Unpopular':r<=60?'Average':r<=95?'Popular':'Favorite'},
+ travel(){const roll=rnd(10);S.travel={roll}},
+ allies(){const r=rnd(10);const who=()=>{const w=rnd(10);return w===1?'a relative in another trade':w<=3?'someone in another trade':w<=7?'a colleague':w<=9?'a superior':'a noble or official'};
+  const out=[];const ally=()=>{const w=who();out.push((/superior|noble/.test(w)?'Patron':'Friend')+': '+w)};const rival=()=>out.push('Rival: '+who());
+  if(r===1){rival();rival()}else if(r<=3)rival();else if(r>=8&&r<=9)ally();else if(r===10){ally();ally();rival()}S.allies=out}
+};
+['abilRest','careerAll','roAll'].forEach(k=>{const f=R[k];R[k]=function(){f.apply(R,arguments);fillSubs()}});
+function rollAll(){rollAll0();if(S.career==='Godbound'&&issues()[6].length)S.role='lay';fillSubs()}
+function rollAll0(){const st=S.step;S=blank();S.step=st;const folks=['Human'];S.folk='Human';R.sex();R.b30();S.career=CAREERS[rnd(CAREERS.length)-1];if(S.career==='Godbound'){const ds=Object.keys(FAITH);S.deity=ds[rnd(ds.length)-1];const rs=Object.keys(ROLES).filter(r=>r==='lay'||FAITH[S.deity][r]);S.role=rs[rnd(rs.length)-1]}R.nation();R.cls();if(S.nation==='orbaal')R.people();S.wealth=rnd(3)-1;S.bg=suggestBg();R.picks();
+ if(rnd(100)<=15){const o=NATIONS.filter(n=>!['other','evael',S.nation].includes(n.id));S.dual=o[rnd(o.length)-1].id;if(S.dual==='tribal')S.dualTribe=pickW(NAT.tribal.places).name}
+ else if(rnd(100)<=50){const nl=langOf(S.nation,S.cls,S.folk);const o=LANGS.filter(l=>l!==nl&&l!=='Sindarin');S.lang2=otherP()||o[rnd(o.length)-1]}
+ if(S.bg==='wanderer')S.lang40='Jarin';S.age=['Young','Adult','Adult','Old'][rnd(4)-1];R.years();R.birth();R.sibs();R.parent();R.standing();R.travel();R.allies();R.abil();R.abilRest();LIFET.forEach(([t])=>{R.life(t);const o=optionsFor(lifeEv(t));S.life[t].pick=o[rnd(o.length)-1]});R.careerAll();R.roAll();R.atAll();R.gearAll();{const k=Object.keys(TRAITS).concat(signWords());const n=1+rnd(2);while(S.traits.length<n){const t=k[rnd(k.length)-1];if(!S.traits.includes(t))S.traits.push(t)}}}
+function example(){S=blank();Object.assign(S,{nation:'kaldor',place:'Olokand',inSet:false,cls:'unguilded',occ:'Soldier: Yeoman',wealth:1,bg:'rural',
+ picks:{c10:['Missile','Melee: Medium'],rs:['Ride'],s10:['Insight','Persuade'],ad:['Divinity'],e1:['Naturewise']},lang2:'Jarin',age:'Adult',birth:{m:5,d:12},life:{origin:{lo:79,pick:'Melee: Medium',rel:''},youth:{lo:37,pick:'Ride',rel:'Friend'},recent:{lo:39,pick:'Willpower',rel:''}},sibs:{n:4,rank:2},parent:'Father dead; mother remarried',standing:'Popular',travel:{roll:8},allies:['Friend: a colleague'],concept:'A yeoman\'s son who wants more than a spear and a strip of land',career:'Warrior',sex:'Male',occ2:'Yeoman',cw:[{mode:'wise',name:'Longbow'}],cp:{Missile:25,'Melee: Medium':20,Dodge:20,Might:15,Perception:20,Endurance:15,Survival:15,Persuade:20,Insight:10,Intimidate:10,'Common Lore':20,Heal:10},ctal:['Rapid Fire'],ccoin:20,at:{res:1,init:1,tough:2,dt:1,rInit:null,rDT:null},gear:{coin:250,freeN:3,armor:{Body:'Scale',Head:'Leather',LLeg:'Quilt',RLeg:'Quilt'},items:[{n:'Longbow',hand:true},{n:'Broadsword',hand:true}],misc:[]},traits:['Loyal','Persistent'],goals:[{text:'I will win a place among the royal archers at Olokand so that my family keeps its holding.',kind:'individual'},{text:'We will find out who has been robbing caravans on the Silver Way.',kind:'shared'}],ro:{bonus:'talent',btal:'Eagle Eye',pts:{Athletics:20,Stealth:20,Track:20,Willpower:20,Ride:10,Heal:10},str:{},neww:[],savvy:['Missile','Perception','Survival','Melee: Medium'],oldEx:'',humEx:'Missile',humTal:'Steely Thews'},tsub:{rb:'Longbow'},abil:[{name:'Dexterity',ex:'Missile',talent:'Combat Awareness',desc:'Quick'},{name:'Constitution',ex:'Endurance',talent:'Mettle',desc:'Hardy'}],b30:{Combat:'Missile',Adventuring:'Perception',Social:'Persuade',Lore:'Common Lore'},example:true,step:3});$('#name').value='Aldric of Olokand'}
+
+/* ---------- render ---------- */
+const cLeft=(n,t,word='left')=>`<span class="cnt ${n<0?'bad':n===0?'ok':'warn'}">${n<0?(-n)+' over':n+' of '+t+' '+word}</span>`;
+const cChosen=(n,t)=>`<span class="cnt ${n===t?'ok':n>t?'bad':'warn'}">${n} of ${t} chosen</span>`;
+const chip=(label,on,act,val,extra='',dis=false)=>`<button class="chip" aria-pressed="${on}" data-act="${act}" data-val="${val}" ${dis?'disabled':''}>${label}${extra?`<small>${extra}</small>`:''}</button>`;
+const rollBtn=(what,label='Roll')=>`<button class="btn roll" data-act="roll" data-val="${what}">${label}</button>`;
+function panel(){const I=issues();const warn=(I[S.step]||[]).map(m=>`<div class="warnbox">${m}</div>`).join('');let h='';const c=culture();
+ if(S.step===0){h=`<header><h2>Folk</h2><p>Nearly everyone on Hârn is human. The elder folk are rare enough that the GM decides whether they can be played.</p></header>${warn}
+  <div class="cards">${[['Human','The peoples of the kingdoms and the tribal nations.'],['Sindarin','The elves of Evael. Few, long-lived, and seldom seen abroad.'],['Khuzdul','The dwarves of Azadmere. Makers and miners.']].map(([f,t])=>{const lock=f!=='Human'&&!GM[f];return`<button class="card" aria-pressed="${S.folk===f}" data-act="folk" data-val="${f}" ${lock?'disabled':''}><span class="tag ${lock?'lock':''}">${lock?'Locked by the GM':f==='Human'?'Usual choice':'Unlocked'}</span><h3>${f}</h3><span>${t}</span></button>`}).join('')}</div>
+  <div class="field"><div class="lab"><b>Sex</b>${rollBtn('sex','Roll d100')}</div><div class="chips">${['Female','Male'].map(x=>chip(x,S.sex===x,'sex',x)).join('')}</div><span class="hint">Your choice. It matters for a few church offices, such as Halea's.</span></div>
+  ${(()=>{const pr=S.birth?signPair(S.birth):null;const sg=activeSign();const k=sg?SIGNSK[sg]:[];
+   return`<div class="field"><div class="lab"><b>Birthdate and sunsign</b>${rollBtn('birth','Roll 1d12 and 1d30')}</div><div class="chips">${SIGNS.map(([n])=>chip(n,!!pr&&(pr.main===n||pr.other===n),'sign',n)).join('')}</div>
+   ${pr&&pr.other?`<div class="lab"><span><b>Born on a cusp</b> <span class="hint">choose which sign's gifts you take</span></span></div><div class="chips">${[pr.main,pr.other].map(n=>chip(n,sg===n,'cusp',n)).join('')}</div>`:''}
+   <div class="result">${S.birth?`Born <b>${S.birth.d} ${MONTHS[S.birth.m-1]}</b> under <b>${sunsign(S.birth)}</b>. ${sg}, ${SIGNINFO[sg][0]}, gives <b>+10</b> ${k[0]} and <b>+5</b> ${k[1]} and ${k[2]}.<br>Those born under it tend to be ${SIGNINFO[sg][1]}; at worst ${SIGNINFO[sg][2]}.`:'Roll a date, or pick a sign and a date under it is rolled for you.'}</div></div>`})()}
+  <p class="hint">Traits for the elder folk aren't written yet. Unlock them in GM settings to see how the later steps respond.</p>`}
+ if(S.step===1){const n=NAT[S.nation];const tribal=S.nation==='tribal';
+  h=`<header><h2>Birthplace</h2><p>Where you were born decides the kind of society that raised you. Everything after this is narrowed by it.</p></header>${warn}
+  <div class="field"><div class="lab"><b>Realm</b>${rollBtn('nation','Roll d100')}</div><div class="chips">${NATIONS.filter(x=>x.id!=='evael'||GM.Sindarin||S.nation==='evael').map(x=>chip(x.name,S.nation===x.id,'nation',x.id,x.w?x.w+'%':'')).join('')}</div></div>
+  ${n?`<div class="field"><div class="lab"><label for="place"><b>${tribal?'Tribal nation':'Nearest keep, castle or town'}</b></label>${rollBtn('place','Roll d100')}</div><select id="place" data-set="place"><option value="">Choose…</option>${n.places.map(p=>`<option ${S.place===p.name?'selected':''}>${p.name}</option>`).join('')}</select></div>`:''}
+  ${n&&S.place&&!tribal?`<div class="field"><div class="lab"><b>Born where, exactly?</b></div><div class="chips">${chip('A village near '+S.place,!S.inSet,'inSet','0','90%')}${chip('In '+S.place+' itself',S.inSet,'inSet','1','10%')}</div></div>`:''}
+  ${S.nation==='orbaal'?`<div class="field"><div class="lab"><span><b>People</b> <span class="hint">Orbaal has two: the Ivinian conquerors and the Jarin they rule.</span></span>${rollBtn('people','Roll d100')}</div><div class="chips">${chip('Ivinian',S.people==='Ivinian','people','Ivinian')}${chip('Jarin',S.people==='Jarin','people','Jarin')}</div>${S.people?`<span class="hint">${S.people} is your native tongue, and ${otherP()} the usual second. If your parents were one of each, choose the people you count as here, then "Between two cultures" on the Tongues tab.</span>`:''}</div>
+  ${S.people==='Ivinian'?`<div class="field"><div class="lab"><label for="clan"><b>Clan</b> <span class="hint">optional</span></label></div><input class="text" id="clan" data-set="clan" value="${esc(S.clan)}" placeholder="Your clan's name"></div>${['serf','slave'].includes(S.cls)?`<p class="note">An Ivinian ${CLASSES[S.cls].toLowerCase()} is rare: a captive brought from Ivinia, perhaps, or taken from a clan that lost. Say how it happened in your backstory.</p>`:''}`:''}
+  ${S.people==='Jarin'?`<p class="note">${STIGMA_JARIN}</p>`:''}`:''}
+  ${c?`<div class="result">Society: <b>${c}</b> · Surroundings: <b>${env()}</b></div>`:''}`}
+ if(S.step===2){const w=classW();const tot=Object.values(w).reduce((a,b)=>a+b,0);const ol=occList();const o=occ();
+  h=`<header><h2>Station</h2><p>The class you were born into and the trade of the household that raised you. ${c?`These are the classes of ${c} society.`:''}</p></header>${warn}
+  ${!c?'<div class="result">Choose a birthplace first. It decides which classes exist.</div>':`
+  <div class="field"><div class="lab"><b>Social class</b>${rollBtn('cls','Roll d100')}</div><div class="chips">${Object.keys(CLASSES).filter(k=>k in w||k===S.cls).map(k=>chip(CLASSES[k],S.cls===k,'cls',k,k in w?Math.round(w[k]/tot*100)+'%':'')).join('')}</div><span class="hint">HârnMaster recommends choosing class to suit the campaign. The percentages show how common each is.</span></div>
+  ${S.cls&&(S.cls in w)?`<div class="field"><div class="lab"><label for="occ"><b>Parent's occupation</b></label>${rollBtn('occ','Roll d100')}</div><select id="occ" data-set="occ"><option value="">Choose…</option>${ol.map(x=>`<option ${S.occ===x.name?'selected':''}>${x.name}</option>`).join('')}</select>${o?`<span class="hint">${o.urban}% of ${o.name.toLowerCase()} households live in towns.</span>`:''}</div>`:''}
+  ${S.cls&&S.cls!=='slave'&&(S.cls in w)?`<div class="field"><div class="lab"><b>Family wealth</b></div><div class="chips">${['Poor','Average','Rich'].map((l,i)=>chip(l,S.wealth===i,'wealth',i,WEALTH[S.cls][i]+'d')).join('')}</div></div>`:''}
+  ${S.cls?`<div class="result">Starting Status: <b>${STATUS[S.cls]}</b> (proposed) · Coin: <b>${S.cls==='slave'?'none':WEALTH[S.cls][S.wealth]+'d'}</b></div>`:''}
+  ${orbP()==='Jarin'?`<p class="note">${STIGMA_JARIN}</p>`:orbP()==='Ivinian'&&['serf','slave'].includes(S.cls)?`<p class="note">An Ivinian ${CLASSES[S.cls].toLowerCase()} is rare. Say how it happened in your backstory.</p>`:''}`}`}
+ if(S.step===3){const sg=suggestBg();const b=BG[S.bg];
+  h=`<header><h2>Upbringing</h2><p>The Background from the Broken Empires rules. Your birthplace and station suggest one, but the choice is yours.</p></header>${warn}
+  <div class="cards">${Object.entries(BG).map(([k,v])=>`<button class="card" aria-pressed="${S.bg===k}" data-act="bg" data-val="${k}">${sg===k?'<span class="tag">Suggested by your origin</span>':''}<h3>${v.name}</h3><span>${v.blurb}</span></button>`).join('')}</div>
+  ${b?`<div class="result">Given to everyone with this upbringing: <b>+20</b> ${b.f20.join(', ')} · <b>+10</b> ${b.f10.join(', ')}${b.fex.length?` · <b>Expertise</b> ${b.fex.join(', ')}`:''}</div>
+  <div class="lab"><b>Your choices</b>${rollBtn('picks','Roll the rest')}</div>
+  ${b.slots.map(sl=>{const p=S.picks[sl.id]||[];return`<div class="field"><div class="lab"><span><b>${sl.label}</b> <span class="hint">${sl.ex?'one level':'+'+sl.amt}</span></span>${cChosen(p.length,sl.n)}</div><div class="chips">${slotOpts(sl).map(s=>chip(s,p.includes(s),'pick',sl.id+'|'+s)).join('')}</div></div>`}).join('')}`:''}`}
+ if(S.step===4){const t=tongues();const nl=S.nation?langOf(S.nation,S.cls,S.folk):'';
+  h=`<header><h2>Tongues</h2><p>A native knows one culture deeply. Someone raised between two knows both, but neither as well.</p></header>${warn}
+  ${!S.nation?'<div class="result">Choose a birthplace first.</div>':`
+  <div class="cards"><button class="card" aria-pressed="${!S.dual}" data-act="dual" data-val=""><h3>Native</h3><span>Your family is of ${NAT[S.nation].name}. Home language at 70, its -wise at 40, and one other language at 20.</span></button>
+  <button class="card" aria-pressed="${!!S.dual}" data-act="dual" data-val="pick"><h3>Between two cultures</h3><span>Your family came from elsewhere. Both languages at 50 and both -wises at 30.</span></button></div>
+  ${S.dual?`<div class="field"><div class="lab"><label for="dual"><b>Your family's culture</b></label></div><select id="dual" data-set="dual">${NATIONS.filter(n=>n.id!=='other'&&(n.id!=='evael'||GM.Sindarin)).map(n=>`<option value="${n.id}" ${S.dual===n.id?'selected':''}>${n.name}${n.id==='orbaal'&&otherP()?' (the '+otherP()+')':''}</option>`).join('')}</select></div>
+  ${tribalFamily()?`<div class="field"><div class="lab"><label for="dualTribe"><b>Which tribal nation?</b></label></div><select id="dualTribe" data-set="dualTribe"><option value="">Choose…</option>${NAT.tribal.places.filter(t=>!(S.nation==='tribal'&&t.name===S.place)).map(t=>`<option ${S.dualTribe===t.name?'selected':''}>${t.name}</option>`).join('')}</select></div>`:''}
+  <p class="note">${tribalFamily()&&S.nation!=='tribal'?STIGMA_TRIBAL:STIGMA_KINGDOM}</p>`
+  :`<div class="field"><div class="lab"><label for="lang2"><b>Second language at 20</b></label></div><select id="lang2" data-set="lang2"><option value="">None yet</option>${langChoices().filter(l=>l!==nl&&l!==parentLang()).map(l=>`<option ${S.lang2===l?'selected':''}>${l}</option>`).join('')}</select>${otherP()&&S.lang2!==otherP()?`<span class="hint">Most ${orbP()} in Orbaal pick up some ${otherP()}.</span>`:''}${gargunTribe()?`<span class="hint">The ${S.place} deal with the gargun often enough that some learn their speech.</span>`:''}${S.travel?`<span class="hint">Travel so far: ${travelOut().label}. Roll or change it under Kin & travel.</span>`:'<span class="hint">Your travel roll under Kin & travel can justify this choice.</span>'}</div>`}
+  ${S.bg==='wanderer'?`<div class="field"><div class="lab"><label for="lang40"><b>Wanderer's extra language at 40</b></label></div><select id="lang40" data-set="lang40"><option value="">Choose…</option>${langChoices().map(l=>`<option ${S.lang40===l?'selected':''}>${l}</option>`).join('')}</select></div>`:''}
+  <p class="hint">Dialects: ten tribal nations speak dialects of Jarin and six speak dialects of Hârnic. A speaker of the parent language follows one of its dialects at 20 less than their own skill, and a dialect speaker follows the parent language the same way.</p>
+  <div class="result">${t.L.map(l=>`<b>${l[0]} ${l[1]}</b> (${l[2]})`).join(' · ')}<br>${t.W.map(w=>`<b>${w[0]} ${w[1]}</b>`).join(' · ')}</div>`}`}
+ if(S.step===5){const tm=travelMod();
+  h=`<header><h2>Kin & travel</h2><p>None of this changes a number. It gives you and the GM a family to draw on and a sense of how much of the world you have seen.</p></header>
+  <div class="field"><div class="lab"><b>Siblings</b>${rollBtn('sibs')}</div><div class="result">${S.sibs?(S.sibs.n===1?'<b>An only child</b>':`<b>${ord(S.sibs.rank)} of ${S.sibs.n}</b> children`):'Not rolled yet.'}</div></div>
+  <div class="field"><div class="lab"><label for="parent"><b>Parentage</b></label>${rollBtn('parent','Roll d100')}</div><select id="parent" data-set="parent"><option value="">Choose…</option>${PARENT.map(p=>`<option ${S.parent===p.name?'selected':''}>${p.name}</option>`).join('')}</select></div>
+  <div class="field"><div class="lab"><b>Standing in the clan</b>${rollBtn('standing','Roll d100')}</div><div class="chips">${STANDING.map(s=>chip(s,S.standing===s,'standing',s)).join('')}</div></div>
+  <div class="field"><div class="lab"><b>Travel before play</b>${rollBtn('travel','Roll d10')}</div><div class="result">${S.travel?`d10 → ${S.travel.roll}${tm.parts.length?', '+tm.parts.join(', '):''} = <b>${S.travel.roll+tm.m}</b> · <b>${travelOut().label}</b>: ${travelOut().text}.`:'Not rolled yet. Modifiers from your origin so far: '+(tm.parts.join(', ')||'none')+'.'}</div></div>
+  <div class="field"><div class="lab"><b>Allies and rivals</b>${rollBtn('allies','Roll d10')}</div><div class="result">${S.allies?(S.allies.length?S.allies.map(a=>`<b>${a.split(': ')[0]}</b>: ${a.split(': ')[1]}`).join(' · '):'None to speak of.'):'Not rolled yet.'}</div></div>`}
+ if(S.step===6){h=`<header><h2>Concept</h2><p>Start with a rough idea of who this is. It isn't binding. Then name what they were always best at.</p></header>${warn}
+  <div class="field"><div class="lab"><label for="concept"><b>In a sentence</b></label></div><input id="concept" class="text" data-set="concept" value="${esc(S.concept)}" placeholder="A runaway squire turned caravan guard"></div>
+  <div class="field"><div class="lab"><span><b>The career you have in mind</b> <span class="hint">optional</span></span></div><div class="chips">${CAREERS.map(c=>chip(c,S.career===c,'career',c)).join('')}</div><span class="hint">Some life events reward a future Spellweaver or Godbound differently, so it helps to say so now. You can change it later.</span></div>
+  ${careerExtra()}
+  <div class="lab"><b>One skill at 30 in each category</b>${rollBtn('b30','Roll all four')}</div>
+  ${Object.entries(CAT).map(([c,list])=>`<div class="field"><div class="lab"><b>${c}</b><span class="hint">${S.b30[c]?'30 in '+S.b30[c]:'not chosen'}</span></div><div class="chips">${list.map(x=>chip(x,S.b30[c]===x,'b30',c+'|'+x)).join('')}</div></div>`).join('')}
+  <p class="hint">Every other skill starts at 20. Magic skills start at zero and come later.</p>`}
+ if(S.step===7){const full=S.abil.length>=2;
+  h=`<header><h2>Ability scores</h2><p>Two things you were naturally good at before anyone taught you anything. Each gives +5 to a handful of skills, one level of Expertise, a Talent and a word that describes you.</p></header>
+  <div class="field"><div class="lab"><b>Choose two</b>${rollBtn('abil','Roll 1d6 twice')}</div><div class="cards">${Object.entries(ABIL).map(([k,v])=>{const on=S.abil.some(a=>a.name===k);return`<button class="card" aria-pressed="${on}" data-act="abil" data-val="${k}" ${!on&&full?'disabled':''}><h3>${k}</h3><span>${v.skills.join(', ')}</span></button>`}).join('')}</div>${full?'<span class="hint">Two chosen. Deselect one to change it.</span>':''}</div>
+  ${S.abil.length?`<div class="lab"><b>The details</b>${rollBtn('abilRest','Roll the rest')}</div>`:''}
+  ${S.abil.map((a,i)=>{const v=ABIL[a.name];return`<div class="sub"><h3>${a.name}</h3>
+   <div class="result"><b>+5</b> ${v.skills.join(', ')}</div>
+   <div class="field"><div class="lab"><span><b>Expertise</b> <span class="hint">one level in one of these</span></span></div><div class="chips">${v.skills.map(x=>chip(x,a.ex===x,'aex',i+'|'+x)).join('')}</div>${a.ex&&skillVal(a.ex)<40?`<span class="hint">${a.ex} is ${skillVal(a.ex)} so far. Expertise normally needs a skill of 40, but a level granted during creation stands.</span>`:''}</div>
+   <div class="field"><div class="lab"><b>Talent</b></div><div class="cards">${v.talents.map(t=>`<button class="card" aria-pressed="${a.talent===t}" data-act="atal" data-val="${i}|${t}"><h3>${t}</h3><span>${TAL[t]}</span></button>`).join('')}</div>${subUI('a'+i,a.talent)}</div>
+   <div class="field"><div class="lab"><label for="adesc${i}"><b>Descriptor</b></label></div><div class="chips">${v.desc.map(d=>chip(d,a.desc===d,'adesc',i+'|'+d)).join('')}</div><input class="text" id="adesc${i}" data-adesc="${i}" value="${v.desc.includes(a.desc)?'':esc(a.desc)}" placeholder="Or write your own"></div></div>`}).join('')}`}
+ if(S.step===8){const skipped=LIFE.origin.filter(unfit);const why={};skipped.forEach(e=>{(why[unfit(e)]=why[unfit(e)]||[]).push(e.name)});
+  h=`<header><h2>Life events</h2><p>Three things that happened before play begins. Each gives one reward of your choice and, if you like, a person who comes with it. The text here is a short summary. The rulebook has the full entry and its questions.</p></header>${warn}
+  ${LIFET.map(([t,n,sub])=>{const l=S.life[t];const e=lifeEv(t);const opts=e?optionsFor(e):[];return`<div class="sub"><div class="lab"><span><b>${n}</b> <span class="hint">${sub}</span></span>${rollBtn('life:'+t,'Roll d100')}</div>
+   <select id="life-${t}" data-life="${t}" aria-label="${n} event"><option value="">Choose…</option>${LIFE[t].map(x=>`<option value="${x.lo}" ${l&&l.lo===x.lo?'selected':''}>${String(x.lo).padStart(2,'0')}${x.hi>x.lo?'–'+String(x.hi%100).padStart(2,'0'):''} ${x.name}</option>`).join('')}</select>
+   ${t==='origin'&&skipped.length?(S.lifeFilter?`<span class="hint">Rolls skip ${Object.entries(why).map(([r,names])=>`<span title="${esc(names.join(', '))}">${names.length} that ${r}</span>`).join(' and ')}. <button class="link" data-act="lifeFilter">Roll on the full table</button></span>`:`<span class="hint">Rolling on the full table. <button class="link" data-act="lifeFilter">Skip results that don't fit</button></span>`):''}
+   ${e?`<div class="result"><b>${e.name}.</b> ${e.text}${unfit(e)?' <i>This one does not fit your earlier choices. Reinterpret it with your GM.</i>':''}</div>
+   ${t==='origin'&&parentClash()?(l.keepParent?`<span class="hint">You kept your parentage as "${S.parent.toLowerCase()}". How both can be true is for your backstory. <button class="link" data-act="parentFit">Change it to fit after all</button></span>`:`<div class="result">This event suggests your parentage was <b>${parentClash().toLowerCase()}</b>, but you have <b>${S.parent.toLowerCase()}</b>.<div class="chips" style="margin-top:8px"><button class="btn" data-act="parentFit">Change parentage to fit</button><button class="btn" data-act="parentKeep">Keep both and explain it in my story</button></div></div>`):''}
+   <div class="field"><div class="lab"><span><b>Reward</b>${(e.sw&&S.career==='Spellweaver')||(e.gb&&S.career==='Godbound')?` <span class="hint">for a future ${S.career}</span>`:''}</span></div><div class="chips">${opts.map(k=>chip(grantLabel(k),l.pick===k,'lpick',t+'|'+k)).join('')}</div></div>
+   <div class="field"><div class="lab"><span><b>Someone from this event</b> <span class="hint">optional</span></span>${rollBtn('rel:'+t,'Roll d4')}</div><div class="chips">${['Friend','Patron','Rival','Adversary'].map(r=>chip(r,l.rel===r,'lrel',t+'|'+r)).join('')}</div></div>`:''}</div>`}).join('')}`}
+ if(S.step===9){const c=cdef();const base=tongues(true);const known=[...base.L,...base.W].map(x=>x[0]);
+  if(c)while(S.cw.length<c.cw[0])S.cw.push({mode:'',name:''});
+  h=`<header><h2>Previous career</h2><p>What you did before the adventuring life. It is not a class and does not bind you afterwards. It gives skill points to spend, Talents and some coin.</p></header>${warn}
+  <div class="cards">${Object.entries(CAREER).map(([k,v])=>`<button class="card" aria-pressed="${S.career===k}" data-act="career" data-val="${k}"><h3>${k}</h3><span>${v.who}</span><span class="hint">Combat ${v.pool[0]} · Adventuring ${v.pool[1]} · Social ${v.pool[2]} · Lore ${v.pool[3]}${v.magic?' · Magic 100':''}</span></button>`).join('')}</div>
+  ${!c?'':`
+  <div class="sub"><div class="lab"><label for="occ2"><b>${c.magic?'Which convocation of the Shek-Pvar?':'What kind of '+S.career.toLowerCase()+'?'}</b> <span class="hint">${c.magic?'a house within the order, for the story only':'a Hârn occupation, for the story only'}</span></label></div><select id="occ2" data-set="occ2"><option value="">Choose…</option>${c.occ.map(o=>`<option value="${o}" ${S.occ2===o?'selected':''}>${o}${c.magic&&o!=='Unaffiliated'?', '+HOUSE[o][0]:''}</option>`).join('')}</select>${S.occ&&!c.magic?`<span class="hint">Your family's trade was ${S.occ.toLowerCase()}.</span>`:''}</div>
+  <div class="sub"><div class="lab"><span><b>Lore of the trade</b> <span class="hint">${c.cw[0]?c.cw[0]+' at '+c.cw[1]+', each a new -wise, a new language, or added to one you have':'your god\'s -wise at 30'}</span></span></div>
+   ${S.career==='Godbound'?`<div class="result">${S.deity?`<b>${esc(S.deity)}-wise 30</b> comes with the career.`:'Choose your god on the Concept tab to gain its -wise at 30.'}</div>`:''}
+   ${S.cw.slice(0,c.cw[0]).map((x,i)=>`<div class="chips"><select id="cw${i}" data-cw="${i}" aria-label="Lore of the trade ${i+1}"><option value="">Choose…</option><option value="wise" ${x.mode==='wise'?'selected':''}>A new -wise (name it)</option>${langChoices().filter(l=>!known.includes(l)).map(l=>`<option value="lang:${l}" ${x.mode==='lang:'+l?'selected':''}>New language: ${l}</option>`).join('')}${known.map(n=>`<option value="add:${esc(n)}" ${x.mode==='add:'+n?'selected':''}>Add ${c.cw[1]} to ${esc(n)}</option>`).join('')}</select>${x.mode==='wise'?`<input class="text" style="width:auto;flex:1" id="cwn${i}" data-cwname="${i}" value="${esc(x.name)}" placeholder="Name it, such as Longbow or Tashal" aria-label="Name of the -wise">`:''}</div>`).join('')}</div>
+  <div class="sub"><div class="lab"><span><b>Skill points</b> <span class="hint">one point raises a skill by one, to 70 at most. Points stay in their category.</span></span>${rollBtn('cpRest','Spend the rest at random')}</div>
+   ${CATS.map(k=>`<div class="field"><div class="lab"><b>${k}</b>${cLeft(poolLeft(k),c.pool[CATS.indexOf(k)])}</div><div class="spg">${CAT[k].map(x=>{const b=baseVal(x),n=S.cp[x]||0;return`<div class="sp"><span>${x}</span><span class="hint">${b}</span><button class="btn mini" data-act="cp" data-val="${x}|-5" ${n<=0?'disabled':''} aria-label="Take 5 from ${x}">−5</button><span class="add">${n?'+'+n:''}</span><button class="btn mini" data-act="cp" data-val="${x}|5" ${poolLeft(k)<=0||b+n>=70?'disabled':''} aria-label="Add 5 to ${x}">+5</button><b>${Math.min(70,b+n)}</b></div>`}).join('')}</div></div>`).join('')}</div>
+  ${c.magic?magicPanel():''}
+  <div class="sub"><div class="lab"><b>Talents</b></div>
+   ${c.fixed.length?`<div class="result">${c.fixed.map(t=>`<b>${t}.</b> ${TAL[t]}`).join('<br>')}</div>`:''}
+   ${c.picks.map((_,i)=>{const o=talentOpts(i);const t=S.ctal[i]||'';const dup=t&&t!=='Combat Awareness'&&!SUBS[t]&&(S.abil.some(a=>a.talent===t)||S.ctal.some((y,k)=>k!==i&&y===t)||c.fixed.includes(t));return`<div class="field"><select id="ctal${i}" data-ctal="${i}" aria-label="Career Talent ${i+1}"><option value="">Choose a Talent…</option>${o.map(n=>`<option ${t===n?'selected':''}>${n}</option>`).join('')}</select>${t?`<span class="hint">${TAL[t]||''}${dup?' You already have this one. The book gives 100 coin or +1 Status in its place.':''}</span>`:''}${subUI('c'+i,t)}</div>`}).join('')}
+   <div class="field"><div class="lab"><label for="cswap"><b>Trade one Talent for +2 Status</b> <span class="hint">optional</span></label></div><select id="cswap" data-set="cswap"><option value="">Keep them all</option>${[...c.fixed,...S.ctal.slice(0,c.picks.length).filter(Boolean)].filter(t=>t!=='Godbound'&&t!=='Patterned in the Weave').map(t=>`<option ${S.cswap===t?'selected':''}>${t}</option>`).join('')}</select></div></div>
+  <div class="sub"><div class="lab"><b>Coin from your career</b>${rollBtn('ccoin','Roll '+c.coin[0]+'d'+c.coin[1]+' × '+c.coin[2])}</div><div class="result">${S.ccoin!==null?`<b>${S.ccoin}d</b>`:'Not rolled yet.'}</div></div>`}`}
+ if(S.step===10)h=roPanel().replace('</header>','</header>'+warn);
+ if(S.step===11)h=atPanel().replace('</header>','</header>'+warn);
+ if(S.step===12)h=tgPanel();
+ if(S.step===13)h=gearPanel().replace('</header>','</header>'+warn);
+ {const pos=ORDER.indexOf(S.step);h+=`<div class="nav">${pos>0?'<button class="btn" data-act="go" data-val="'+ORDER[pos-1]+'">Back</button>':'<span></span>'}${pos<ORDER.length-1?'<button class="btn primary" data-act="go" data-val="'+ORDER[pos+1]+'">Next: '+STEPS[ORDER[pos+1]]+'</button>':''}</div>`}
+ $('#panel').innerHTML=h}
+const ord=n=>n+(['th','st','nd','rd'][n%10>3||Math.floor(n/10)===1?0:n%10]);
+function travelOut(){const tot=S.travel.roll+travelMod().m;const t=TRAVEL.find(x=>tot<=x[0]);return{label:t[1],text:t[2]}}
+const PHASES=[['Family & Origin',7],['Your Character',4],['Outfitting & Final Touches',3]];let viewPhase=null;
+const phaseSteps=k=>{const st=PHASES.slice(0,k).reduce((a,p)=>a+p[1],0);return ORDER.slice(st,st+PHASES[k][1])};
+const phaseOf=i=>PHASES.findIndex((_,k)=>phaseSteps(k).includes(i));
+function steps(){const I=issues();const bad=i=>(I[i]||[]).length>0;const cur=phaseOf(S.step);const vp=viewPhase===null?cur:viewPhase;
+ $('#steps').innerHTML=`<div class="phases" role="tablist">${PHASES.map(([n],k)=>{const st=phaseSteps(k),d=st.filter(i=>done(i)&&!bad(i)).length,b=st.filter(bad).length;return`<button type="button" class="phase" role="tab" aria-selected="${k===vp}" data-act="phase" data-val="${k}">${n} <span class="cnt ${b?'bad':d===st.length?'ok':'warn'}">${d} of ${st.length}${b?' · '+b+' to fix':''}</span></button>`}).join('')}</div>
+ <div class="steps">${phaseSteps(vp).map(i=>{const now=S.step===i;const m=bad(i)?'bad':now?'now':done(i)?'done':'';return`<button class="step" data-act="go" data-val="${i}" ${now?'aria-current="step"':''}><span class="mark ${m}" title="${bad(i)?'Needs another look':done(i)?'Complete':'Not finished'}"></span>${STEPS[i]}${bad(i)?'<span class="sr"> (needs another look)</span>':''}</button>`}).join('')}</div>`}
+function sheet(){const c=culture();const o=occ();const t=tongues();const {led,ex}=ledger();const e='<span class="empty">not chosen</span>';
+ const id=`<dl>${S.concept?`<dt>Concept</dt><dd>${esc(S.concept)}</dd>`:''}${S.career?`<dt>Career</dt><dd>${careerLine()}</dd>`:''}<dt>Folk</dt><dd>${S.folk}${S.sex?', '+S.sex.toLowerCase():''}${orbP()?', '+orbP()+(orbP()==='Ivinian'&&S.clan?' of clan '+esc(S.clan):''):''}</dd><dt>Born</dt><dd>${S.place?(S.nation==='tribal'?'Among the '+S.place:(S.inSet?S.place:'A village near '+S.place)+', '+NAT[S.nation].name):e}</dd><dt>Society</dt><dd>${c||e}</dd><dt>Class</dt><dd>${S.cls?CLASSES[S.cls]:e}</dd><dt>Family trade</dt><dd>${S.occ||e}</dd><dt>Upbringing</dt><dd>${S.bg?BG[S.bg].name:e}</dd><dt>Status</dt><dd>${S.cls?statusVal():e}</dd><dt>Coin</dt><dd>${S.cls?coinText():e}</dd></dl>`;
+ const lang=`<div class="sec"><h3>Tongues and lore</h3><div class="rows stripe">${t.L.length?t.L.concat(t.W).map(l=>`<div class="row"><span>${l[0]} ${l[2]?`<small>${l[2]}</small>`:''}</span><span>${l[1]}</span></div>`).join(''):e}</div>${S.dual?`<p class="note">${tribalFamily()&&S.nation!=='tribal'?'Tribal family. Expect prejudice in the kingdoms, and little hope of rank above the unguilded.':orbMixed()?'Of both peoples of Orbaal.':'Family from elsewhere. Rank above guildsman is rare.'}</p>`:''}${orbP()==='Jarin'?'<p class="note">Jarin in Orbaal. Rank above guildsman is rare there.</p>':''}</div>`;
+ const tl=talentCounts();const A=attrs();
+ const atr=`<div class="sec"><h3>Attributes ${atLeft()?`<span class="cnt ${atLeft()<0?'bad':'warn'}">${atLeft()<0?(-atLeft())+' over':atLeft()+' points to spend'}</span>`:''}</h3><div class="rows stripe">${[A.res,A.init,A.tough,A.dt,A.ll,A.inv].map(x=>`<div class="row" title="${atBreak(x)}"><span>${x.name}${x.parts.length>1?` <small>${atBreak(x)}</small>`:''}</span><span>${x.name==='Initiative'?'+':''}${x.val}</span></div>`).join('')}</div></div>`;
+ const apt=`<div class="sec"><h3>Aptitudes and talents</h3><div class="ents">${S.abil.length?S.abil.map(a=>`<div class="ent"><b>${a.name}</b>${a.desc?` <small>${esc(a.desc)}</small>`:''}</div>`).join('')+Object.entries(talentSlots().reduce((m,[id,t])=>{const k=t+(subOf(id,t)?': '+subOf(id,t):'');m[k]=[t,(m[k]?m[k][1]:0)+1];return m},{})).map(([k,[t,n]])=>`<div class="ent"><b>${esc(k)}${n>1?' ×'+n:''}</b> <small>${TAL[t]||''}</small></div>`).join(''):e}</div></div>`;
+ const left=slotsLeft();
+ const sk=`<div class="sec"><h3>Skills ${S.bg&&left?`<span class="cnt warn">${left} choices left</span>`:`<small>${S.bg?'upbringing applied':'base values'}</small>`}</h3><div class="skills">${Object.entries(CAT).map(([g,list])=>`<div class="grp"><h4>${g}</h4>${list.map(s=>{const parts=led[s];const sum=parts.reduce((a,p)=>a+p[0],0);const v=Math.max(0,Math.min(70,sum));return`<div class="sk ${sum>20||ex[s]?'up':''} ${sum>70?'over':''}" title="${parts.map(p=>p[0]+' '+p[1]).join(' + ')}${sum>70?' — '+(sum-70)+' lost to the cap of 70':''}"><span>${s}${S.ro.savvy.includes(s)?'<span class="ex" title="Savvy">S</span>':''}${ex[s]?`<span class="ex">Ex${Math.min(4,ex[s]+1)}</span>`:''}${parts.length>1?`<span class="src">${parts.map(p=>p[0]).join(' + ').replace(/\+ -/g,'− ')}</span>`:''}</span><b>${v}</b></div>`}).join('')}</div>`).join('')}</div></div>`;
+ const kin=`<div class="sec"><h3>Kin and travel</h3><dl>${ageSettled()?`<dt>Age</dt><dd>${S.age}, ${ageYears()}</dd>`:''}<dt>Born on</dt><dd>${S.birth?S.birth.d+' '+MONTHS[S.birth.m-1]+(ageSettled()?' '+yearTxt(birthYear()):'')+', '+sunsign(S.birth):e}</dd><dt>Family</dt><dd>${[S.sibs?(S.sibs.n===1?'Only child':ord(S.sibs.rank)+' of '+S.sibs.n):'',S.parent,S.standing?S.standing+' in the clan':''].filter(Boolean).join(' · ')||e}</dd><dt>Travelled</dt><dd>${S.travel?travelOut().label:e}</dd><dt>People</dt><dd>${S.allies?(S.allies.join(' · ')||'None'):e}</dd></dl></div>`;
+ const mk=Object.keys(led).filter(k=>/^(Bind|Strand|Piety)/.test(k));
+ const thinK=cdef()&&cdef().magic?S.sw.thin.map(x=>'Strand: '+x):[];const mkAll=[...new Set([...mk,...thinK])];
+ const mag=mkAll.length?`<div class="sec"><h3>Magic${cdef()&&cdef().magic&&S.sw.thread?` <small>d8 Thread in ${S.sw.thread}</small>`:''}</h3>${cdef()&&cdef().magic&&S.sw.name?`<div class="row"><span>True Name</span><span>${esc(S.sw.name)}</span></div>`:''}<div class="rows">${mkAll.map(k=>{const parts=led[k]||[];return`<div class="row"><span>${k}${S.ro.savvy.includes(k)?' <span style="color:var(--lichen);font-size:11px;font-weight:700" title="Savvy">S</span>':''}${ex[k]?` <span class="ex" style="color:var(--lichen);font-size:11px;font-weight:700">Ex${ex[k]+1}</span>`:''}${thinK.includes(k)?' <small>Thin</small>':''} <small>${parts.map(q=>q[0]).join(' + ')}</small></span><span>${Math.min(k.startsWith('Strand')?99:k==='Piety'?90:70,parts.reduce((a,q)=>a+q[0],0))}</span></div>`}).join('')}</div></div>`:'';
+ const lf=`<div class="sec"><h3>Life events</h3><div class="ents">${LIFET.some(([t])=>S.life[t])?LIFET.filter(([t])=>S.life[t]).map(([t,n])=>{const l=S.life[t];return`<div class="ent"><b>${lifeEv(t).name}</b> <small>${n.toLowerCase()}${l.pick?', '+grantLabel(l.pick):''}${l.rel?', a '+l.rel.toLowerCase():''}</small></div>`}).join(''):e}</div></div>`;
+ const G=gearCalc();const gs=`<div class="sec"><h3>Gear ${S.gear.coin!==null?`<span class="cnt ${G.left<0?'bad':'ok'}">${G.left<0?(-G.left)+'d over':G.left+'d left'}</span>`:''}</h3><div class="rows stripe"><div class="row"><span>Dagger <small>damage 1, at hand</small></span><span></span></div>${S.gear.items.map(x=>{const w=WMAP[x.n];return`<div class="row"><span>${w[0]} <small>${w[1]==='Shield'?w[3]:'damage '+w[3]}${x.hand?'':', packed'}</small></span><span></span></div>`}).join('')}${G.pieces.map(x=>`<div class="row"><span>${x.n} <small>${x.a[0]}</small></span><span>AP ${x.a[2]}</span></div>`).join('')}${S.gear.misc.map(n=>`<div class="row"><span>${n}</span><span></span></div>`).join('')}</div>${Object.keys(G.pn).length?`<p class="fine">In this armor: ${Object.entries(G.pn).map(([k,v])=>k+' −'+v).join(', ')}</p>`:''}<p class="fine">Supply dice: Gear, Ammo, Rations and Medical at d12</p></div>`;
+ const trLine=()=>{const t=S.traits.map(x=>`<b>${esc(x)}</b>`);if(!t.length)return'<span class="empty">no traits yet</span>';const list=t.length===1?t[0]:t.length===2?t.join(' and '):t.slice(0,-1).join(', ')+' &amp; '+t[t.length-1];return S.traits.some(x=>x.trim().split(/\s+/).length>=3)?list+'.':'You are '+list+'.'};
+ const gSub=(kind,label)=>{const l=S.goals.filter(g=>g.kind===kind);return l.length?`<div class="grp"><h4 class="subh">${label}</h4><div class="ents">${l.map(g=>`<div class="ent goal">${esc(g.text)}</div>`).join('')}</div></div>`:''};
+ const pg=`<div class="sec"><h3>Personality and goals</h3>${S.traits.length||S.goals.length?`<p class="traitline">${trLine()}</p>${gSub('individual','My goals')}${gSub('shared','Shared goals')}`:e}</div>`;
+ $('#sheet').innerHTML=id+atr+gs+lang+apt+sk+mag+lf+pg+kin}
+const SAVEKEY='broken-harn:current',STOREKEY='broken-harn:characters';let saveOK=null;
+let CHARS=[],CUR=null,VIEW='start',pendingDel=null;
+const newId=()=>'c'+Date.now().toString(36)+Math.floor(Math.random()*1e6).toString(36);
+const strip=o=>JSON.stringify({...o,step:0});
+const summary=()=>({career:S.career?careerLine():'',born:S.place?(S.nation==='tribal'?'Among the '+esc(S.place):esc(S.place)+', '+NAT[S.nation].name):'',done:ORDER.filter(i=>done(i)&&!(issues()[i]||[]).length).length});
+function store(){try{localStorage.setItem(STOREKEY,JSON.stringify({v:2,list:CHARS,current:CUR,GM}));saveOK=true}catch(e){saveOK=false}}
+function saveNow(){if(VIEW==='char'&&CUR&&!S.example){const e=CHARS.find(c=>c.id===CUR);if(e){const nm=$('#name').value;if(!e.S||strip(e.S)!==strip(S)||e.name!==nm)e.saved=Date.now();e.name=nm;e.S=JSON.parse(JSON.stringify(S));e.sum=summary()}}
+ store();const n=$('#savenote');n.textContent=saveOK?'Saved in this browser':'Not saved: this browser is blocking storage';n.classList.toggle('bad',!saveOK)}
+function loadSaved(){try{const d=JSON.parse(localStorage.getItem(STOREKEY)||'null');if(d&&d.v===2&&Array.isArray(d.list)){CHARS=d.list.filter(c=>c&&c.id&&c.S&&typeof c.S==='object');CUR=CHARS.some(c=>c.id===d.current)?d.current:null;Object.assign(GM,d.GM||{});return}}catch(e){}
+ try{const d=JSON.parse(localStorage.getItem(SAVEKEY)||'null');if(d&&d.v===1&&d.S&&typeof d.S==='object'){Object.assign(GM,d.GM||{});const id=newId();CHARS=[{id,name:d.name||'',S:d.S,saved:Date.now(),sum:null}];CUR=id}}catch(e){}}
+function openChar(id){const e=CHARS.find(c=>c.id===id);if(!e)return false;S=Object.assign(blank(),JSON.parse(JSON.stringify(e.S)));S.example=false;$('#name').value=e.name||'';CUR=id;VIEW='char';viewPhase=null;pendingDel=null;return true}
+function addChar(roll){S=blank();S.step=ORDER[0];if(roll)rollAll();const id=newId();CHARS.unshift({id,name:'',S:JSON.parse(JSON.stringify(S)),saved:Date.now(),sum:null});$('#name').value='';CUR=id;VIEW='char';viewPhase=null;pendingDel=null}
+function savedTxt(ts){const d0=x=>{const d=new Date(x);return new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime()};const n=Math.round((d0(Date.now())-d0(ts))/864e5);return n<=0?'Today':n===1?'Yesterday':n<7?n+' days ago':new Date(ts).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'})}
+function startScreen(){const rows=CHARS.slice().sort((a,b)=>b.saved-a.saved).map(c=>{const m=c.sum||{career:'',born:'',done:0};const nm=c.name?esc(c.name):'Unnamed';const no='<span class="empty">Not chosen</span>';
+  return`<tr><td><b>${nm}</b></td><td>${m.career||no}</td><td>${m.born||no}</td><td><span class="cnt ${m.done===ORDER.length?'ok':'warn'}">${m.done} of ${ORDER.length} steps</span></td><td>${savedTxt(c.saved)}</td><td class="act">${pendingDel===c.id?`<span class="err">Delete ${nm}?</span><button class="btn" data-act="delyes" data-val="${c.id}">Delete</button><button class="link" data-act="delno">Cancel</button>`:`<button class="btn" data-act="open" data-val="${c.id}">Open</button><button class="link" data-act="dl" data-val="${c.id}" aria-label="Download ${nm}">Download</button><button class="link" data-act="del" data-val="${c.id}" aria-label="Delete ${nm}">Delete</button>`}</td></tr>`}).join('');
+ $('#start').innerHTML=`<p class="instr">Make a character for the Broken Empires rules, set on Hârn. Work through origin, career and gear one step at a time, choosing or rolling at every point. Your work is saved in this browser, and you can download any character as a file.</p>
+ <div class="field"><div class="lab"><b>Begin</b></div><div class="begin">
+  <div class="bcard"><h3>New character</h3><span>Start at Concept and make each choice yourself.</span><button class="btn primary" data-act="newchar">New character</button></div>
+  <div class="bcard"><h3>Roll a whole origin</h3><span>Let the dice fill every step, then change what you like.</span><button class="btn roll" data-act="rollchar">Roll a whole origin</button></div>
+  <div class="bcard"><h3>Load a character file</h3><span>Open a .md file you downloaded earlier.</span><button class="btn" data-act="pickfile">Choose a file</button>${loadMsg?`<span class="${loadMsg[0]?'hint':'err'}" role="status">${esc(loadMsg[1])}</span>`:''}</div>
+ </div></div>
+ <div class="field"><div class="lab"><b>Your characters</b></div>${CHARS.length?`<div class="scroll"><table><thead><tr><th>Name</th><th>Career</th><th>Born</th><th>Progress</th><th>Saved</th><th></th></tr></thead><tbody>${rows}</tbody></table></div>`:'<div class="result">No characters yet. Begin one above.</div>'}
+ ${saveOK===false?'<div class="warnbox">This browser is blocking storage, so characters will not be kept after you close the page.</div>':''}</div>`}
+
+/* ---------- download as Markdown ---------- */
+const unesc=t=>String(t).replace(/<[^>]+>/g,'').replace(/&lt;/g,'<').replace(/&gt;/g,'>').replace(/&quot;/g,'"').replace(/&amp;/g,'&');
+const cell=t=>String(t).replace(/\|/g,'\\|');
+const b64=t=>{const u=new TextEncoder().encode(t);let o='';for(let i=0;i<u.length;i+=0x8000)o+=String.fromCharCode.apply(null,u.subarray(i,i+0x8000));return btoa(o)};
+const fileName=n=>((n||'').normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase().replace(/[^a-z0-9]+/g,'-').replace(/^-+|-+$/g,'')||'unnamed-character')+'.md';
+function charMd(name){const L=[];const nc='Not chosen yet';const c=culture();const {led,ex}=ledger();const A=attrs();const G=gearCalc();const t=tongues();
+ const val=k=>Math.max(0,Math.min(70,(led[k]||[]).reduce((a,q)=>a+q[0],0)));
+ L.push('# '+(name||'Unnamed character'),'');
+ L.push([S.career?unesc(careerLine()):'',S.folk+(S.sex?', '+S.sex.toLowerCase():'')+(orbP()?', '+orbP()+(orbP()==='Ivinian'&&S.clan?' of clan '+S.clan:''):''),ageSettled()?S.age+', '+ageYears():''].filter(Boolean).join(' · '));
+ const place=S.place?(S.nation==='tribal'?'among the '+S.place:(S.inSet?S.place:'a village near '+S.place)+', '+NAT[S.nation].name):'';
+ if(S.birth||place)L.push('Born '+[S.birth?S.birth.d+' '+MONTHS[S.birth.m-1]+(ageSettled()?' '+yearTxt(birthYear()):'')+' ('+sunsign(S.birth)+')':'',place].filter(Boolean).join(', '));
+ if(S.concept)L.push('','> '+S.concept);
+ L.push('','## Origin');
+ [['Society',c],['Class',S.cls?CLASSES[S.cls]:''],['Family trade',S.occ],['Upbringing',S.bg?BG[S.bg].name:''],['Status',S.cls?statusVal():''],['Coin',S.cls?unesc(coinText()):''],
+  ['Family',[S.sibs?(S.sibs.n===1?'Only child':ord(S.sibs.rank)+' of '+S.sibs.n):'',S.parent,S.standing?S.standing+' in the clan':''].filter(Boolean).join(' · ')],['Travelled',S.travel?unesc(travelOut().label):''],['People',S.allies?(S.allies.join(' · ')||'None'):'']].forEach(([k,v])=>L.push('- **'+k+':** '+(v===''||v===null||v===undefined?nc:v)));
+ L.push('','## Attributes','| Max Resolve | Initiative | Toughness | Death Threshold | Lethality Level | Inventory slots |','|---|---|---|---|---|---|','| '+[A.res.val,'+'+A.init.val,A.tough.val,A.dt.val,A.ll.val,A.inv.val].join(' | ')+' |');
+ const sk=k=>{const m=[S.ro.savvy.includes(k)?'S':'',ex[k]?'Ex'+Math.min(4,ex[k]+1):''].filter(Boolean).join(', ');return[cell(k+(m?' ('+m+')':'')),val(k)]};
+ L.push('','## Skills');
+ [['Combat','Adventuring'],['Social','Lore']].forEach(([a,b])=>{L.push('| '+a+' | | '+b+' | |','|---|---|---|---|');const x=CAT[a].map(sk),y=CAT[b].map(sk);for(let i=0;i<Math.max(x.length,y.length);i++)L.push('| '+(x[i]||['','']).join(' | ')+' | '+(y[i]||['','']).join(' | ')+' |');L.push('')});
+ L.push('S marks a Savvy skill. Ex marks Expertise.');
+ const mk=Object.keys(led).filter(k=>/^(Bind|Strand|Piety)/.test(k));const thinK=cdef()&&cdef().magic?S.sw.thin.map(x=>'Strand: '+x):[];const mkAll=[...new Set([...mk,...thinK])];
+ if(mkAll.length){L.push('','## Magic');if(cdef()&&cdef().magic&&S.sw.name)L.push('- **True Name:** '+S.sw.name);if(cdef()&&cdef().magic&&S.sw.thread)L.push('- **Thread Die:** d8 in '+S.sw.thread);
+  mkAll.forEach(k=>{const v=Math.min(k.startsWith('Strand')?99:k==='Piety'?90:70,(led[k]||[]).reduce((a,q)=>a+q[0],0));const m=[S.ro.savvy.includes(k)?'S':'',ex[k]?'Ex'+(ex[k]+1):'',thinK.includes(k)?'Thin':''].filter(Boolean).join(', ');L.push('- '+k+' '+v+(m?' ('+m+')':''))})}
+ L.push('','## Tongues and lore');if(t.L.length||t.W.length)t.L.concat(t.W).forEach(l=>L.push('- '+l[0]+' '+l[1]+(l[2]?' ('+unesc(l[2])+')':'')));else L.push(nc);
+ if(orbP()==='Jarin')L.push('','Jarin in Orbaal. Rank above guildsman is rare there.');
+ L.push('','## Aptitudes and talents');
+ if(S.abil.length){L.push('- '+S.abil.map(a=>'**'+a.name+'**'+(a.desc?' ('+a.desc+')':'')).join(', '));Object.entries(talentSlots().reduce((m,[id,tn])=>{const k=tn+(subOf(id,tn)?': '+subOf(id,tn):'');m[k]=[tn,(m[k]?m[k][1]:0)+1];return m},{})).forEach(([k,[tn,n]])=>L.push('- **'+k+(n>1?' ×'+n:'')+'.** '+(TAL[tn]||'')))}else L.push(nc);
+ L.push('','## Life events');const le=LIFET.filter(([k])=>S.life[k]);if(le.length)le.forEach(([k,n])=>{const l=S.life[k];L.push('- **'+lifeEv(k).name+'** ('+n.toLowerCase()+')'+([l.pick?unesc(grantLabel(l.pick)):'',l.rel?'a '+l.rel.toLowerCase():''].filter(Boolean).join(', ').replace(/^(.)/,': $1')))});else L.push(nc);
+ L.push('','## Gear');if(S.gear.coin!==null)L.push((G.left<0?(-G.left)+'d overspent.':G.left+'d in hand.'),'');else L.push('Starting coin not rolled yet.','');
+ L.push('- Dagger, damage 1, at hand');S.gear.items.forEach(x=>{const w=WMAP[x.n];L.push('- '+w[0]+', '+(w[1]==='Shield'?w[3]:'damage '+w[3])+', '+(x.hand?'at hand':'packed'))});G.pieces.forEach(x=>L.push('- '+x.n+': '+x.a[0]+', AP '+x.a[2]));S.gear.misc.forEach(n=>L.push('- '+n));
+ L.push('');if(Object.keys(G.pn).length)L.push('In this armor: '+Object.entries(G.pn).map(([k,v])=>k+' −'+v).join(', ')+'.');L.push('Supply dice: Gear d12, Ammo d12, Rations d12, Medical d12.');
+ L.push('','## Personality and goals',S.traits.length?S.traits.join(', '):'No traits yet');
+ [['individual','My goals'],['shared','Shared goals']].forEach(([k,lab])=>{const g=S.goals.filter(x=>x.kind===k);if(g.length){L.push('','**'+lab+'**');g.forEach(x=>L.push('- '+x.text))}});
+ const todo=ORDER.filter(i=>!done(i)).map(i=>STEPS[i]);
+ L.push('','---','*Made with the Broken Hârn character creator. Campaign start '+campTxt()+'.*','*Unfinished steps: '+(todo.length?todo.join(', '):'none')+'.*','');
+ const data=b64(JSON.stringify({v:1,name:name||'',S,camp:{d:GM.d,m:GM.m,y:GM.y}})).replace(/(.{76})/g,'$1\n');
+ L.push('<!-- broken-harn-data v1','This block lets the Broken Hârn character creator open this file again. Leave it as it is.',data,'-->','');
+ return L.join('\n')}
+function mdFor(id){if(VIEW==='char'&&id===CUR)return{name:$('#name').value,md:charMd($('#name').value)};const e=CHARS.find(c=>c.id===id);if(!e)return null;const keep=S;try{S=Object.assign(blank(),JSON.parse(JSON.stringify(e.S)));return{name:e.name,md:charMd(e.name)}}finally{S=keep}}
+let DL=null;try{if(window.claude&&window.claude.use)window.claude.use('downloads').then(d=>{DL=d}).catch(()=>{})}catch(e){}
+function download(id){const r=mdFor(id);if(!r)return;const fn=fileName(r.name);const say=m=>{const n=$('#dlnote');if(n)n.textContent=m};
+ if(DL){DL.save({filename:fn,data:r.md}).then(()=>say('Downloaded '+fn)).catch(e=>{if(!e||e.code!=='declined')say('The download did not go through. Try again.')});return}
+ try{const u=URL.createObjectURL(new Blob([r.md],{type:'text/markdown;charset=utf-8'}));const a=document.createElement('a');a.href=u;a.download=fn;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),2000);say('Downloaded '+fn)}catch(e){say('The download did not go through. Try again.')}}
+let loadMsg=null;
+const clean=x=>typeof x==='string'?x.replace(/[<>]/g,''):Array.isArray(x)?x.map(clean):x&&typeof x==='object'?Object.fromEntries(Object.entries(x).map(([k,v])=>[clean(k),clean(v)])):x;
+function readCharFile(text){const m=/<!--\s*broken-harn-data v(\d+)[^\n]*\n(?:[^\n]*\n)?([A-Za-z0-9+\/=\s]+?)-->/.exec(text);if(!m)return{err:'That file has no Broken Hârn character data in it. Choose a file downloaded from this app.'};
+ if(m[1]!=='1')return{err:'That file was made by a newer version of this app and cannot be opened here.'};
+ let d;try{const bin=atob(m[2].replace(/\s+/g,''));const u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);d=JSON.parse(new TextDecoder().decode(u))}catch(e){return{err:'The character data in that file is damaged and could not be read.'}}
+ if(!d||typeof d.S!=='object'||!d.S||Array.isArray(d.S))return{err:'The character data in that file is damaged and could not be read.'};
+ const c=clean(d);const st=Object.assign(blank(),c.S);st.example=false;if(!ORDER.includes(st.step))st.step=ORDER[0];return{name:typeof c.name==='string'?c.name.slice(0,200):'',S:st,camp:c.camp}}
+function importChar(text){const r=readCharFile(text);if(r.err){loadMsg=[false,r.err];render();return}
+ const id=newId();CHARS.unshift({id,name:r.name,S:r.S,saved:Date.now(),sum:null});openChar(id);
+ const cp=r.camp;loadMsg=null;render();if(cp&&(cp.d!==GM.d||cp.m!==GM.m||cp.y!==GM.y)){const n=$('#dlnote');if(n)n.textContent='This file was made for a campaign starting '+cp.d+' '+(MONTHS[cp.m-1]||'')+' '+yearTxt(cp.y)+'. Yours starts '+campTxt()+', so the birth year may differ.'}}
+function syncGM(){$('#eyebrow').textContent='Character roll · '+yearTxt(GM.y);const m=$('#camp-m');if(!m.options.length)m.innerHTML=MONTHS.map((n,i)=>`<option value="${i+1}">${n}</option>`).join('');const set=(el,v)=>{if(document.activeElement!==el)el.value=v};set($('#camp-d'),GM.d);set(m,GM.m);set($('#camp-y'),GM.y);$('#gm-sindarin').checked=!!GM.Sindarin;$('#gm-khuzdul').checked=!!GM.Khuzdul}
+function render(){syncGM();const st=VIEW==='start';$('#start').hidden=!st;$('#steps').hidden=st;$('#cols').hidden=st;$('#lnk-chars').hidden=st;
+ if(st){$('#banner').hidden=true;$('#sect').textContent='Characters';store();startScreen();return}
+ ageSettled();$('#banner').hidden=!S.example;$('#sect').textContent=STEPS[S.step];steps();panel();sheet();saveNow()}
+
+/* ---------- events ---------- */
+document.addEventListener('click',ev=>{const b=ev.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,v=b.dataset.val;
+ if(a==='dl'){download(v||CUR);return}
+ if(a==='pickfile'){const f=$('#filein');f.value='';f.click();return}
+ if(a==='chars'){VIEW='start';pendingDel=null;loadMsg=null;render();window.scrollTo(0,0);return}
+ if(a==='newchar'||a==='rollchar'){addChar(a==='rollchar');render();window.scrollTo(0,0);return}
+ if(a==='open'){openChar(v);render();window.scrollTo(0,0);return}
+ if(a==='del'){pendingDel=v;render();return}
+ if(a==='delno'){pendingDel=null;render();return}
+ if(a==='delyes'){CHARS=CHARS.filter(c=>c.id!==v);if(CUR===v)CUR=null;pendingDel=null;render();return}
+ if(a==='phase')viewPhase=+v;
+ else if(a==='rollAll'){rollAll();viewPhase=null;$('#name').value=''}
+ else if(a==='fresh'){const st=6;S=blank();S.step=st;viewPhase=null;$('#name').value=''}
+ else{S.example=false;
+  if(a==='go'){if(S.step===10&&+v!==10)S.ageSet=true;S.step=+v;viewPhase=null}
+  else if(a==='b30'){const[c,x]=v.split('|');S.b30[c]=S.b30[c]===x?'':x}
+  else if(a==='career')S.career=S.career===v?'':v;
+  else if(a==='role')S.role=v;
+  else if(a==='sex')S.sex=S.sex===v?'':v;
+  else if(a==='sign'){const i=SIGNS.findIndex(x=>x[0]===v);const start=SIGNS[i][1];const len=(SIGNS[(i+1)%12][1]-start+360)%360;const doy=((start+1+rnd(len-4)-1)%360)+1;const m=Math.ceil(doy/30);S.birth={m,d:doy-(m-1)*30}}
+  else if(a==='cusp')S.cuspPick=v;
+  else if(a==='lifeFilter')S.lifeFilter=!S.lifeFilter;
+  else if(a==='gadd'){const n=$('#gadd').value;if(n){const G=gearCalc();S.gear.items.push({n,hand:G.handEnc+WMAP[n][4]<=G.maxHand})}}
+  else if(a==='gdel')S.gear.items.splice(+v,1);
+  else if(a==='ghand'){const[i,h]=v.split('|');S.gear.items[+i].hand=h==='1'}
+  else if(a==='gmisc'){const m=S.gear.misc;if(m.includes(v))S.gear.misc=m.filter(x=>x!==v);else m.push(v)}
+  else if(a==='tr'){if(S.traits.includes(v))S.traits=S.traits.filter(x=>x!==v);else if(S.traits.length<3)S.traits.push(v)}
+  else if(a==='tradd'){const t=cap($('#trcustom').value.trim());if(t&&S.traits.length<3&&!S.traits.includes(t))S.traits.push(t)}
+  else if(a==='goaladd'){const t=$('#goaltext').value.trim();if(t)S.goals.push({text:t,kind:'individual'})}
+  else if(a==='goalbuild'){const t=goalText();if(t)S.goals.push({text:t,kind:'individual'})}
+  else if(a==='goalkind'){const[i,k]=v.split('|');S.goals[+i].kind=k}
+  else if(a==='goaldel')S.goals.splice(+v,1);
+  else if(a==='atp'){const i=v.lastIndexOf('|');const k=v.slice(0,i),d=+v.slice(i+1);if(d<0)S.at[k]=Math.max(0,S.at[k]+d);else if(atLeft()>=d)S.at[k]+=d}
+  else if(a==='atroll'){if(S.at[v]!==null)S.at[v]=null;else if(v==='rInit')S.at.rInit=6+rnd(6);else{S.at.rDT=15+dice(2,4);S.at.dt=0}}
+  else if(a==='robonus'){S.ro.bonus=S.ro.bonus===v?'':v;if(S.ro.bonus!=='talent')S.ro.btal=''}
+  else if(a==='rop'){const i=v.lastIndexOf('|');const k=v.slice(0,i),d=+v.slice(i+1);const cur=S.ro.pts[k]||0;if(d<0)S.ro.pts[k]=Math.max(0,cur+d);else{const room=k[0]==='@'?70-tongueVal(k.slice(1)):70-total(k);if(room>=d&&roOk(roCat(k),d))S.ro.pts[k]=cur+d}}
+  else if(a==='rostr'){const i=v.lastIndexOf('|');const x=v.slice(0,i),d=+v.slice(i+1);const cur=S.ro.str[x]||0;if(d<0)S.ro.str[x]=Math.max(0,cur+d);else if(strandLv(x)<5&&roOk('Magic',5))S.ro.str[x]=cur+1}
+  else if(a==='rosav'){const r=S.ro;if(r.savvy.includes(v))r.savvy=r.savvy.filter(x=>x!==v);else if(r.savvy.length<savvyMax())r.savvy.push(v)}
+  else if(a==='ronew'){if(roOk('Lore',20))S.ro.neww.push({mode:'',name:''})}
+  else if(a==='rodel'){const x=S.ro.neww.splice(+v,1)[0];if(x){const nm=x.mode==='wise'?x.name.replace(/-wise$/i,'')+'-wise':x.mode.slice(5);delete S.ro.pts['@'+nm]}}
+  else if(a==='swb'){const w=S.sw;if(w.binds.includes(v))w.binds=w.binds.filter(x=>x!==v);else if(w.binds.length<2)w.binds.push(v);w.tpl=''}
+  else if(a==='sws'){const w=S.sw;if(w.strands.includes(v))w.strands=w.strands.filter(x=>x!==v);else if(w.strands.length<4&&!w.thin.includes(v))w.strands.push(v);w.tpl='';swClean()}
+  else if(a==='swt'){const w=S.sw;if(w.thin.includes(v))w.thin=w.thin.filter(x=>x!==v);else if(w.thin.length<2&&!w.strands.includes(v))w.thin.push(v);w.tpl='';swClean()}
+  else if(a==='swex')S.sw.ex=S.sw.ex===v?'':v;
+  else if(a==='bp'||a==='sl'||a==='sx'){const i=v.lastIndexOf('|');const x=v.slice(0,i),d=+v.slice(i+1);const w=S.sw;const cur=w[a][x]||0;const left=a==='bp'?100-sum(w.bp):a==='sl'?10-sum(w.sl):3-sum(w.sx);const room=a==='bp'?70-baseVal('Bind: '+x)-cur:5-strandLv(x);w[a][x]=Math.max(0,Math.min(cur+d,cur+left,cur+room))}
+  else if(a==='cp'){const i=v.lastIndexOf('|');const x=v.slice(0,i),d=+v.slice(i+1);const cat=CATS.find(k=>CAT[k].includes(x));const cur=S.cp[x]||0;S.cp[x]=Math.max(0,Math.min(cur+d,cur+poolLeft(cat),70-baseVal(x)))}
+  else if(a==='parentFit'){S.parent=parentClash()||S.parent;S.life.origin.keepParent=false}
+  else if(a==='parentKeep')S.life.origin.keepParent=true;
+  else if(a==='lpick'||a==='lrel'){const i=v.indexOf('|');const t=v.slice(0,i),x=v.slice(i+1);const k=a==='lpick'?'pick':'rel';S.life[t][k]=S.life[t][k]===x?'':x}
+  else if(a==='abil'){if(S.abil.some(x=>x.name===v))S.abil=S.abil.filter(x=>x.name!==v);else if(S.abil.length<2)S.abil.push({name:v,ex:'',talent:'',desc:''})}
+  else if(a==='aex'||a==='atal'||a==='adesc'){const[i,x]=v.split('|');const k={aex:'ex',atal:'talent',adesc:'desc'}[a];S.abil[+i][k]=S.abil[+i][k]===x?'':x}
+  else if(a==='folk')S.folk=v;
+  else if(a==='nation'){S.nation=v;S.place='';S.inSet=false}
+  else if(a==='inSet')S.inSet=v==='1';
+  else if(a==='people'){S.people=S.people===v?'':v}
+  else if(a==='cls'){S.cls=v;if(!occ())S.occ=''}
+  else if(a==='wealth')S.wealth=+v;
+  else if(a==='bg'){if(S.bg!==v){S.bg=v;S.picks={}}}
+  else if(a==='pick'){const[id,s]=v.split('|');const sl=BG[S.bg].slots.find(x=>x.id===id);const p=S.picks[id]||[];if(p.includes(s))S.picks[id]=p.filter(x=>x!==s);else if(sl.n===1)S.picks[id]=[s];else if(p.length<sl.n)S.picks[id]=[...p,s];
+   BG[S.bg].slots.filter(x=>x.not===id).forEach(x=>S.picks[x.id]=(S.picks[x.id]||[]).filter(y=>!(S.picks[id]||[]).includes(y)))}
+  else if(a==='dual')S.dual=v?(S.dual||NATIONS.find(n=>!['tribal','other','evael',S.nation].includes(n.id)).id):'';
+  else if(a==='age'){if(S.age!==v)S.years=null;S.age=v;S.ageSet=true}
+  else if(a==='standing')S.standing=v;
+  else if(a==='roll'){if(v==='picks'){const keep=S.picks;R.picks();const b2=BG[S.bg];b2.slots.forEach(sl=>{if((keep[sl.id]||[]).length===sl.n)S.picks[sl.id]=keep[sl.id]});b2.slots.filter(x=>x.not).forEach(x=>{const taken=S.picks[x.not]||[];if((S.picks[x.id]||[]).some(y=>taken.includes(y))){const o=slotOpts(x).slice();const p=[];while(p.length<x.n&&o.length)p.push(o.splice(rnd(o.length)-1,1)[0]);S.picks[x.id]=p}})}else if(v.startsWith('life:'))R.life(v.slice(5));else if(v.startsWith('rel:'))S.life[v.slice(4)].rel=['Friend','Patron','Rival','Adversary'][rnd(4)-1];else R[v]()}}
+ render()});
+document.addEventListener('change',ev=>{const el=ev.target;
+ if(el.dataset.camp){const k=el.dataset.camp,lim={d:[1,30],m:[1,12],y:[1,9999]}[k];const v=Math.round(+el.value);GM[k]=Number.isFinite(v)?Math.min(lim[1],Math.max(lim[0],v)):{d:1,m:1,y:720}[k];el.value=GM[k];render();return}
+ if(el.dataset.years!==undefined){S.example=false;S.years=+el.value;S.ageSet=true;render();return}if(el.dataset.gm){GM[el.dataset.gm]=el.checked;if(!el.checked&&S.folk===el.dataset.gm)S.folk='Human';render();return}
+ if(el.dataset.adesc!==undefined){S.example=false;S.abil[+el.dataset.adesc].desc=el.value.trim();render();return}
+ if(el.dataset.tsub!==undefined){S.example=false;S.tsub[el.dataset.tsub]=el.value;render();return}
+ if(el.dataset.arm){S.example=false;S.gear.armor[el.dataset.arm]=el.value;render();return}
+ if(el.id==='gadd')return;
+ if(el.dataset.ro){S.example=false;S.ro[el.dataset.ro]=el.value;render();return}
+ if(el.dataset.ronew!==undefined){S.example=false;S.ro.neww[+el.dataset.ronew]={mode:el.value,name:''};render();return}
+ if(el.dataset.ronewname!==undefined){S.example=false;S.ro.neww[+el.dataset.ronewname].name=el.value.trim();render();return}
+ if(el.dataset.swtpl){S.example=false;const t=SWT[el.value];const keep=S.sw;S.sw=newSw();S.sw.name=keep.name;S.sw.thread=keep.thread;if(t){S.sw.tpl=el.value;S.sw.binds=t[0].slice();S.sw.strands=t[1].slice();S.sw.thin=t[2].slice()}render();return}
+ if(el.dataset.sw){S.example=false;S.sw[el.dataset.sw]=el.value.trim();render();return}
+ if(el.dataset.cw!==undefined){S.example=false;S.cw[+el.dataset.cw]={mode:el.value,name:''};render();return}
+ if(el.dataset.cwname!==undefined){S.example=false;S.cw[+el.dataset.cwname].name=el.value.trim();render();return}
+ if(el.dataset.ctal!==undefined){S.example=false;S.ctal[+el.dataset.ctal]=el.value;if(S.cswap&&!careerTalents().concat(S.cswap).includes(S.cswap))S.cswap='';render();return}
+ if(el.dataset.life){S.example=false;const t=el.dataset.life;S.life[t]=el.value?{lo:+el.value,pick:'',rel:''}:null;if(S.life[t]){const o=optionsFor(lifeEv(t));if(o.length===1)S.life[t].pick=o[0];if(t==='origin')afterOrigin()}render();return}
+ const k=el.dataset.set;if(!k)return;S.example=false;S[k]=el.value;if(k==='place')S.inSet=false;if(k==='deity'&&S.role!=='lay'&&!(FAITH[S.deity]||{})[S.role])S.role='lay';render()});
+
+loadSaved();if(!(CUR&&openChar(CUR)))VIEW='start';render();
+$('#name').addEventListener('input',saveNow);
+$('#filein').addEventListener('change',ev=>{const f=ev.target.files&&ev.target.files[0];if(!f)return;if(f.size>2e6){loadMsg=[false,'That file is too large to be a character file.'];render();return}const r=new FileReader();r.onload=()=>importChar(String(r.result));r.onerror=()=>{loadMsg=[false,'That file could not be read.'];render()};r.readAsText(f)});
+document.addEventListener('input',ev=>{if(ev.target.id==='years'){$('#yearsOut').textContent=ev.target.value;$('#bornOut').innerHTML=bornLine(+ev.target.value);return}if(!['gwant','gblock','gdo'].includes(ev.target.id))return;const t=goalText(),el=$('#gprev');el.hidden=!t;el.innerHTML=t?'<b>Your goal will read</b>'+esc(t):''});
+</script>
+
+</body>
+</html>
