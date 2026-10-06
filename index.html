@@ -210,6 +210,7 @@ td b{font:700 17.5px var(--head)}
  .blink{font-size:15.5px;padding:3px 6px}
 }
 @media (max-width:380px){.banner .name{font-size:18px}.blink{font-size:14.5px;padding:3px 4px}}
+.notice.fin{border-left-color:var(--ok)}
 </style>
 </head>
 <body>
@@ -971,7 +972,7 @@ function panel(){const I=issues();const warn=(I[S.step]||[]).map(m=>`<div class=
  if(S.step===11)h=atPanel().replace('</header>','</header>'+warn);
  if(S.step===12)h=tgPanel();
  if(S.step===13)h=gearPanel().replace('</header>','</header>'+warn);
- {const pos=ORDER.indexOf(S.step);h+=`<div class="nav">${pos>0?'<button class="btn" data-act="go" data-val="'+ORDER[pos-1]+'">Back</button>':'<span></span>'}${pos<ORDER.length-1?'<button class="btn primary" data-act="go" data-val="'+ORDER[pos+1]+'">Next: '+STEPS[ORDER[pos+1]]+'</button>':''}</div>`}
+ {const pos=ORDER.indexOf(S.step);h+=`<div class="nav">${pos>0?'<button class="btn" data-act="go" data-val="'+ORDER[pos-1]+'">Back</button>':'<span></span>'}${pos<ORDER.length-1?'<button class="btn primary" data-act="go" data-val="'+ORDER[pos+1]+'">Next: '+STEPS[ORDER[pos+1]]+'</button>':'<button class="btn primary" data-act="finish">Finish</button>'}</div>`}
  $('#panel').innerHTML=h}
 const ord=n=>n+(['th','st','nd','rd'][n%10>3||Math.floor(n/10)===1?0:n%10]);
 function travelOut(){const tot=S.travel.roll+travelMod().m;const t=TRAVEL.find(x=>tot<=x[0]);return{label:t[1],text:t[2]}}
@@ -1000,7 +1001,7 @@ function sheet(){const c=culture();const o=occ();const t=tongues();const {led,ex
  const pg=`<div class="sec"><h3>Personality and goals</h3>${S.traits.length||S.goals.length?`<p class="traitline">${trLine()}</p>${gSub('individual','My goals')}${gSub('shared','Shared goals')}`:e}</div>`;
  $('#sheet').innerHTML=id+atr+gs+lang+apt+sk+mag+lf+pg+kin}
 const SAVEKEY='broken-harn:current',STOREKEY='broken-harn:characters';let saveOK=null;
-let CHARS=[],CUR=null,VIEW='start',pendingDel=null;
+let CHARS=[],CUR=null,VIEW='start',pendingDel=null,finMsg=null;
 const newId=()=>'c'+Date.now().toString(36)+Math.floor(Math.random()*1e6).toString(36);
 const strip=o=>JSON.stringify({...o,step:0});
 const summary=()=>({career:S.career?careerLine():'',born:S.place?(S.nation==='tribal'?'Among the '+esc(S.place):esc(S.place)+', '+NAT[S.nation].name):'',done:ORDER.filter(i=>done(i)&&!(issues()[i]||[]).length).length});
@@ -1014,7 +1015,8 @@ function addChar(roll){S=blank();S.step=ORDER[0];if(roll)rollAll();const id=newI
 function savedTxt(ts){const d0=x=>{const d=new Date(x);return new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime()};const n=Math.round((d0(Date.now())-d0(ts))/864e5);return n<=0?'Today':n===1?'Yesterday':n<7?n+' days ago':new Date(ts).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'})}
 function startScreen(){const rows=CHARS.slice().sort((a,b)=>b.saved-a.saved).map(c=>{const m=c.sum||{career:'',born:'',done:0};const nm=c.name?esc(c.name):'Unnamed';const no='<span class="empty">Not chosen</span>';
   return`<tr><td><b>${nm}</b></td><td>${m.career||no}</td><td>${m.born||no}</td><td><span class="cnt ${m.done===ORDER.length?'ok':'warn'}">${m.done} of ${ORDER.length} steps</span></td><td>${savedTxt(c.saved)}</td><td class="act">${pendingDel===c.id?`<span class="err">Delete ${nm}?</span><button class="btn" data-act="delyes" data-val="${c.id}">Delete</button><button class="link" data-act="delno">Cancel</button>`:`<button class="btn" data-act="open" data-val="${c.id}">Open</button><button class="link" data-act="dl" data-val="${c.id}" aria-label="Download ${nm}">Download</button><button class="link" data-act="del" data-val="${c.id}" aria-label="Delete ${nm}">Delete</button>`}</td></tr>`}).join('');
- $('#start').innerHTML=`<p class="instr">Make a character for the Broken Empires rules, set on Hârn. Work through origin, career and gear one step at a time, choosing or rolling at every point. Your work is saved in this browser, and you can download any character as a file.</p>
+ const fin=finMsg&&CHARS.some(c=>c.id===finMsg.id)?`<div class="notice fin" role="status"><span>${finMsg.todo.length?`<b>${esc(finMsg.name)}</b> is saved, with ${finMsg.todo.length} ${finMsg.todo.length===1?'step':'steps'} unfinished: ${finMsg.todo.join(', ')}.`:`<b>${esc(finMsg.name)}</b> is finished and saved in this browser. Download the file to keep a copy or to send to your GM.`}</span><span class="chips">${finMsg.todo.length?`<button class="btn" data-act="open" data-val="${finMsg.id}">Go back to it</button><button class="btn" data-act="dl" data-val="${finMsg.id}">Download anyway</button>`:`<button class="btn primary" data-act="dl" data-val="${finMsg.id}">Download .md</button>`}</span></div>`:'';
+ $('#start').innerHTML=`${fin}<p class="instr">Make a character for the Broken Empires rules, set on Hârn. Work through origin, career and gear one step at a time, choosing or rolling at every point. Your work is saved in this browser, and you can download any character as a file.</p>
  <div class="field"><div class="lab"><b>Begin</b></div><div class="begin">
   <div class="bcard"><h3>New character</h3><span>Start at Concept and make each choice yourself.</span><button class="btn primary" data-act="newchar">New character</button></div>
   <div class="bcard"><h3>Roll a whole origin</h3><span>Let the dice fill every step, then change what you like.</span><button class="btn roll" data-act="rollchar">Roll a whole origin</button></div>
@@ -1073,7 +1075,7 @@ function readCharFile(text){const m=/<!--\s*broken-harn-data v(\d+)[^\n]*\n(?:[^
  let d;try{const bin=atob(m[2].replace(/\s+/g,''));const u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);d=JSON.parse(new TextDecoder().decode(u))}catch(e){return{err:'The character data in that file is damaged and could not be read.'}}
  if(!d||typeof d.S!=='object'||!d.S||Array.isArray(d.S))return{err:'The character data in that file is damaged and could not be read.'};
  const c=clean(d);const st=Object.assign(blank(),c.S);st.example=false;if(!ORDER.includes(st.step))st.step=ORDER[0];return{name:typeof c.name==='string'?c.name.slice(0,200):'',S:st,camp:c.camp}}
-function importChar(text){const r=readCharFile(text);if(r.err){loadMsg=[false,r.err];render();return}
+function importChar(text){finMsg=null;const r=readCharFile(text);if(r.err){loadMsg=[false,r.err];render();return}
  const id=newId();CHARS.unshift({id,name:r.name,S:r.S,saved:Date.now(),sum:null});openChar(id);
  const cp=r.camp;loadMsg=null;render();if(cp&&(cp.d!==GM.d||cp.m!==GM.m||cp.y!==GM.y)){const n=$('#dlnote');if(n)n.textContent='This file was made for a campaign starting '+cp.d+' '+(MONTHS[cp.m-1]||'')+' '+yearTxt(cp.y)+'. Yours starts '+campTxt()+', so the birth year may differ.'}}
 function syncGM(){$('#eyebrow').textContent='Character roll · '+yearTxt(GM.y);const m=$('#camp-m');if(!m.options.length)m.innerHTML=MONTHS.map((n,i)=>`<option value="${i+1}">${n}</option>`).join('');const set=(el,v)=>{if(document.activeElement!==el)el.value=v};set($('#camp-d'),GM.d);set(m,GM.m);set($('#camp-y'),GM.y);$('#gm-sindarin').checked=!!GM.Sindarin;$('#gm-khuzdul').checked=!!GM.Khuzdul}
@@ -1085,9 +1087,10 @@ function render(){syncGM();const st=VIEW==='start';$('#start').hidden=!st;$('#st
 document.addEventListener('click',ev=>{const b=ev.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,v=b.dataset.val;
  if(a==='dl'){download(v||CUR);return}
  if(a==='pickfile'){const f=$('#filein');f.value='';f.click();return}
- if(a==='chars'){VIEW='start';pendingDel=null;loadMsg=null;render();window.scrollTo(0,0);return}
- if(a==='newchar'||a==='rollchar'){addChar(a==='rollchar');render();window.scrollTo(0,0);return}
- if(a==='open'){openChar(v);render();window.scrollTo(0,0);return}
+ if(a==='finish'){const I=issues();saveNow();finMsg={id:CUR,name:$('#name').value.trim()||'Your character',todo:ORDER.filter(i=>!done(i)||(I[i]||[]).length).map(i=>STEPS[i])};VIEW='start';pendingDel=null;loadMsg=null;render();window.scrollTo(0,0);return}
+ if(a==='chars'){finMsg=null;VIEW='start';pendingDel=null;loadMsg=null;render();window.scrollTo(0,0);return}
+ if(a==='newchar'||a==='rollchar'){finMsg=null;addChar(a==='rollchar');render();window.scrollTo(0,0);return}
+ if(a==='open'){finMsg=null;openChar(v);render();window.scrollTo(0,0);return}
  if(a==='del'){pendingDel=v;render();return}
  if(a==='delno'){pendingDel=null;render();return}
  if(a==='delyes'){CHARS=CHARS.filter(c=>c.id!==v);if(CUR===v)CUR=null;pendingDel=null;render();return}
@@ -1095,7 +1098,7 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-act]');i
  else if(a==='rollAll'){rollAll();viewPhase=null;$('#name').value=''}
  else if(a==='fresh'){const st=6;S=blank();S.step=st;viewPhase=null;$('#name').value=''}
  else{S.example=false;
-  if(a==='go'){if(S.step===10&&+v!==10)S.ageSet=true;S.step=+v;viewPhase=null}
+  if(a==='go'){if(S.step===10&&+v!==10)S.ageSet=true;S.step=+v;viewPhase=null;window.scrollTo(0,0)}
   else if(a==='b30'){const[c,x]=v.split('|');S.b30[c]=S.b30[c]===x?'':x}
   else if(a==='career')S.career=S.career===v?'':v;
   else if(a==='role')S.role=v;
