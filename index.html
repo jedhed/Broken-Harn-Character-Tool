@@ -4,7 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <style>html{box-sizing:border-box}body{margin:0}img{max-width:100%}</style>
-<title>Broken Hârn Origins</title>
+<title>Broken Hârn</title>
+<meta name="robots" content="noindex,nofollow">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Grenze:ital,wght@0,500;0,600;0,700;1,500&family=Bitter:ital,wght@0,400;0,600;0,700;1,400&display=swap">
 <style>
 /* Layout: a working desk. Choices on the left as one step at a time; the character's roll (the record) stays pinned on the right and fills as you choose. */
@@ -17,12 +18,6 @@
   --house:#7E4210; --lock:#8A8380; --sel:#EAF3F0; --trait:#2A4296;
   --head:"Grenze",Georgia,serif;
   --body:"Bitter",Georgia,serif;
-  /* Older names, kept as aliases until each component is restyled. */
-  --display:var(--head);
-  --bg:var(--paper); --surface:var(--card); --sunk:var(--panel); --line:var(--hair); --line-strong:var(--muted);
-  --ink-dim:var(--muted); --ink-faint:var(--muted);
-  --woad:var(--primary); --woad-soft:var(--panel2); --on-woad:var(--onp);
-  --lichen:var(--ok-t); --madder:var(--bad-t); --madder-soft:var(--panel2);
 }
 @media (prefers-color-scheme: dark){
   :root:not([data-theme="light"]){
@@ -41,9 +36,9 @@
     --house:#E0A070; --lock:#7C7572; --sel:#22373A; --trait:#9FB2F2; color-scheme:dark;
 }
 *{box-sizing:border-box}
-body{background:var(--bg);color:var(--ink);font:400 15px/1.45 var(--body);padding-inline:16px;padding-block:20px 48px;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
+body{background:var(--paper);color:var(--ink);font:400 15px/1.45 var(--body);padding-inline:16px;padding-block:20px 48px;min-height:100vh;min-height:100dvh;display:flex;flex-direction:column}
 .app{max-width:1180px;width:100%;margin:0 auto;display:flex;flex-direction:column;gap:18px;flex:1}
-h1,h2,h3{font-family:var(--display);font-weight:700;margin:0;text-wrap:balance}
+h1,h2,h3{font-family:var(--head);font-weight:700;margin:0;text-wrap:balance}
 h1{font-size:30px;line-height:1.1}
 h2{font-size:22px}
 h3{font-size:19px;line-height:1.15}
@@ -114,11 +109,11 @@ input.text{width:100%}
 button.link{border:0;background:none;padding:0;color:var(--ink);text-decoration:underline;text-underline-offset:3px;cursor:pointer;font:600 16px var(--head)}
 .spg{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:4px 20px}
 .sp{display:grid;grid-template-columns:minmax(0,1fr) 3ch auto 4ch auto 3ch;gap:6px;align-items:center}
-.sp .add{color:var(--lichen);font-weight:700;text-align:center;font-variant-numeric:tabular-nums}
+.sp .add{color:var(--ok-t);font-weight:700;text-align:center;font-variant-numeric:tabular-nums}
 .sp b{text-align:right;font-variant-numeric:tabular-nums}
 .btn.mini{padding:1px 8px;font-size:15.5px}
 .btn:disabled{background:var(--hair);border-color:var(--hair);color:var(--muted);cursor:not-allowed}
-.sub{border-top:1px solid var(--line);padding-top:12px;display:flex;flex-direction:column;gap:12px}
+.sub{border-top:1px solid var(--hair);padding-top:12px;display:flex;flex-direction:column;gap:12px}
 .sub>h3{font-size:20px}
 .note{background:var(--panel2);padding:9px 12px;font-size:14px;border-left:3px solid var(--house)}
 .nav{display:flex;flex-wrap:wrap;justify-content:space-between;gap:10px;border-top:4px double var(--ink);padding-top:12px}
@@ -130,7 +125,7 @@ aside .eyebrow{font:600 13px var(--head);letter-spacing:.12em;text-transform:upp
 dl{margin:0;display:grid;grid-template-columns:auto minmax(0,1fr);gap:3px 10px}
 dt{font:600 15.5px var(--head)}
 dd{margin:0}
-.empty{color:var(--ink-faint)}
+.empty{color:var(--muted)}
 .sec{display:flex;flex-direction:column;gap:6px}
 .sec h3{font:700 17px var(--head);letter-spacing:.06em;text-transform:uppercase;margin:6px 0 0;padding-bottom:2px;border-bottom:4px double var(--ink);display:flex;flex-wrap:wrap;justify-content:space-between;align-items:baseline;gap:2px 8px}
 .sec h3 small{font:400 12.5px var(--body);letter-spacing:0;text-transform:none;color:var(--muted)}
@@ -141,22 +136,22 @@ dd{margin:0}
 .grp h4{margin:0 0 2px;font:600 13px var(--head);letter-spacing:.1em;text-transform:uppercase;color:var(--muted)}
 .sk{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:6px;align-items:baseline;font-size:14px;color:var(--muted)}
 .sk.up{color:var(--ink)}
-.sk .src{display:block;font-size:12px;line-height:1.1;margin-bottom:3px;color:var(--ink-faint);font-variant-numeric:tabular-nums}
+.sk .src{display:block;font-size:12px;line-height:1.1;margin-bottom:3px;color:var(--muted);font-variant-numeric:tabular-nums}
 .sk b{font-variant-numeric:tabular-nums;min-width:2ch;text-align:right}
-.sk .ex{font-size:11px;font-weight:700;color:var(--lichen);margin-left:4px}
-.sk.over b{color:var(--madder)}
+.sk .ex{font-size:11px;font-weight:700;color:var(--ok-t);margin-left:4px}
+.sk.over b{color:var(--bad-t)}
 .rows{display:flex;flex-direction:column;gap:2px}
 .row{display:flex;justify-content:space-between;align-items:baseline;gap:10px}
 .row span:last-child{font-variant-numeric:tabular-nums;font-weight:700;white-space:nowrap}
 .row small{color:var(--muted);font-size:12px}
 .rows.stripe{gap:0}.rows.stripe .row{padding:2px 6px}.rows.stripe .row:nth-child(odd){background:var(--panel)}
-details.calls{border-top:1px solid var(--line-strong);padding-top:10px;margin-top:auto}
+details.calls{border-top:1px solid var(--muted);padding-top:10px;margin-top:auto}
 details.calls summary{cursor:pointer;font-weight:700}
-details.calls ol{color:var(--ink-dim);max-width:75ch;padding-left:22px}
+details.calls ol{color:var(--muted);max-width:75ch;padding-left:22px}
 .gm{position:relative}
 .gm summary{list-style:none;cursor:pointer}
 .gm summary::-webkit-details-marker{display:none}
-.gm .pop{position:absolute;right:0;top:calc(100% + 6px);background:var(--surface);border:1px solid var(--line-strong);padding:10px 12px;display:flex;flex-direction:column;gap:6px;z-index:5;min-width:220px}
+.gm .pop{position:absolute;right:0;top:calc(100% + 6px);background:var(--card);border:1px solid var(--muted);padding:10px 12px;display:flex;flex-direction:column;gap:6px;z-index:5;min-width:220px}
 .gm label{display:flex;gap:8px;align-items:center}
 .subpick{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:10px;padding:8px 12px;background:var(--panel2);border:1px solid var(--hair);border-left:3px solid var(--ink)}.subpick select{flex:1;min-width:180px}
 .ptbar{position:sticky;top:0;z-index:5;display:flex;flex-wrap:wrap;align-items:center;gap:8px 22px;padding:9px 12px;background:var(--panel);border-bottom:2px solid var(--ink);box-shadow:0 4px 10px -6px rgba(0,0,0,.35)}
@@ -168,7 +163,7 @@ details.calls ol{color:var(--ink-dim);max-width:75ch;padding-left:22px}
 .seg{display:inline-flex;border:1px solid var(--ink);border-radius:3px;overflow:hidden}
 .seg button{font:600 15.5px var(--head);border:0;background:var(--card);color:var(--ink);padding:3px 12px;cursor:pointer}
 .seg button[aria-pressed="true"]{background:var(--primary);color:var(--onp)}
-.savenote{font-size:13px;font-weight:600;color:var(--lichen);min-height:1.2em}.savenote.bad{color:var(--madder)}
+.savenote{font-size:13px;font-weight:600;color:var(--ok-t);min-height:1.2em}.savenote.bad{color:var(--bad-t)}
 .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0)}
 .ents{display:flex;flex-direction:column;gap:7px}
 .ent{padding-left:12px;text-indent:-12px;line-height:1.35}
@@ -235,7 +230,6 @@ td b{font:700 17.5px var(--head)}
 <div class="app">
   <div id="start" class="panel" hidden></div>
   <nav class="stepnav" id="steps" aria-label="Character creation steps"></nav>
-  <div class="notice" id="banner" hidden><span>This is an example origin so you can see a filled roll. Nothing here is yours yet.</span><button class="btn" data-act="fresh">Start fresh</button></div>
   <div class="cols" id="cols">
     <main>
       <section class="panel" id="panel"></section>
@@ -732,7 +726,7 @@ function gearPanel(){const g=S.gear,G=gearCalc();const inv=attrs().inv.val;const
 const esc=t=>String(t).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 /* ---------- state ---------- */
-const blank=()=>({folk:'Human',nation:'',place:'',inSet:false,cls:'',occ:'',wealth:1,bg:'',picks:{},dual:'',lang2:'',lang40:'',age:'Adult',birth:null,sibs:null,parent:'',standing:'',travel:null,allies:null,concept:'',career:'',deity:'',role:'lay',sex:'',dualTribe:'',people:'',clan:'',years:null,ageSet:false,abil:[],cuspPick:'',life:{origin:null,youth:null,recent:null},lifeFilter:true,occ2:'',cw:[],cp:{},ctal:[],cswap:'',ccoin:null,sw:newSw(),ro:newRo(),at:newAt(),traits:[],goals:[],gear:newGear(),tsub:{},b30:{},step:6,example:false});
+const blank=()=>({folk:'Human',nation:'',place:'',inSet:false,cls:'',occ:'',wealth:1,bg:'',picks:{},dual:'',lang2:'',lang40:'',age:'Adult',birth:null,sibs:null,parent:'',standing:'',travel:null,allies:null,concept:'',career:'',deity:'',role:'lay',sex:'',dualTribe:'',people:'',clan:'',years:null,ageSet:false,abil:[],cuspPick:'',life:{origin:null,youth:null,recent:null},lifeFilter:true,occ2:'',cw:[],cp:{},ctal:[],cswap:'',ccoin:null,sw:newSw(),ro:newRo(),at:newAt(),traits:[],goals:[],gear:newGear(),tsub:{},b30:{},step:6});
 let S=blank();
 const GM={Sindarin:false,Khuzdul:false,d:1,m:1,y:720};
 const AGE_R={Young:[20,29],Adult:[30,49],Old:[50,69]};
@@ -867,9 +861,6 @@ function rollAll0(){const st=S.step;S=blank();S.step=st;const folks=['Human'];S.
  if(rnd(100)<=15){const o=NATIONS.filter(n=>!['other','evael',S.nation].includes(n.id));S.dual=o[rnd(o.length)-1].id;if(S.dual==='tribal')S.dualTribe=pickW(NAT.tribal.places).name}
  else if(rnd(100)<=50){const nl=langOf(S.nation,S.cls,S.folk);const o=LANGS.filter(l=>l!==nl&&l!=='Sindarin');S.lang2=otherP()||o[rnd(o.length)-1]}
  if(S.bg==='wanderer')S.lang40='Jarin';S.age=['Young','Adult','Adult','Old'][rnd(4)-1];R.years();R.birth();R.sibs();R.parent();R.standing();R.travel();R.allies();R.abil();R.abilRest();LIFET.forEach(([t])=>{R.life(t);const o=optionsFor(lifeEv(t));S.life[t].pick=o[rnd(o.length)-1]});R.careerAll();R.roAll();R.atAll();R.gearAll();{const k=Object.keys(TRAITS).concat(signWords());const n=1+rnd(2);while(S.traits.length<n){const t=k[rnd(k.length)-1];if(!S.traits.includes(t))S.traits.push(t)}}}
-function example(){S=blank();Object.assign(S,{nation:'kaldor',place:'Olokand',inSet:false,cls:'unguilded',occ:'Soldier: Yeoman',wealth:1,bg:'rural',
- picks:{c10:['Missile','Melee: Medium'],rs:['Ride'],s10:['Insight','Persuade'],ad:['Divinity'],e1:['Naturewise']},lang2:'Jarin',age:'Adult',birth:{m:5,d:12},life:{origin:{lo:79,pick:'Melee: Medium',rel:''},youth:{lo:37,pick:'Ride',rel:'Friend'},recent:{lo:39,pick:'Willpower',rel:''}},sibs:{n:4,rank:2},parent:'Father dead; mother remarried',standing:'Popular',travel:{roll:8},allies:['Friend: a colleague'],concept:'A yeoman\'s son who wants more than a spear and a strip of land',career:'Warrior',sex:'Male',occ2:'Yeoman',cw:[{mode:'wise',name:'Longbow'}],cp:{Missile:25,'Melee: Medium':20,Dodge:20,Might:15,Perception:20,Endurance:15,Survival:15,Persuade:20,Insight:10,Intimidate:10,'Common Lore':20,Heal:10},ctal:['Rapid Fire'],ccoin:20,at:{res:1,init:1,tough:2,dt:1,rInit:null,rDT:null},gear:{coin:250,freeN:3,armor:{Body:'Scale',Head:'Leather',LLeg:'Quilt',RLeg:'Quilt'},items:[{n:'Longbow',hand:true},{n:'Broadsword',hand:true}],misc:[]},traits:['Loyal','Persistent'],goals:[{text:'I will win a place among the royal archers at Olokand so that my family keeps its holding.',kind:'individual'},{text:'We will find out who has been robbing caravans on the Silver Way.',kind:'shared'}],ro:{bonus:'talent',btal:'Eagle Eye',pts:{Athletics:20,Stealth:20,Track:20,Willpower:20,Ride:10,Heal:10},str:{},neww:[],savvy:['Missile','Perception','Survival','Melee: Medium'],oldEx:'',humEx:'Missile',humTal:'Steely Thews'},tsub:{rb:'Longbow'},abil:[{name:'Dexterity',ex:'Missile',talent:'Combat Awareness',desc:'Quick'},{name:'Constitution',ex:'Endurance',talent:'Mettle',desc:'Hardy'}],b30:{Combat:'Missile',Adventuring:'Perception',Social:'Persuade',Lore:'Common Lore'},example:true,step:3});$('#name').value='Aldric of Olokand'}
-
 /* ---------- render ---------- */
 const cLeft=(n,t,word='left')=>`<span class="cnt ${n<0?'bad':n===0?'ok':'warn'}">${n<0?(-n)+' over':n+' of '+t+' '+word}</span>`;
 const cChosen=(n,t)=>`<span class="cnt ${n===t?'ok':n>t?'bad':'warn'}">${n} of ${t} chosen</span>`;
@@ -993,7 +984,7 @@ function sheet(){const c=culture();const o=occ();const t=tongues();const {led,ex
  const kin=`<div class="sec"><h3>Kin and travel</h3><dl>${ageSettled()?`<dt>Age</dt><dd>${S.age}, ${ageYears()}</dd>`:''}<dt>Born on</dt><dd>${S.birth?S.birth.d+' '+MONTHS[S.birth.m-1]+(ageSettled()?' '+yearTxt(birthYear()):'')+', '+sunsign(S.birth):e}</dd><dt>Family</dt><dd>${[S.sibs?(S.sibs.n===1?'Only child':ord(S.sibs.rank)+' of '+S.sibs.n):'',S.parent,S.standing?S.standing+' in the clan':''].filter(Boolean).join(' · ')||e}</dd><dt>Travelled</dt><dd>${S.travel?travelOut().label:e}</dd><dt>People</dt><dd>${S.allies?(S.allies.join(' · ')||'None'):e}</dd></dl></div>`;
  const mk=Object.keys(led).filter(k=>/^(Bind|Strand|Piety)/.test(k));
  const thinK=cdef()&&cdef().magic?S.sw.thin.map(x=>'Strand: '+x):[];const mkAll=[...new Set([...mk,...thinK])];
- const mag=mkAll.length?`<div class="sec"><h3>Magic${cdef()&&cdef().magic&&S.sw.thread?` <small>d8 Thread in ${S.sw.thread}</small>`:''}</h3>${cdef()&&cdef().magic&&S.sw.name?`<div class="row"><span>True Name</span><span>${esc(S.sw.name)}</span></div>`:''}<div class="rows">${mkAll.map(k=>{const parts=led[k]||[];return`<div class="row"><span>${k}${S.ro.savvy.includes(k)?' <span style="color:var(--lichen);font-size:11px;font-weight:700" title="Savvy">S</span>':''}${ex[k]?` <span class="ex" style="color:var(--lichen);font-size:11px;font-weight:700">Ex${ex[k]+1}</span>`:''}${thinK.includes(k)?' <small>Thin</small>':''} <small>${parts.map(q=>q[0]).join(' + ')}</small></span><span>${Math.min(k.startsWith('Strand')?99:k==='Piety'?90:70,parts.reduce((a,q)=>a+q[0],0))}</span></div>`}).join('')}</div></div>`:'';
+ const mag=mkAll.length?`<div class="sec"><h3>Magic${cdef()&&cdef().magic&&S.sw.thread?` <small>d8 Thread in ${S.sw.thread}</small>`:''}</h3>${cdef()&&cdef().magic&&S.sw.name?`<div class="row"><span>True Name</span><span>${esc(S.sw.name)}</span></div>`:''}<div class="rows">${mkAll.map(k=>{const parts=led[k]||[];return`<div class="row"><span>${k}${S.ro.savvy.includes(k)?' <span style="color:var(--ok-t);font-size:11px;font-weight:700" title="Savvy">S</span>':''}${ex[k]?` <span class="ex" style="color:var(--ok-t);font-size:11px;font-weight:700">Ex${ex[k]+1}</span>`:''}${thinK.includes(k)?' <small>Thin</small>':''} <small>${parts.map(q=>q[0]).join(' + ')}</small></span><span>${Math.min(k.startsWith('Strand')?99:k==='Piety'?90:70,parts.reduce((a,q)=>a+q[0],0))}</span></div>`}).join('')}</div></div>`:'';
  const lf=`<div class="sec"><h3>Life events</h3><div class="ents">${LIFET.some(([t])=>S.life[t])?LIFET.filter(([t])=>S.life[t]).map(([t,n])=>{const l=S.life[t];return`<div class="ent"><b>${lifeEv(t).name}</b> <small>${n.toLowerCase()}${l.pick?', '+grantLabel(l.pick):''}${l.rel?', a '+l.rel.toLowerCase():''}</small></div>`}).join(''):e}</div></div>`;
  const G=gearCalc();const gs=`<div class="sec"><h3>Gear ${S.gear.coin!==null?`<span class="cnt ${G.left<0?'bad':'ok'}">${G.left<0?(-G.left)+'d over':G.left+'d left'}</span>`:''}</h3><div class="rows stripe"><div class="row"><span>Dagger <small>damage 1, at hand</small></span><span></span></div>${S.gear.items.map(x=>{const w=WMAP[x.n];return`<div class="row"><span>${w[0]} <small>${w[1]==='Shield'?w[3]:'damage '+w[3]}${x.hand?'':', packed'}</small></span><span></span></div>`}).join('')}${G.pieces.map(x=>`<div class="row"><span>${x.n} <small>${x.a[0]}</small></span><span>AP ${x.a[2]}</span></div>`).join('')}${S.gear.misc.map(n=>`<div class="row"><span>${n}</span><span></span></div>`).join('')}</div>${Object.keys(G.pn).length?`<p class="fine">In this armor: ${Object.entries(G.pn).map(([k,v])=>k+' −'+v).join(', ')}</p>`:''}<p class="fine">Supply dice: Gear, Ammo, Rations and Medical at d12</p></div>`;
  const trLine=()=>{const t=S.traits.map(x=>`<b>${esc(x)}</b>`);if(!t.length)return'<span class="empty">no traits yet</span>';const list=t.length===1?t[0]:t.length===2?t.join(' and '):t.slice(0,-1).join(', ')+' &amp; '+t[t.length-1];return S.traits.some(x=>x.trim().split(/\s+/).length>=3)?list+'.':'You are '+list+'.'};
@@ -1006,11 +997,11 @@ const newId=()=>'c'+Date.now().toString(36)+Math.floor(Math.random()*1e6).toStri
 const strip=o=>JSON.stringify({...o,step:0});
 const summary=()=>({career:S.career?careerLine():'',born:S.place?(S.nation==='tribal'?'Among the '+esc(S.place):esc(S.place)+', '+NAT[S.nation].name):'',done:ORDER.filter(i=>done(i)&&!(issues()[i]||[]).length).length});
 function store(){try{localStorage.setItem(STOREKEY,JSON.stringify({v:2,list:CHARS,current:CUR,GM}));saveOK=true}catch(e){saveOK=false}}
-function saveNow(){if(VIEW==='char'&&CUR&&!S.example){const e=CHARS.find(c=>c.id===CUR);if(e){const nm=$('#name').value;if(!e.S||strip(e.S)!==strip(S)||e.name!==nm)e.saved=Date.now();e.name=nm;e.S=JSON.parse(JSON.stringify(S));e.sum=summary()}}
+function saveNow(){if(VIEW==='char'&&CUR){const e=CHARS.find(c=>c.id===CUR);if(e){const nm=$('#name').value;if(!e.S||strip(e.S)!==strip(S)||e.name!==nm)e.saved=Date.now();e.name=nm;e.S=JSON.parse(JSON.stringify(S));e.sum=summary()}}
  store();const n=$('#savenote');n.textContent=saveOK?'Saved in this browser':'Not saved: this browser is blocking storage';n.classList.toggle('bad',!saveOK)}
 function loadSaved(){try{const d=JSON.parse(localStorage.getItem(STOREKEY)||'null');if(d&&d.v===2&&Array.isArray(d.list)){CHARS=d.list.filter(c=>c&&c.id&&c.S&&typeof c.S==='object');CUR=CHARS.some(c=>c.id===d.current)?d.current:null;Object.assign(GM,d.GM||{});return}}catch(e){}
  try{const d=JSON.parse(localStorage.getItem(SAVEKEY)||'null');if(d&&d.v===1&&d.S&&typeof d.S==='object'){Object.assign(GM,d.GM||{});const id=newId();CHARS=[{id,name:d.name||'',S:d.S,saved:Date.now(),sum:null}];CUR=id}}catch(e){}}
-function openChar(id){const e=CHARS.find(c=>c.id===id);if(!e)return false;S=Object.assign(blank(),JSON.parse(JSON.stringify(e.S)));S.example=false;$('#name').value=e.name||'';CUR=id;VIEW='char';viewPhase=null;pendingDel=null;return true}
+function openChar(id){const e=CHARS.find(c=>c.id===id);if(!e)return false;S=Object.assign(blank(),JSON.parse(JSON.stringify(e.S)));$('#name').value=e.name||'';CUR=id;VIEW='char';viewPhase=null;pendingDel=null;return true}
 function addChar(roll){S=blank();S.step=ORDER[0];if(roll)rollAll();const id=newId();CHARS.unshift({id,name:'',S:JSON.parse(JSON.stringify(S)),saved:Date.now(),sum:null});$('#name').value='';CUR=id;VIEW='char';viewPhase=null;pendingDel=null}
 function savedTxt(ts){const d0=x=>{const d=new Date(x);return new Date(d.getFullYear(),d.getMonth(),d.getDate()).getTime()};const n=Math.round((d0(Date.now())-d0(ts))/864e5);return n<=0?'Today':n===1?'Yesterday':n<7?n+' days ago':new Date(ts).toLocaleDateString(undefined,{day:'numeric',month:'short',year:'numeric'})}
 function startScreen(){const rows=CHARS.slice().sort((a,b)=>b.saved-a.saved).map(c=>{const m=c.sum||{career:'',born:'',done:0};const nm=c.name?esc(c.name):'Unnamed';const no='<span class="empty">Not chosen</span>';
@@ -1074,14 +1065,14 @@ function readCharFile(text){const m=/<!--\s*broken-harn-data v(\d+)[^\n]*\n(?:[^
  if(m[1]!=='1')return{err:'That file was made by a newer version of this app and cannot be opened here.'};
  let d;try{const bin=atob(m[2].replace(/\s+/g,''));const u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);d=JSON.parse(new TextDecoder().decode(u))}catch(e){return{err:'The character data in that file is damaged and could not be read.'}}
  if(!d||typeof d.S!=='object'||!d.S||Array.isArray(d.S))return{err:'The character data in that file is damaged and could not be read.'};
- const c=clean(d);const st=Object.assign(blank(),c.S);st.example=false;if(!ORDER.includes(st.step))st.step=ORDER[0];return{name:typeof c.name==='string'?c.name.slice(0,200):'',S:st,camp:c.camp}}
+ const c=clean(d);const st=Object.assign(blank(),c.S);if(!ORDER.includes(st.step))st.step=ORDER[0];return{name:typeof c.name==='string'?c.name.slice(0,200):'',S:st,camp:c.camp}}
 function importChar(text){finMsg=null;const r=readCharFile(text);if(r.err){loadMsg=[false,r.err];render();return}
  const id=newId();CHARS.unshift({id,name:r.name,S:r.S,saved:Date.now(),sum:null});openChar(id);
  const cp=r.camp;loadMsg=null;render();if(cp&&(cp.d!==GM.d||cp.m!==GM.m||cp.y!==GM.y)){const n=$('#dlnote');if(n)n.textContent='This file was made for a campaign starting '+cp.d+' '+(MONTHS[cp.m-1]||'')+' '+yearTxt(cp.y)+'. Yours starts '+campTxt()+', so the birth year may differ.'}}
 function syncGM(){$('#eyebrow').textContent='Character roll · '+yearTxt(GM.y);const m=$('#camp-m');if(!m.options.length)m.innerHTML=MONTHS.map((n,i)=>`<option value="${i+1}">${n}</option>`).join('');const set=(el,v)=>{if(document.activeElement!==el)el.value=v};set($('#camp-d'),GM.d);set(m,GM.m);set($('#camp-y'),GM.y);$('#gm-sindarin').checked=!!GM.Sindarin;$('#gm-khuzdul').checked=!!GM.Khuzdul}
 function render(){syncGM();const st=VIEW==='start';$('#start').hidden=!st;$('#steps').hidden=st;$('#cols').hidden=st;$('#lnk-chars').hidden=st;document.querySelector('.banner').classList.toggle('inchar',!st);
- if(st){$('#banner').hidden=true;$('#sect').textContent='Characters';store();startScreen();return}
- ageSettled();$('#banner').hidden=!S.example;$('#sect').textContent=STEPS[S.step];steps();panel();sheet();saveNow()}
+ if(st){$('#sect').textContent='Characters';store();startScreen();return}
+ ageSettled();$('#sect').textContent=STEPS[S.step];steps();panel();sheet();saveNow()}
 
 /* ---------- events ---------- */
 document.addEventListener('click',ev=>{const b=ev.target.closest('[data-act]');if(!b)return;const a=b.dataset.act,v=b.dataset.val;
@@ -1095,9 +1086,7 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-act]');i
  if(a==='delno'){pendingDel=null;render();return}
  if(a==='delyes'){CHARS=CHARS.filter(c=>c.id!==v);if(CUR===v)CUR=null;pendingDel=null;render();return}
  if(a==='phase')viewPhase=+v;
- else if(a==='rollAll'){rollAll();viewPhase=null;$('#name').value=''}
- else if(a==='fresh'){const st=6;S=blank();S.step=st;viewPhase=null;$('#name').value=''}
- else{S.example=false;
+ else{
   if(a==='go'){if(S.step===10&&+v!==10)S.ageSet=true;S.step=+v;viewPhase=null;window.scrollTo(0,0)}
   else if(a==='b30'){const[c,x]=v.split('|');S.b30[c]=S.b30[c]===x?'':x}
   else if(a==='career')S.career=S.career===v?'':v;
@@ -1151,21 +1140,21 @@ document.addEventListener('click',ev=>{const b=ev.target.closest('[data-act]');i
  render()});
 document.addEventListener('change',ev=>{const el=ev.target;
  if(el.dataset.camp){const k=el.dataset.camp,lim={d:[1,30],m:[1,12],y:[1,9999]}[k];const v=Math.round(+el.value);GM[k]=Number.isFinite(v)?Math.min(lim[1],Math.max(lim[0],v)):{d:1,m:1,y:720}[k];el.value=GM[k];render();return}
- if(el.dataset.years!==undefined){S.example=false;S.years=+el.value;S.ageSet=true;render();return}if(el.dataset.gm){GM[el.dataset.gm]=el.checked;if(!el.checked&&S.folk===el.dataset.gm)S.folk='Human';render();return}
- if(el.dataset.adesc!==undefined){S.example=false;S.abil[+el.dataset.adesc].desc=el.value.trim();render();return}
- if(el.dataset.tsub!==undefined){S.example=false;S.tsub[el.dataset.tsub]=el.value;render();return}
- if(el.dataset.arm){S.example=false;S.gear.armor[el.dataset.arm]=el.value;render();return}
+ if(el.dataset.years!==undefined){S.years=+el.value;S.ageSet=true;render();return}if(el.dataset.gm){GM[el.dataset.gm]=el.checked;if(!el.checked&&S.folk===el.dataset.gm)S.folk='Human';render();return}
+ if(el.dataset.adesc!==undefined){S.abil[+el.dataset.adesc].desc=el.value.trim();render();return}
+ if(el.dataset.tsub!==undefined){S.tsub[el.dataset.tsub]=el.value;render();return}
+ if(el.dataset.arm){S.gear.armor[el.dataset.arm]=el.value;render();return}
  if(el.id==='gadd')return;
- if(el.dataset.ro){S.example=false;S.ro[el.dataset.ro]=el.value;render();return}
- if(el.dataset.ronew!==undefined){S.example=false;S.ro.neww[+el.dataset.ronew]={mode:el.value,name:''};render();return}
- if(el.dataset.ronewname!==undefined){S.example=false;S.ro.neww[+el.dataset.ronewname].name=el.value.trim();render();return}
- if(el.dataset.swtpl){S.example=false;const t=SWT[el.value];const keep=S.sw;S.sw=newSw();S.sw.name=keep.name;S.sw.thread=keep.thread;if(t){S.sw.tpl=el.value;S.sw.binds=t[0].slice();S.sw.strands=t[1].slice();S.sw.thin=t[2].slice()}render();return}
- if(el.dataset.sw){S.example=false;S.sw[el.dataset.sw]=el.value.trim();render();return}
- if(el.dataset.cw!==undefined){S.example=false;S.cw[+el.dataset.cw]={mode:el.value,name:''};render();return}
- if(el.dataset.cwname!==undefined){S.example=false;S.cw[+el.dataset.cwname].name=el.value.trim();render();return}
- if(el.dataset.ctal!==undefined){S.example=false;S.ctal[+el.dataset.ctal]=el.value;if(S.cswap&&!careerTalents().concat(S.cswap).includes(S.cswap))S.cswap='';render();return}
- if(el.dataset.life){S.example=false;const t=el.dataset.life;S.life[t]=el.value?{lo:+el.value,pick:'',rel:''}:null;if(S.life[t]){const o=optionsFor(lifeEv(t));if(o.length===1)S.life[t].pick=o[0];if(t==='origin')afterOrigin()}render();return}
- const k=el.dataset.set;if(!k)return;S.example=false;S[k]=el.value;if(k==='place')S.inSet=false;if(k==='deity'&&S.role!=='lay'&&!(FAITH[S.deity]||{})[S.role])S.role='lay';render()});
+ if(el.dataset.ro){S.ro[el.dataset.ro]=el.value;render();return}
+ if(el.dataset.ronew!==undefined){S.ro.neww[+el.dataset.ronew]={mode:el.value,name:''};render();return}
+ if(el.dataset.ronewname!==undefined){S.ro.neww[+el.dataset.ronewname].name=el.value.trim();render();return}
+ if(el.dataset.swtpl){const t=SWT[el.value];const keep=S.sw;S.sw=newSw();S.sw.name=keep.name;S.sw.thread=keep.thread;if(t){S.sw.tpl=el.value;S.sw.binds=t[0].slice();S.sw.strands=t[1].slice();S.sw.thin=t[2].slice()}render();return}
+ if(el.dataset.sw){S.sw[el.dataset.sw]=el.value.trim();render();return}
+ if(el.dataset.cw!==undefined){S.cw[+el.dataset.cw]={mode:el.value,name:''};render();return}
+ if(el.dataset.cwname!==undefined){S.cw[+el.dataset.cwname].name=el.value.trim();render();return}
+ if(el.dataset.ctal!==undefined){S.ctal[+el.dataset.ctal]=el.value;if(S.cswap&&!careerTalents().concat(S.cswap).includes(S.cswap))S.cswap='';render();return}
+ if(el.dataset.life){const t=el.dataset.life;S.life[t]=el.value?{lo:+el.value,pick:'',rel:''}:null;if(S.life[t]){const o=optionsFor(lifeEv(t));if(o.length===1)S.life[t].pick=o[0];if(t==='origin')afterOrigin()}render();return}
+ const k=el.dataset.set;if(!k)return;S[k]=el.value;if(k==='place')S.inSet=false;if(k==='deity'&&S.role!=='lay'&&!(FAITH[S.deity]||{})[S.role])S.role='lay';render()});
 
 loadSaved();if(!(CUR&&openChar(CUR)))VIEW='start';render();
 $('#name').addEventListener('input',saveNow);
